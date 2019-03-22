@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tingting&#39;s Blog on Tingting&#39;s Blog</title>
+    <link>/</link>
+    <description>Recent content in Tingting&#39;s Blog on Tingting&#39;s Blog</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Experience</title>
+      <link>/experience/experience/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/experience/experience/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Recent Publications</title>
+      <link>/publication/publications/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/publications/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    &lt;p&gt;Quickly discover relevant content by &lt;a href=&#34;/publication/&#34;&gt;filtering publications&lt;/a&gt;.&lt;/p&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;
+
+</description>
+    </item>
+    
+    <item>
+      <title>Structural Time-Series Models</title>
+      <link>/post/2019-03-21-bsts/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-03-21-bsts/</guid>
+      <description>
+
+
+&lt;p&gt;&lt;strong&gt;State-space models&lt;/strong&gt; were originally developed by control engineers, particularly for applications requiring continuous updating of the current position. An example, from the field of navigation systems, is “controlling the position of a space rocket”. They have also found increasing use in many types of time-series problems, including parameter estimation, smoothing, and prediction. &lt;strong&gt;Structural time-series models&lt;/strong&gt; are state-space models for time-series data. They are useful in practice because they are &lt;strong&gt;flexible&lt;/strong&gt; (a very large class of models can be expressed in state space forms, including all ARIMA and VARMA models) and &lt;strong&gt;modular&lt;/strong&gt; (the latent state as well as the model matrices can be assembled from a library of component sub-models to capture important features of the data). Several widely used &lt;strong&gt;state-component models&lt;/strong&gt; are avaialble for capturing the trend, seasonality or effects of holidays.&lt;/p&gt;
+&lt;div id=&#34;general-form&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;General Form&lt;/h2&gt;
+&lt;p&gt;A general form of (univariate) structural time-series model, which underlies the Kalman filter, can be written as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+&amp;amp; y_t = Z_t^T \alpha_t + \epsilon_t, \qquad (observation\; equation)\\
+&amp;amp; \alpha_{t+1} = T_t\alpha_{t} + R_t\eta_t, \qquad (transition/state\; equation),\\
+&amp;amp; \epsilon_t\sim N(0,\Sigma_t),\quad \eta_t \sim N(0, Q_t)
+\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt;-dimensional &lt;strong&gt;state vector&lt;/strong&gt;, &lt;span class=&#34;math inline&#34;&gt;\(Z_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt;-dimensional &lt;strong&gt;output vector&lt;/strong&gt;, &lt;span class=&#34;math inline&#34;&gt;\(T_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(m\times m\)&lt;/span&gt; &lt;strong&gt;transition matrix&lt;/strong&gt;, &lt;span class=&#34;math inline&#34;&gt;\(R_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(m\times q\)&lt;/span&gt; &lt;strong&gt;control matrix&lt;/strong&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\)&lt;/span&gt; is a scalar observation error, and &lt;span class=&#34;math inline&#34;&gt;\(\eta_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(q\)&lt;/span&gt;-dimensional system error with a &lt;span class=&#34;math inline&#34;&gt;\(q\times q\)&lt;/span&gt; &lt;strong&gt;state-diffusion matrix&lt;/strong&gt; &lt;span class=&#34;math inline&#34;&gt;\(Q_t\)&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(q\leq d\)&lt;/span&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The state vector &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t\)&lt;/span&gt; is of prime importance and is usually unobserved or partially known. Although it may not be directly observable, it is often reasonable to assume that we know how it changes over time, and we denote the updating equation by the transition/state equation above.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The matrices &lt;span class=&#34;math inline&#34;&gt;\(Z_t, T_t, R_t\)&lt;/span&gt; typically contain a mix of known values (often 0 and 1) and unknown parameters.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The observation equation links the observed data &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt; with the unobserved latent state &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t\)&lt;/span&gt;. The transition equation defines how the latent space evolves over time.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\eta_t\)&lt;/span&gt; are generally assumed to be serially uncorrelated and also to be uncorrelated with each other at all time periods. In practice, we often assume &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\sim N(0,\sigma_t^2)\)&lt;/span&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The term &lt;span class=&#34;math inline&#34;&gt;\(R_t\eta_t\)&lt;/span&gt; allows us to incorporate state components of less than full ranks: a model for seasonality will be the most important example.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;state-components&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;State Components&lt;/h2&gt;
+&lt;p&gt;Independent state components can be combined by concatenating their observation vectors &lt;span class=&#34;math inline&#34;&gt;\(Z_t\)&lt;/span&gt;, and arranging the other model matrices as elements in a block diagonal matrix.&lt;/p&gt;
+&lt;div id=&#34;local-linear-trend&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Local linear trend&lt;/h3&gt;
+&lt;p&gt;The local linear trend is a porpular choice for modelling trends because it quickly adapts to local variation, which is desirable when making short-term predictions. However, this degree of flexibility may not be desired when making long-term predicitons, as such predictions often come with implausibly wide uncertainty intervals.&lt;/p&gt;
+&lt;p&gt;A local linear trend allows both level and slope to be stochastic. The level and the slope are estimated by giving more weight on the most recent observations. The local linear trend model for &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt; can be written as, &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+&amp;amp; y_t = \mu_t +\epsilon_t, \\
+&amp;amp; \mu_{t+1} = \mu_{t} + \delta_t + \eta_{\mu,t}, \qquad \text{(stochastic level component)}\\
+&amp;amp; \delta_{t+1} = \delta_t + \eta_{\delta,t}, \qquad \text{(stochastic slope component)}\\
+\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\mu_t\)&lt;/span&gt; is the value of the trend at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\delta_t\)&lt;/span&gt; is the expected increase in &lt;span class=&#34;math inline&#34;&gt;\(\mu\)&lt;/span&gt; between time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(t+1\)&lt;/span&gt; so it can be thought of as the slope at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;The model can be rewritten as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+&amp;amp; y_t = [1\quad 0]\left[\begin{matrix}\mu_t\\\delta_t\end{matrix}\right] +\epsilon_t, \\
+&amp;amp; \left[\begin{matrix}\mu_{t+1}\\\delta_{t+1}\end{matrix}\right] = 
+\left[\begin{matrix}1 &amp;amp; 1\\ 0 &amp;amp; 1 \end{matrix}\right]
+\left[\begin{matrix}\mu_t\\\delta_t\end{matrix}\right] + 
+\left[\begin{matrix}1 &amp;amp; 0 \\ 0 &amp;amp; 1 \end{matrix}\right]
+\left[\begin{matrix}\eta_{\mu, t}\\\eta_{\delta, t}\end{matrix}\right]
+\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(Z_t = (1,0)^T\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t = (\mu_t, \delta_t)^T\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(T_t = \left[\begin{smallmatrix}1 &amp;amp; 1\\ 0 &amp;amp; 1 \end{smallmatrix}\right]\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(R_t=\left[\begin{smallmatrix}1 &amp;amp; 0 \\ 0 &amp;amp; 1 \end{smallmatrix}\right]\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(\eta_t = (\eta_{\mu,t}, \eta_{\delta, t})^T\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;seasonality&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Seasonality&lt;/h3&gt;
+&lt;p&gt;There are several commonly used state-component models to capture seasonality. The most frequently used model in the time domain is &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+&amp;amp; y_t = \gamma_t +\epsilon_t, \\
+&amp;amp; \gamma_{t+1} = - \sum_{i=0}^{s-2}\gamma_{t-i} + \eta_{\gamma, t},
+\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; is the number of seasons (or seasonal duration) and &lt;span class=&#34;math inline&#34;&gt;\(\gamma_t\)&lt;/span&gt; denotes their joint contribution to the observed response &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt;. The mean of &lt;span class=&#34;math inline&#34;&gt;\(\gamma_{t+1}\)&lt;/span&gt; is such that the total seasonal effect is zero when summed over &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; seasons. The model can be rewritten as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+&amp;amp; y_t = [1\quad 0 \quad \cdots\quad 0]\left[\begin{matrix}\gamma_{t+1}\\\gamma_t\\ \vdots\\
+\gamma_{t-s+3}\end{matrix}\right] +\epsilon_t, \\
+&amp;amp; \left[\begin{matrix}\gamma_{t+1}\\\gamma_t\\\gamma_{t-1}\\ \vdots\\
+\gamma_{t-s+4}\\
+\gamma_{t-s+3}\end{matrix}\right] = 
+\left[\begin{matrix} -1 &amp;amp; - 1 &amp;amp; \cdots &amp;amp; -1 &amp;amp; -1 \\ 1 &amp;amp; 0 &amp;amp; \cdots &amp;amp;0&amp;amp; 0\\
+0 &amp;amp; 1 &amp;amp; \cdots &amp;amp; 0 &amp;amp;0 \\
+\vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\\
+0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 1 &amp;amp; 0 \\
+0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0 \\
+\end{matrix}\right]
+\left[\begin{matrix}\gamma_{t}\\\gamma_{t-1}\\\gamma_{t-2}\\\vdots \\
+\gamma_{t-s+3}\\
+\gamma_{t-s+2}\end{matrix}\right] + \left[\begin{matrix}1\\0\\0\\ \vdots\\
+0\\
+0\end{matrix}\right]\eta_{\gamma, t}
+\end{split}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The seasonal model can be generalized to allow for multiple seasonal components with differen periods.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;linear-regression&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Linear regression&lt;/h3&gt;
+&lt;p&gt;The covariates in structual time series models are assumed to be contemporaneous. The coefficients of the contemporaneous covariates &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{x}_t\)&lt;/span&gt; can be static or time-varying. A static regression can be written in state-space form by setting &lt;span class=&#34;math display&#34;&gt;\[Z_t = \beta^T \mathbf{x}_t \quad \text{and} \quad \alpha_t =1.\]&lt;/span&gt; A dynamic regression component can be written as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+&amp;amp; \mathbf{x}_t^T\beta_t = \sum_{j=1}^J x_{j,t} \beta_{j,t}\\
+&amp;amp; \beta_{j, t+1} = \beta_{j,t} + \eta_{\beta,j,t},
+\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\beta_{j,t}\)&lt;/span&gt; is the cofficient for the &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt;-th covariate &lt;span class=&#34;math inline&#34;&gt;\(x_{j,t}\)&lt;/span&gt;. The state-space form is given as &lt;span class=&#34;math display&#34;&gt;\[Z_t = \mathbf{x}_t,\quad \alpha_t =\beta_t,\quad T_t = R_t =  I_{J\times J}.\]&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
