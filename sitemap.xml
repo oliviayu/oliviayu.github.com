@@ -18,6 +18,11 @@
   
     <url>
     
+      <loc>/post/posts/</loc>
+    </url>
+  
+    <url>
+    
       <loc>/project/projects/</loc>
     </url>
   
@@ -29,6 +34,12 @@
     <url>
     
       <loc>/author/contact/</loc>
+    </url>
+  
+    <url>
+    
+      <loc>/post/2019-03-21-bsts/</loc>
+      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
     </url>
   
     <url>
@@ -45,6 +56,12 @@
     <url>
     
       <loc>/author/admin/</loc>
+    </url>
+  
+    <url>
+    
+      <loc>/post/</loc>
+      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
     </url>
   
     <url>
@@ -102,6 +119,7 @@
     <url>
     
       <loc>/</loc>
+      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
