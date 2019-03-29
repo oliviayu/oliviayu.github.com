@@ -3,24 +3,43 @@
   
     <url>
     
+      <loc>/about/about/</loc>
+    </url>
+  
+    <url>
+    
+      <loc>/author/skills/</loc>
+    </url>
+  
+    <url>
+    
       <loc>/experience/experience/</loc>
     </url>
   
     <url>
     
-      <loc>/publication/publications/</loc>
+      <loc>/project/projects/</loc>
     </url>
   
     <url>
     
-      <loc>/post/2019-03-21-bsts/</loc>
-      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
+      <loc>/talk/talks/</loc>
+    </url>
+  
+    <url>
+    
+      <loc>/author/contact/</loc>
     </url>
   
     <url>
     
       <loc>/tutorial/</loc>
       <lastmod>2018-09-09T00:00:00+02:00</lastmod>
+    </url>
+  
+    <url>
+    
+      <loc>/about/</loc>
     </url>
   
     <url>
@@ -54,8 +73,7 @@
   
     <url>
     
-      <loc>/post/</loc>
-      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
+      <loc>/project/</loc>
       <priority>0</priority>
     </url>
   
@@ -84,7 +102,6 @@
     <url>
     
       <loc>/</loc>
-      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
