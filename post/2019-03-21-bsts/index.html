@@ -345,34 +345,34 @@
 <p><strong>State-space models</strong> were originally developed by control engineers, particularly for applications that require continuous updating of the current position. An example, from the field of navigation systems, is updating an user equipment’s position. The models have also found increasing use in many types of time-series problems, including parameter estimation, smoothing, and prediction. <strong>Structural time-series models</strong> are state-space models for time-series data. They are useful in practice because they are</p>
 <ul>
 <li><p><strong>flexible</strong> : a very large class of models can be expressed in state space forms, including all ARIMA and VARMA models;</p></li>
-<li><p><strong>modular</strong> : the model can be assembled from a library of state-component sub-models to capture important features of the data. Several widely used <strong>state components</strong> are avaialble for capturing the trend, seasonality, or effects of holidays.</p></li>
+<li><p><strong>modular</strong> : the model can be assembled from a library of state-component sub-models to capture important features of the data. Several widely used <strong>state components</strong> are available for capturing the trend, seasonality, or effects of holidays.</p></li>
 </ul>
+<p>The <em>bsts</em> R package is a tool for fitting structural time series models using Bayesian methods and <em>bsts</em> stands for Bayesian structural time series. The <em>bsts</em> can be configured for short term or long term forecasting, incorporating one or more seasonal effects, or fitting explanatory models if forecasting is not the primary goal.</p>
 </div>
 <div id="general-form" class="section level1">
 <h1>General Form</h1>
 <p>A general form of (univariate) structural time-series model <!-- which underlies the Kalman filter--> can be written as <span class="math display">\[\begin{split}
 &amp; y_t = Z_t^T \alpha_t + \epsilon_t, \qquad (\text{observation equation})\\
 &amp; \alpha_{t+1} = T_t\alpha_{t} + R_t\eta_t, \qquad (\text{transition or state equation})\\
-&amp; \epsilon_t\sim N(0,\Sigma_t),\quad \eta_t \sim N(0, Q_t)
-\end{split}\]</span> where <span class="math inline">\(y_t\)</span> is the observed value of a time series at time <span class="math inline">\(t\)</span>, <span class="math inline">\(\alpha_t\)</span> is a <span class="math inline">\(m\)</span>-dimensional <strong>state vector</strong>, <span class="math inline">\(Z_t\)</span> is a <span class="math inline">\(m\)</span>-dimensional <strong>output vector</strong>, <span class="math inline">\(T_t\)</span> is a <span class="math inline">\(m\times m\)</span> <strong>transition matrix</strong>, <span class="math inline">\(R_t\)</span> is a <span class="math inline">\(m\times q\)</span> <strong>control matrix</strong>, <span class="math inline">\(\epsilon_t\)</span> is a scalar observation error, and <span class="math inline">\(\eta_t\)</span> is a <span class="math inline">\(q\)</span>-dimensional system error with a <span class="math inline">\(q\times q\)</span> <strong>state-diffusion matrix</strong> <span class="math inline">\(Q_t\)</span> where <span class="math inline">\(q\leq d\)</span>.</p>
+&amp; \epsilon_t\sim N(0,\sigma^2_t),\quad \eta_t \sim N(0, Q_t)
+\end{split}\]</span> where <span class="math inline">\(y_t\)</span> is the observed value of a time series at time <span class="math inline">\(t\)</span>, <span class="math inline">\(\alpha_t\)</span> is a <span class="math inline">\(m\)</span>-dimensional <strong>state vector</strong>, <span class="math inline">\(Z_t\)</span> is a <span class="math inline">\(m\)</span>-dimensional <strong>output vector</strong>, <span class="math inline">\(T_t\)</span> is a <span class="math inline">\(m\times m\)</span> <strong>transition matrix</strong>, <span class="math inline">\(R_t\)</span> is a <span class="math inline">\(m\times q\)</span> <strong>control matrix</strong>, <span class="math inline">\(\epsilon_t\)</span> is a scalar observation error, and <span class="math inline">\(\eta_t\)</span> is a <span class="math inline">\(q\)</span>-dimensional system error with a <span class="math inline">\(q\times q\)</span> <strong>state-diffusion matrix</strong> <span class="math inline">\(Q_t\)</span> where <span class="math inline">\(q\leq m\)</span>.</p>
 <ul>
 <li><p>The observation equation links the observed data <span class="math inline">\(y_t\)</span> with the unobserved latent state <span class="math inline">\(\alpha_t\)</span>.</p></li>
 <li><p>The state vector <span class="math inline">\(\alpha_t\)</span> is of prime importance and is usually unobserved or partially known. Although it may not be directly observable, it is often reasonable to assume that we know how it changes over time, and we denote the updating equation by the transition or state equation above. This equation defines how the latent space evolves over time.</p></li>
-<li><p>The matrices <span class="math inline">\(Z_t, T_t, R_t\)</span> typically contain a mix of known values (often 0 and 1) and unknown parameters.</p></li>
+<li><p>The arrays <span class="math inline">\(Z_t, T_t, R_t\)</span> typically contain a mix of known values (often 0 and 1) and unknown parameters. The 0’s and 1’s indicate which bits of <span class="math inline">\(\alpha_t\)</span> are relevant for a particular computation.</p></li>
 <li><p>The <span class="math inline">\(\epsilon_t\)</span> and <span class="math inline">\(\eta_t\)</span> are generally assumed to be serially uncorrelated and also to be uncorrelated with each other at all time periods. In practice, we often assume <span class="math inline">\(\epsilon_t\sim N(0,\sigma_t^2)\)</span>.</p></li>
 <li><p>The term <span class="math inline">\(R_t\eta_t\)</span> allows us to incorporate state components of less than full ranks. A model for seasonality will be the most important example.</p></li>
 </ul>
+<p>The analyst chooses the structure of <span class="math inline">\(\alpha_t\)</span> based on the specific data and task, such as whether it is for short or long term forecast, whether the data contains seasonal effects, and whether and how regressors are to be included. Many of these models are standard, and can be fit using a variety of tools, such as the <em>StructTS</em> function distributed with base R or one of several R packages for fitting these models, such as the <em>dlm</em> package for dynamic linear model. The <em>bsts</em> package handles all the standard cases, but it also includes several useful extensions.</p>
 </div>
 <div id="state-components" class="section level1">
 <h1>State Components</h1>
 <div id="static-intercept" class="section level2">
 <h2>Static intercept</h2>
-<p>We can add a static intercept term to a model, <span class="math display">\[y_t = c+\epsilon_t,\]</span> where <span class="math inline">\(c\)</span> is a constant value.</p>
-<p>If the structural time-series model includes a traditional trend component (e.g. local level, local linear trend, etc) then a separate intercept is not needed (and will probably cause trouble, as it will be confounded with the initial state of the trend model). However, if there is no trend, or the trend is an AR process centered around zero, then adding a static intercept will shift the center to a data-determined value.</p>
+<p>We can add a static intercept term to a model, <span class="math display">\[y_t = c+\epsilon_t,\]</span> where <span class="math inline">\(c\)</span> is a constant value. If the structural time-series model includes a traditional trend component (e.g. local level, local linear trend, etc) then a separate intercept is not needed (and will probably cause trouble, as it will be confounded with the initial state of the trend model). However, if there is no trend, or the trend is an AR process centered around zero, then adding a static intercept will shift the center to a data-determined value.</p>
 <pre class="r"><code># R code
 ss &lt;- list()
-ss &lt;- bsts::AddStaticIntercept(ss, y)
-bsts::bsts(y, ss, niter = 500)</code></pre>
+ss &lt;- bsts::AddStaticIntercept(ss, y)</code></pre>
 </div>
 <div id="trend" class="section level2">
 <h2>Trend</h2>
@@ -382,26 +382,28 @@ bsts::bsts(y, ss, niter = 500)</code></pre>
 &amp;y_t = \mu_t +\epsilon_t,\\
 &amp;\mu_{t+1} =  \mu_{t} + \eta_{t}
 \end{split}\]</span></p>
+<pre class="r"><code># R code
+ss &lt;- list()
+ss &lt;- bsts::AddLocalLevel(ss, y)</code></pre>
 </div>
 <div id="ar" class="section level3">
 <h3>AR</h3>
-<p>An autogressive (AR) model is a representation of a type of random process. The AR model specifies that the time series <span class="math inline">\(y_t\)</span> depends <em>linearly</em> on its own previous values and on a stochastic term. In general, the AR model of order <span class="math inline">\(p\)</span>, i.e. <span class="math inline">\(AR(p)\)</span>, can be written as <span class="math display">\[\begin{split}
+<p>An autoregressive (AR) model is a representation of a type of random process. The AR model specifies that the time series <span class="math inline">\(y_t\)</span> depends <em>linearly</em> on its own previous values and on a stochastic term. In general, the AR model of order <span class="math inline">\(p\)</span>, i.e. <span class="math inline">\(AR(p)\)</span>, can be written as <span class="math display">\[\begin{split}
 &amp;y_t = \mu_t +\epsilon_t,\\
 &amp;\mu_{t+1} = \sum_{i=0}^{p-1} \phi_i \mu_{t-i} + \eta_{t}
-\end{split}\]</span> where <span class="math inline">\(\phi_0,\cdots,\phi_{p-1}\)</span> are the parameters of the model. <!--Note that when $p=1$ and $\phi_0=1$, the AR process is equivalent to the local level component.--> It can be re-written in the general form with ???</p>
+\end{split}\]</span> where <span class="math inline">\(\phi_0,\cdots,\phi_{p-1}\)</span> are the parameters of the model. <!--Note that when $p=1$ and $\phi_0=1$, the AR process is equivalent to the local level component. It can be re-written in the general form with ???
+--></p>
 <pre class="r"><code># R code
 ss &lt;- list()
-ss &lt;- bsts::AddAr(ss, y, lags = p)
-bsts::bsts(y, ss, niter = 500)</code></pre>
-<p>The <em>bsts</em> package also supports sparse AR(p) process for large <span class="math inline">\(p\)</span>, where a spike and slab prior is applied on the autoregression coeffects <span class="math inline">\(\phi_0,\cdots, \phi_{p-1}\)</span>. This model differs from the one in <code>AddAr()</code> only in that some of its coefficients may be set to zero.</p>
+ss &lt;- bsts::AddAr(ss, y, lags = p)</code></pre>
+<p>The <em>bsts</em> package also supports sparse AR(p) process for large <span class="math inline">\(p\)</span>, where a spike and slab prior is applied on the autoregression coefficients <span class="math inline">\(\phi_0,\cdots, \phi_{p-1}\)</span>. This model differs from the one in <code>AddAr()</code> only in that some of its coefficients may be set to zero.</p>
 <pre class="r"><code># R code
 ss &lt;- list()
-ss &lt;- bsts::AddAutoAr(ss, y, lags = p)
-bsts::bsts(y, ss, niter = 500)</code></pre>
+ss &lt;- bsts::AddAutoAr(ss, y, lags = p)</code></pre>
 </div>
 <div id="local-linear-trend" class="section level3">
 <h3>Local linear trend</h3>
-<p>The local linear trend is a porpular choice for modelling trends because it quickly adapts to local variation, which is desirable when making short-term predictions. However, this degree of flexibility may not be desired when making long-term predicitons, as such predictions often come with implausibly wide uncertainty intervals.</p>
+<p>The local linear trend is a popular choice for modelling trends because it quickly adapts to local variation, which is desirable when making short-term predictions. However, this degree of flexibility may not be desired when making long-term predictions, as such predictions often come with implausibly wide uncertainty intervals.</p>
 <p>A local linear trend model for <span class="math inline">\(y_t\)</span> can be written as, <span class="math display">\[\begin{split}
 &amp; y_t = \mu_t +\epsilon_t, \\
 &amp; \mu_{t+1} = \mu_{t} + \delta_t + \eta_{\mu,t}, \qquad \text{(stochastic level component)}\\
@@ -419,8 +421,7 @@ bsts::bsts(y, ss, niter = 500)</code></pre>
 \end{split}\]</span> where <span class="math inline">\(Z_t = (1,0)^T\)</span>, <span class="math inline">\(\alpha_t = (\mu_t, \delta_t)^T\)</span>, <span class="math inline">\(T_t = \left[\begin{smallmatrix}1 &amp; 1\\ 0 &amp; 1 \end{smallmatrix}\right]\)</span>, <span class="math inline">\(R_t=\left[\begin{smallmatrix}1 &amp; 0 \\ 0 &amp; 1 \end{smallmatrix}\right]\)</span>, and <span class="math inline">\(\eta_t = (\eta_{\mu,t}, \eta_{\delta, t})^T\)</span>.</p>
 <pre class="r"><code># R code
 ss &lt;- list()
-ss &lt;- bsts::AddLocalLinearTrend(ss, y)
-bsts::bsts(y, ss, niter = 500)</code></pre>
+ss &lt;- bsts::AddLocalLinearTrend(ss, y)</code></pre>
 </div>
 <div id="semi-local-linear-trend" class="section level3">
 <h3>Semi-local linear trend</h3>
@@ -430,12 +431,11 @@ bsts::bsts(y, ss, niter = 500)</code></pre>
 &amp; \delta_{t+1} = a + \phi\times (\delta_t-a) + \eta_{\delta,t}, \qquad \text{(stochastic slope component)}\\
 &amp; \eta_{\mu, t} \sim N(0,\sigma^2_{\mu, t}),\quad
   \eta_{\delta, t} \sim N(0,\sigma^2_{\delta, t})
-\end{split}\]</span> where the slope component <span class="math inline">\(\delta_{t+1}\)</span> is modelled by an AR(1) process centered at value <span class="math inline">\(a\)</span>. A stationary AR(1) process is less variable than a random walk so it often gives more reasonable uncertainty estimates when making long term forecasts.</p>
+\end{split}\]</span> where the slope component <span class="math inline">\(\delta_{t+1}\)</span> is modeled by an AR(1) process centered at value <span class="math inline">\(a\)</span>. A stationary AR(1) process is less variable than a random walk so it often gives more reasonable uncertainty estimates when making long term forecasts.</p>
 <p>The model can be expressed in the general form with <span class="math inline">\(Z_t = (1,0, a)^T\)</span>, <span class="math inline">\(\alpha_t = (\mu_t+a, \delta_t-a, -1)^T\)</span>, <span class="math inline">\(T_t = \left[\begin{smallmatrix}1 &amp; 1 &amp; 0 \\ 0 &amp; \phi &amp; 0 \\ 0 &amp; 0 &amp; 1 \end{smallmatrix}\right]\)</span>, <span class="math inline">\(R_t=\left[\begin{smallmatrix}1 &amp; 0 \\ 0 &amp; 1\\0&amp;0 \end{smallmatrix}\right]\)</span>, and <span class="math inline">\(\eta_t = (\eta_{\mu,t}, \eta_{\delta, t})^T\)</span>.</p>
 <pre class="r"><code># R code
 ss &lt;- list()
-ss &lt;- bsts::AddSemilocalLinearTrend(ss, y)
-bsts::bsts(y, ss, niter = 500)</code></pre>
+ss &lt;- bsts::AddSemilocalLinearTrend(ss, y)</code></pre>
 </div>
 </div>
 <div id="seasonality" class="section level2">
@@ -463,26 +463,31 @@ bsts::bsts(y, ss, niter = 500)</code></pre>
 0\\
 0\end{matrix}\right]\eta_{\gamma, t}
 \end{split}\]</span></p>
-<p>The seasonal model can be generalized to allow for multiple seasonal components with differen periods.</p>
+<p>The seasonal model can be generalized to allow for multiple seasonal components with different periods.</p>
 <pre class="r"><code># R code
 # Suppose that y is a time series collected hourly
 ss &lt;- list()
-ss &lt;- bsts::AddSeasonal(ss, y, nseasons = 24, season.duration = 1) # daily seasonality
-ss &lt;- bsts::AddSeasonal(ss, y, nseasons = 7, season.duration = 24) # weely seasonality
-bsts::bsts(y, ss, niter = 500)</code></pre>
+# daily seasonality
+ss &lt;- bsts::AddSeasonal(ss, y, nseasons = 24, season.duration = 1) 
+# weely seasonality
+ss &lt;- bsts::AddSeasonal(ss, y, nseasons = 7, season.duration = 24)</code></pre>
 </div>
 <div id="trigonometric-seasonal-model" class="section level3">
 <h3>Trigonometric Seasonal model</h3>
-<p><span class="math display">\[\begin{split}
+<p>Another way to model seasonality is to use trigonometric seasonal model, <span class="math display">\[\begin{split}
 &amp; y_t = \gamma_t +\epsilon_t, \\
-&amp; \gamma_{j, t+1} = y_{j,t}\times \cos(\lambda_j) - y^*_{j,t}\times \sin(\lambda_j) + \epsilon_0,\\
-&amp; \gamma^*_{j, t+1} = y^*_{j,t}\times \cos(\lambda_j) - y_{j,t}\times \sin(\lambda_j) + \epsilon_1,\\
-\end{split}\]</span></p>
+&amp; \gamma_{j, t+1} = \gamma_{j,t}\times \cos(\lambda_j) - \gamma^*_{j,t}\times \sin(\lambda_j) + \omega_{j, t},\\
+&amp; \gamma^*_{j, t+1} = \gamma^*_{j,t}\times \cos(\lambda_j) - \gamma_{j,t}\times \sin(\lambda_j) + \omega^*_{j,t},\\
+\end{split}\]</span> where <span class="math inline">\(\gamma_t = \sum_{j=1}^{k}\gamma_{j,t}\)</span>, <span class="math inline">\(\lambda_j = 2\pi j/s\)</span> is the <span class="math inline">\(j\)</span>-th seasonal frequency, <span class="math inline">\(j = 1,\cdots, k\)</span>, and <span class="math inline">\(s\)</span> is the number of time steps required for the longest cycle to repeat (e.g. number of seasosn).</p>
+<pre class="r"><code># R code
+ss &lt;- list()
+# The harmonic method is strongly preferred to the direct method.
+ss &lt;- bsts::AddTrig(ss, y, period = s, frequencies = 1:k, method = &quot;harmonic&quot;)</code></pre>
 </div>
 </div>
 <div id="linear-regression" class="section level2">
 <h2>Linear regression</h2>
-<p>The covariates in structual time series models are assumed to be contemporaneous. The coefficients of the contemporaneous covariates <span class="math inline">\(\mathbf{x}_t\)</span> can be static or time-varying.</p>
+<p>The covariates in structural time series models are assumed to be contemporaneous. The coefficients of the contemporaneous covariates <span class="math inline">\(\mathbf{x}_t\)</span> can be static or time-varying.</p>
 <p>A static regression can be written in state-space form by setting <span class="math inline">\(Z_t = \beta^T \mathbf{x}_t\)</span> and <span class="math inline">\(\alpha_t =1\)</span>, where <span class="math inline">\(\beta\)</span> is static.</p>
 <pre class="r"><code># R code
 ss &lt;- list()
@@ -490,7 +495,7 @@ bsts::bsts(y ~ x, ss, niter = 500)</code></pre>
 <p>A dynamic regression component can be written as <span class="math display">\[\begin{split}
 &amp; \mathbf{x}_t^T\beta_t = \sum_{j=1}^J x_{j,t} \beta_{j,t}\\
 &amp; \beta_{j, t+1} = \beta_{j,t} + \eta_{\beta,j,t},
-\end{split}\]</span> where <span class="math inline">\(\beta_{j,t}\)</span> is the cofficient for the <span class="math inline">\(j\)</span>-th covariate <span class="math inline">\(x_{j,t}\)</span> at time <span class="math inline">\(t\)</span>. The state-space form is given as <span class="math inline">\(Z_t = \mathbf{x}_t, \alpha_t =\beta_t, T_t = R_t = I_{J\times J}\)</span>.</p>
+\end{split}\]</span> where <span class="math inline">\(\beta_{j,t}\)</span> is the coefficient for the <span class="math inline">\(j\)</span>-th covariate <span class="math inline">\(x_{j,t}\)</span> at time <span class="math inline">\(t\)</span>. The state-space form is given as <span class="math inline">\(Z_t = \mathbf{x}_t, \alpha_t =\beta_t, T_t = R_t = I_{J\times J}\)</span>.</p>
 <pre class="r"><code># R code
 ss &lt;- list()
 ss &lt;- bsts::AddDynamicRegression(ss, y ~ x)
@@ -498,7 +503,7 @@ bsts::bsts(y, ss, niter = 500)</code></pre>
 </div>
 <div id="assemble-multiple-state-components" class="section level2">
 <h2>Assemble multiple state components</h2>
-<p>Independent state components can be combined by concatenating their observation vectors <span class="math inline">\(Z_t\)</span> and arranging the other model matrices as elements in a block diagonal matrix. For example, we can combine the <em>local linear trend</em> with <em>seasonality</em> and have the following model matries: <span class="math display">\[Z_t = \left[\begin{smallmatrix}
+<p>Independent state components can be combined by concatenating their observation vectors <span class="math inline">\(Z_t\)</span> and arranging the other model matrices as elements in a block diagonal matrix. For example, we can combine the <em>local linear trend</em> with <em>seasonality</em> and have the following model matrices: <span class="math display">\[Z_t = \left[\begin{smallmatrix}
 1  \\ 
 0 \\
 1 \\
@@ -528,7 +533,7 @@ ss &lt;- list()
 ss &lt;- bsts::AddLocalLinearTrend(ss, y)
 ss &lt;- bsts::AddSeasonality(ss, y, nseason = s, season.duration = d)
 bsts::bsts(y, ss, niter = 500)</code></pre>
-<p>Similarly, we can add other state components such as Regression, Local level, AR process, Random walk for holiday effect, etc (see <em>bsts</em> Package for more dtails). As mentioned in the Introduction, the model is modular and can be easily extended by using the <em>bsts</em> package. For example,</p>
+<p>Similarly, we can add other state components such as Regression, Local level, AR process, Random walk for holiday effect, etc (see <em>bsts</em> Package for more details). As mentioned in the Introduction, the model is modular and can be easily extended by using the <em>bsts</em> package. For example,</p>
 <pre class="r"><code># R code
 ss &lt;- list()
 ss &lt;- bsts::AddLocalLevel(ss, y)
@@ -536,10 +541,34 @@ ss &lt;- bsts::AddAr(ss, y)
 ss &lt;- bsts::AddSeasonal(ss, y, nseasons = 24)
 ss &lt;- bsts::AddDynamicRegression(ss, y ~ x1)
 bsts::bsts(y ~ x2, ss, niter = 500)</code></pre>
+<p>Some examples of application to real data analyses can be found <a href="http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html">here</a>.</p>
 </div>
 </div>
 <div id="model-diagnostic" class="section level1">
 <h1>Model diagnostic</h1>
+<div id="prediction-errors" class="section level2">
+<h2>Prediction errors</h2>
+<p>As part of the model fitting process, the algorithm in <em>bsts</em> generates the one-step-ahead prediction errors <span class="math inline">\(y_t−E(y_t|Y_{t−1},\theta)\)</span> , where <span class="math inline">\(Y_{t−1}=y_1,\cdots,y_{t−1}\)</span>, and the vector of model parameters <span class="math inline">\(\theta\)</span> is fixed at its current value in the MCMC algorithm. The one-step-ahead prediction errors can be obtained from the bsts model by calling</p>
+<pre class="r"><code>bsts.prediction.errors(model1)</code></pre>
+<p>The one step prediction errors are a useful diagnostic for comparing several bsts models that have been fit to the same data. They are used to implement the function <code>CompareBstsModels</code>, which is called as shown below.</p>
+<pre class="r"><code>CompareBstsModels(list(&quot;Model 1&quot; = model1,
+                       &quot;Model 2&quot; = model2,
+                       &quot;Model 3&quot; = model3),
+                  colors = c(&quot;black&quot;, &quot;red&quot;, &quot;blue&quot;))</code></pre>
+</div>
+<div id="model-assumptions" class="section level2">
+<h2>Model assumptions</h2>
+<p>In BSTS models, the residual term is often assumed to follow a Gaussian distribution. It is important to check the validity of such assumption to see if the model is valid or not.</p>
+<p>The output of bsts model contains a matrix of Monte Carlo draws of residual errors. Each row is a Monte Carlo draw, and each column is an observation.</p>
+<p>The <code>qqdist</code> function sorts the columns of draws by their mean, and plots the resulting set of curves against the quantiles of the standard normal distribution. A reference line is added, and the mean of each column of draws is represented by a blue dot. If the dots fall around the straight line, the normality assumption holds well for the residuals. If the dots depart greatly from the line, the normality assumption may violate. In this case, we may either do data transformation to obtain more normally distributed data or assume a different distribution on the data (e.g. t-distribution)</p>
+<p>The <code>AcfDist</code> function plots the posterior distribution of the autocorrelation function (ACF) of the residuals using a set of side-by-side boxplots. If the boxplot of lag <span class="math inline">\(k\)</span> contains 0, we may consider the residuals are uncorrelated at lag <span class="math inline">\(k\)</span>. If the ACF does not dampen out (i.e. falling to zero) within about 15 to 20 lags, the residual term is nonstationary and we should try a different model.</p>
+</div>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p>STEVEN L. SCOTT. (2017). Fitting Bayesian structural time series with the bsts R package. <a href="http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html" class="uri">http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html</a>.</p>
+<p>Chatfield, Chris. (2016). The analysis of time series: an introduction. CRC press.</p>
+<p>Montgomery, Douglas C., Cheryl L. Jennings, and Murat Kulahci. (2015). Introduction to time series analysis and forecasting. John Wiley &amp; Sons.</p>
 </div>
 
     </div>
@@ -551,7 +580,7 @@ bsts::bsts(y ~ x2, ss, niter = 500)</code></pre>
   
   <a class="badge badge-light" href="/tags/bsts/">bsts</a>
   
-  <a class="badge badge-light" href="/tags/time-serimes/">time-serimes</a>
+  <a class="badge badge-light" href="/tags/time-series/">time-series</a>
   
 </div>
 

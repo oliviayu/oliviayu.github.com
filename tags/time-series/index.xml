@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>time-series on Tingting&#39;s Blog</title>
+    <link>/tags/time-series/</link>
+    <description>Recent content in time-series on Tingting&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 21 Mar 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/time-series/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Structural Time-Series Models</title>
+      <link>/post/2019-03-21-bsts/</link>
+      <pubDate>Thu, 21 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-03-21-bsts/</guid>
+      <description>Introduction State-space models were originally developed by control engineers, particularly for applications that require continuous updating of the current position. An example, from the field of navigation systems, is updating an user equipment’s position. The models have also found increasing use in many types of time-series problems, including parameter estimation, smoothing, and prediction. Structural time-series models are state-space models for time-series data. They are useful in practice because they are</description>
+    </item>
+    
+  </channel>
+</rss>
