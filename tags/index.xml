@@ -10,5 +10,23 @@
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
+    <item>
+      <title>bsts</title>
+      <link>/tags/bsts/</link>
+      <pubDate>Thu, 21 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/bsts/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>time-serimes</title>
+      <link>/tags/time-serimes/</link>
+      <pubDate>Thu, 21 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/time-serimes/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

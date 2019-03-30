@@ -6,20 +6,18 @@
     <description>Recent content in R Markdown on Tingting&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 21 Mar 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Structural Time-Series Models</title>
+      <link>/post/2019-03-21-bsts/</link>
+      <pubDate>Thu, 21 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/2015-07-23-r-rmarkdown/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/post/2019-03-21-bsts/</guid>
+      <description>Introduction State-space models were originally developed by control engineers, particularly for applications that require continuous updating of the current position. An example, from the field of navigation systems, is updating an user equipment’s position. The models have also found increasing use in many types of time-series problems, including parameter estimation, smoothing, and prediction. Structural time-series models are state-space models for time-series data. They are useful in practice because they are</description>
     </item>
     
   </channel>
