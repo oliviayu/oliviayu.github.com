@@ -6,7 +6,7 @@
     <description>Recent content in Tingting&#39;s Blog on Tingting&#39;s Blog</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 21 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 10 Apr 2019 00:00:00 +0000</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
@@ -20,10 +20,10 @@
     
     <item>
       <title></title>
-      <link>/post/post/</link>
+      <link>/post/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/post/post/</guid>
+      <guid>/post/</guid>
       <description></description>
     </item>
     
@@ -47,10 +47,10 @@
     
     <item>
       <title>Recent Posts</title>
-      <link>/posts/</link>
+      <link>/recent_posts/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/posts/</guid>
+      <guid>/recent_posts/</guid>
       <description></description>
     </item>
     
@@ -79,6 +79,198 @@
       
       <guid>/author/contact/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>sparklyr (Spark in R)</title>
+      <link>/post/2019-04-10-sparklyr/</link>
+      <pubDate>Wed, 10 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-04-10-sparklyr/</guid>
+      <description>
+
+
+&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;The &lt;code&gt;R&lt;/code&gt; programming language, along with &lt;code&gt;RStudio&lt;/code&gt;, has become one of the most popular tools for data analysis as it contains a large amount of open-source packages developed by a community of statisticians. However, &lt;code&gt;R&lt;/code&gt; or &lt;code&gt;RStudio&lt;/code&gt; is not ideal for Big Data analysis as mostly the data would not fit into R memory. On the other hand, Spark has become the leading platform for big-data analytics. It works with the system to distribute data across clusters and process data in parallel. Moreover it provides native bindings for different languages such as Java, Python, Scala, and R.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sparklyr&lt;/code&gt; is an R package that allows us to analyze data in Spark from R. It supports &lt;code&gt;dplyr&lt;/code&gt;, a popular tool for working with data frame like objects both in memory and out of memory, and many machine learning algorithms to run classifiers, regressions, and so on in Spark. It is extensible that you can create R packages that depend on &lt;code&gt;sparklyr&lt;/code&gt; to call the full Spark API, such as H2O’s &lt;code&gt;rsparkling&lt;/code&gt;, an R package that works with H2O’s machine learning algorithm. With &lt;code&gt;sparklyr&lt;/code&gt; and &lt;code&gt;rsparkling&lt;/code&gt;, we have access to all the tools in H2O for analysis with R and Spark.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;connect-to-spark&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Connect to Spark&lt;/h1&gt;
+&lt;p&gt;Suppose that &lt;code&gt;sparklyr&lt;/code&gt; has been successfully installed in your &lt;code&gt;R&lt;/code&gt; environment. To get start with Spark using &lt;code&gt;sparklyr&lt;/code&gt; and a local cluster,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(sparklyr)
+spark_install()
+sc &amp;lt;- spark_connect(master = &amp;quot;local&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;or if a Spark cluster has been made available to you&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sc &amp;lt;- spark_connect(master = &amp;quot;&amp;lt;cluster-master&amp;gt;&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;When I run &lt;code&gt;spark_connect(master = &amp;quot;local&amp;quot;)&lt;/code&gt;, I got the error message&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;Java 9 is currently unsupported in Spark distributions unless you manually install Hadoop 2.8 and manually configure Spark. Please consider uninstalling Java 9 and reinstalling Java 8. To override this failure set &amp;#39;options(sparklyr.java9 = TRUE)&amp;#39;.&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That’s because on my Windows 10 laptop, my JAVA_HOME was set to &lt;code&gt;C:\Java\jdk&lt;/code&gt;, which has Version 11, in the system environment. I change it to&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;JAVA_HOME = &amp;quot;C:\Java\jre1.8.0_151&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note that my Java folder was in &lt;code&gt;C:\Program Files (x86)\..&lt;/code&gt; and it created an issue when connecting to Spark. So I moved the folder directly to &lt;code&gt;C:\..&lt;/code&gt; to solve the problem. Howoever, another error triggers when connecting to Spark&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;---- Output Log ----
+Error occurred during initialization of VM
+Could not reserve enough space for 2097152KB object heap&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It cannot allocate 2GB and this seems a common issue under Windows with a Java version using x86. To solve this, we can either install java x64 or reduce the default memory&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;config &amp;lt;- spark_config()
+config[[&amp;quot;sparklyr.shell.driver-memory&amp;quot;]] &amp;lt;- &amp;quot;512m&amp;quot;
+sc &amp;lt;- spark_connect(master = &amp;quot;local&amp;quot;, config = config)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, I get connected to Spark! Now I can run analyses and build models using Spark from R.&lt;/p&gt;
+&lt;p&gt;To monitor and analyze execution, we can go to the Spark’s web interface:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;spark_web(sc)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once we are done with analysis, we can disconnect spark,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;spark_disconnect(sc)&lt;/code&gt;&lt;/pre&gt;
+&lt;!--I&#39;m using a local cluster with Spark 2.4.0 and Hadoop 2.7 on Windows 10. However my computer has Java 11 installed and it gives me an error when running
+This means I have to either install Hadoop 2.8 or later or rollback Java to version 8. Emmm... 
+I chose the first option and installed Hadoop 2.9.1 in my computer, following the well written instructions by Parixit Odedara (https://exitcondition.com/install-hadoop-windows/). To unpack the compressed files of hadoop, I use the `tar` command in git bash 
+```
+tar xvf hadoop-2.9.1.tar.gz
+```
+When editing the PATH in the system environment setting, 
+```
+%JAVA_HOME%
+%HADOOP_HOME%
+%HADOOP_BIN%
+%HADOOP_HOME%\sbin
+```
+didn&#39;t work out for me, so I just set the complete paths in the PATH
+```
+C:\Program Files (x86)\Java\jdk
+C:\hadoop-2.9.1
+C:\hadoop-2.9.1\bin
+C:\hadoop-2.9.1\sbin
+```
+Similarly in the `etc\hadoop\hadoop-env.cmd` file, I set 
+```
+set JAVA_HOME=&#34;C:\Program Files (x86)\Java\jdk&#34;
+```
+--&gt;
+&lt;!--
+To check which versions are available or installed:
+```r
+spark_available_versions()
+spark_installed_versions()
+```
+--&gt;
+&lt;/div&gt;
+&lt;div id=&#34;data-analysis&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Data Analysis&lt;/h1&gt;
+&lt;div id=&#34;copy-data-to-spark&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Copy data to Spark&lt;/h2&gt;
+&lt;p&gt;The data set &lt;code&gt;mtcars&lt;/code&gt; is a dataframe available in &lt;code&gt;R&lt;/code&gt;. Run &lt;code&gt;?mtcars&lt;/code&gt; to see more details. To copy the data set into Apache Spark&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cars &amp;lt;- copy_to(sc, mtcars)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we can access the data that was copied into Spark from R using the &lt;code&gt;cars&lt;/code&gt; reference.&lt;/p&gt;
+&lt;p&gt;To read data from existing data sources in csv format and copy to Spark,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cars &amp;lt;- spark_read_csv(sc, &amp;quot;cars.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To export data as a csv file,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;spark_write_csv(cars, &amp;quot;cars.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Other formats like plain text, JSON, JDBC are supported as well.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;exploratory-data-analysis&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Exploratory data analysis&lt;/h2&gt;
+&lt;p&gt;When using Spark from R to analyze data, most regular &lt;code&gt;R&lt;/code&gt; functions, such as &lt;code&gt;nrow&lt;/code&gt;, won’t work directly on the Spark reference &lt;code&gt;cars&lt;/code&gt;. Instead, we can either use SQL through the &lt;code&gt;DBI&lt;/code&gt; package or use &lt;code&gt;dplyr&lt;/code&gt; (strongly preferred). Most of the data transformation made available by &lt;code&gt;dplyr&lt;/code&gt; to work with local data frames are also available to use with a Spark connection. This means that a general approach to learning &lt;code&gt;dplyr&lt;/code&gt; can be taken in order to gain more proficiency with data exploration and preparation with Spark. For example, to count how many records are available in &lt;code&gt;cars&lt;/code&gt;,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dplyr::count(cars)  # = nrow(mtcars)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To select columns, sample rows, and collect data from Spark,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_in_r &amp;lt;- dplyr::select(cars, hp, mpg) %&amp;gt;% 
+             dplyr::sample_n(100) %&amp;gt;% 
+             dplyr::collect()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then we can apply regular &lt;code&gt;R&lt;/code&gt; functions on the dataframe &lt;code&gt;df_in_r&lt;/code&gt;, for example&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dim(df_in_r)
+plot(df_in_r)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If a particular functionality is not available in Spark and no extension has been developed, we can distribute the R code across the Spark cluster. For example,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cars %&amp;gt;% spark_apply(nrow)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is a powerful tools but comes with additional complexity that we should only use as a last resort option. We should learn how to do proper data analysis and modeling without having to distribute custom R code across our cluster!&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;corrr&lt;/code&gt; package specializes in correlations. It contains friendly functions to prepare and visualize the results.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(corrr)
+cars %&amp;gt;%
+  correlate(use = &amp;quot;pairwise.complete.obs&amp;quot;, method = &amp;quot;pearson&amp;quot;) %&amp;gt;% 
+  shave() %&amp;gt;%
+  rplot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;sparklyr&lt;/code&gt; package also provides some functions for data transformation and exploratory data analysis. Those functions usually have &lt;code&gt;sdf_&lt;/code&gt; as a prefix.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;modeling&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Modeling&lt;/h2&gt;
+&lt;p&gt;Spark MLlib is the component of Spark that allows one to write high level code to perform machine learning tasks on distributed data. Sparklyr provides an interface to the ML algorithms that should be familiar to R users. For example, you can run a linear regression as follows:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model &amp;lt;- ml_linear_regression(cars, mpg ~ hp)
+model %&amp;gt;%
+  ml_predict(copy_to(sc, data.frame(hp = 250 + 10 * 1:10))) %&amp;gt;%
+  transmute(hp = hp, mpg = prediction) %&amp;gt;%
+  full_join(select(cars, hp, mpg)) %&amp;gt;%
+  collect() %&amp;gt;%
+  plot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To retrieve additional statistics from the model,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;broom::glance(model)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Spark provides a wide range of algorithms and feature transformers. Those functions usually have &lt;code&gt;ml_&lt;/code&gt; or &lt;code&gt;ft_&lt;/code&gt; as prefix.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;References&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://therinspark.com/starting.html#starting-spark-web-interface&#34; class=&#34;uri&#34;&gt;https://therinspark.com/starting.html#starting-spark-web-interface&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ARIMA</title>
+      <link>/post/2019-04-03-arima/</link>
+      <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-04-03-arima/</guid>
+      <description>
+
+
+&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;The ARIMA (autoregressive integrated moving average) models are also known as &lt;strong&gt;Box–Jenkins models&lt;/strong&gt;. ARIMA models are applied in some cases where data show evidence of non-stationarity, where an initial differencing step (corresponding to the “integrated” part of the model) can be applied one or more times to eliminate the non-stationarity.&lt;/p&gt;
+&lt;p&gt;The AR part of ARIMA indicates that the evolving variable of interest is regressed on its own lagged (i.e., prior) values. The MA part indicates that the regression error is actually a linear combination of error terms whose values occurred contemporaneously and at various times in the past. The I (for “integrated”) indicates that the data values have been replaced with the difference between their values and the previous values (and this differencing process may have been performed more than once).&lt;/p&gt;
+&lt;p&gt;When two out of the three model parameters are zeros, the model may be referred to based on the non-zero parameter, dropping “AR”, “I” or “MA” from the acronym describing the model. For example, &lt;span class=&#34;math inline&#34;&gt;\(ARIMA (1,0,0)\)&lt;/span&gt; is &lt;span class=&#34;math inline&#34;&gt;\(AR(1)\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,0)\)&lt;/span&gt; is &lt;span class=&#34;math inline&#34;&gt;\(I(1)\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,0,1)\)&lt;/span&gt; is &lt;span class=&#34;math inline&#34;&gt;\(MA(1)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;arp&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;AR(p)&lt;/h1&gt;
+&lt;p&gt;An autoregressive (AR) model is a representation of a type of random process. The AR model specifies that the output variable depends &lt;em&gt;linearly&lt;/em&gt; on its own previous values and on a stochastic term. In general, the AR model of order &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt;, i.e. &lt;span class=&#34;math inline&#34;&gt;\(AR(p)\)&lt;/span&gt;, is defined as &lt;span class=&#34;math display&#34;&gt;\[y_t = c + \sum_{i=1}^p \phi_i y_{t-i} +\epsilon_t,\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\phi_1,\cdots,\phi_p\)&lt;/span&gt; are the parameters, &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; is a constant, and &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\)&lt;/span&gt; is white noise often assumed following &lt;span class=&#34;math inline&#34;&gt;\(N(0,\sigma^2)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;For AR(1), &lt;span class=&#34;math inline&#34;&gt;\(|\phi|&amp;lt;1\)&lt;/span&gt; is necessary for the process to be stationary, such that &lt;span class=&#34;math display&#34;&gt;\[E(y_t) = E(y_{t-1}) = \mu,\]&lt;/span&gt; &lt;span class=&#34;math display&#34;&gt;\[\text{var}(y_t) = \text{var}(y_{t-1})=\frac{\sigma^2}{1-\phi^2} = \sigma_y^2,\]&lt;/span&gt; assuming &lt;span class=&#34;math inline&#34;&gt;\(y_{t}\)&lt;/span&gt;’s and &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\)&lt;/span&gt;’s are independent from each other. The condition &lt;span class=&#34;math inline&#34;&gt;\(|\phi|&amp;lt;1\)&lt;/span&gt; appears in the variance term so that &lt;span class=&#34;math inline&#34;&gt;\(\sigma_y^2\)&lt;/span&gt; is finite and positive. Note that &lt;span class=&#34;math inline&#34;&gt;\(\text{var}(y_t)\)&lt;/span&gt; in AR(1) is larger than in AR(0) i.e. regular linear models without autoregressions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;id&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;I(d)&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Differencing&lt;/strong&gt; in statistics is a transformation applied to time-series data in order to make it stationary. Differencing removes the changes in the level of a time series, eliminating trend and seasonality and consequently stabilizing the mean of the time series. The differenced data is then used for the estimation of an ARMA model.&lt;/p&gt;
+&lt;p&gt;The I(1) model of first-order differencing can be written as &lt;span class=&#34;math display&#34;&gt;\[D(y_t) = y_t - y_{t-1} = \epsilon_t,\]&lt;/span&gt; and the I(2) model of second-order differencing can be written as &lt;span class=&#34;math display&#34;&gt;\[D^2(y_t)  = D(y_t) - D(y_{t-1})  = y_t - 2y_{t-1}+y_{t-2} = \epsilon_t,\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(D()\)&lt;/span&gt; is the operator of differencing and &lt;span class=&#34;math inline&#34;&gt;\(D^d(y_t) = D^{d-1}(y_t) - D^{d-1}(y_{t-1})\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Another method of differencing data is &lt;strong&gt;seasonal differencing&lt;/strong&gt;, which involves computing the difference between an observation and the corresponding observation in the previous period. For example, &lt;span class=&#34;math display&#34;&gt;\[y&amp;#39;_t = y_t - y_{t-s},\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; is the duration of season. We denote it as &lt;span class=&#34;math inline&#34;&gt;\(D_s(y_t)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;maq&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;MA(q)&lt;/h1&gt;
+&lt;p&gt;The moving average model of order &lt;span class=&#34;math inline&#34;&gt;\(q\)&lt;/span&gt;, i.e. &lt;span class=&#34;math inline&#34;&gt;\(MA(q)\)&lt;/span&gt;, is given as &lt;span class=&#34;math display&#34;&gt;\[y_t = \mu + \epsilon_t + \sum_{i=1}^q\theta_i\epsilon_{t-i},\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\theta_1,\cdots,\theta_q\)&lt;/span&gt; are the parameters, &lt;span class=&#34;math inline&#34;&gt;\(\mu\)&lt;/span&gt; is the expectation of &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t, \epsilon_{t-1},\cdots\)&lt;/span&gt; are white noise error terms.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;arimapdq&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;ARIMA(p,d,q)&lt;/h1&gt;
+&lt;div id=&#34;non-seasonal-arima&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Non-seasonal ARIMA&lt;/h2&gt;
+&lt;p&gt;Non-seasonal ARIMA models are generally denoted &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(p,d,q)\)&lt;/span&gt; where parameters &lt;span class=&#34;math inline&#34;&gt;\(p, d, q\)&lt;/span&gt; are non-negative integers, &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; is the order (number of time lags) of the autoregressive model, &lt;span class=&#34;math inline&#34;&gt;\(d\)&lt;/span&gt; is the degree of differencing (the number of times the data have had past values subtracted), and &lt;span class=&#34;math inline&#34;&gt;\(q\)&lt;/span&gt; is the order of the moving-average model. In general, an &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(p,d, q)\)&lt;/span&gt; model is given as &lt;span class=&#34;math display&#34;&gt;\[D^d(y_t) = \delta + \sum_{i=1}^p\phi_i D^d(y_{t-i}) + \epsilon_t +
+\sum_{i=1}^q \theta_i \epsilon_{t-i},\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(D^d(y_t)\)&lt;/span&gt; is the &lt;span class=&#34;math inline&#34;&gt;\(d\)&lt;/span&gt;-order difference of &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;seasonal-arima&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Seasonal ARIMA&lt;/h2&gt;
+&lt;p&gt;Seasonal ARIMA models are usually denoted &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(p,d,q)\times(P,D,Q)_s\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; refers to the time span of repeating seasonal pattern, and the uppercase &lt;span class=&#34;math inline&#34;&gt;\(P,D,Q\)&lt;/span&gt; refer to the autoregressive, differencing, and moving average terms for the seasonal part of the ARIMA model.&lt;/p&gt;
+&lt;p&gt;The non-seasonal components are the same as in non-seasonal ARIMA. As for the seasonal components, we have, for example,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Seasonal AR: &lt;span class=&#34;math inline&#34;&gt;\(y_t = c + \sum_{i=1}^P\psi_i y_{t-si}\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Seasonal MA: &lt;span class=&#34;math inline&#34;&gt;\(y_t = \mu+ \epsilon_t + \sum_{i=1}^Q\eta_i\epsilon_{t-si}\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Seasonal I: &lt;span class=&#34;math inline&#34;&gt;\(D^D_s(y_t) = D^{D-1}_s(y_t)- D_s^{D-1}(y_{t-s})\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;examples&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Examples&lt;/h2&gt;
+&lt;p&gt;Some well-known special cases arise naturally or are mathematically equivalent to other popular forecasting models. For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,0)\)&lt;/span&gt; model (or &lt;span class=&#34;math inline&#34;&gt;\(I(1)\)&lt;/span&gt; model) is given by &lt;span class=&#34;math inline&#34;&gt;\(X_{t}=X_{t-1}+\epsilon_{t}\)&lt;/span&gt;, which is simply a random walk.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,0)\)&lt;/span&gt; with a constant, given by &lt;span class=&#34;math inline&#34;&gt;\(X_{t}=c+X_{t-1}+\epsilon_{t}\)&lt;/span&gt;, which is a random walk with drift.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,0,0)\)&lt;/span&gt; model is a white noise model.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,2)\)&lt;/span&gt; model is a Damped Holt’s model.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,1)\)&lt;/span&gt; model without constant is a &lt;strong&gt;basic exponential smoothing model&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,2,2)\)&lt;/span&gt; model is given by &lt;span class=&#34;math inline&#34;&gt;\(X_{t}=2X_{t-1}-X_{t-2}+(\alpha +\beta -2)\epsilon_{t-1}+(1-\alpha )\epsilon_{t-2}+\epsilon_{t}\)&lt;/span&gt;, which is equivalent to Holt’s linear method with additive errors, or &lt;strong&gt;second-order exponential smoothing&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
@@ -228,11 +420,14 @@ ss &amp;lt;- bsts::AddSeasonal(ss, y, nseasons = 7, season.duration = 24)&lt;/co
 &amp;amp; y_t = \gamma_t +\epsilon_t, \\
 &amp;amp; \gamma_{j, t+1} = \gamma_{j,t}\times \cos(\lambda_j) - \gamma^*_{j,t}\times \sin(\lambda_j) + \omega_{j, t},\\
 &amp;amp; \gamma^*_{j, t+1} = \gamma^*_{j,t}\times \cos(\lambda_j) - \gamma_{j,t}\times \sin(\lambda_j) + \omega^*_{j,t},\\
-\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\gamma_t = \sum_{j=1}^{k}\gamma_{j,t}\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\lambda_j = 2\pi j/s\)&lt;/span&gt; is the &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt;-th seasonal frequency, &lt;span class=&#34;math inline&#34;&gt;\(j = 1,\cdots, k\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; is the number of time steps required for the longest cycle to repeat (e.g. number of seasosn).&lt;/p&gt;
+\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\gamma_t = \sum_{j=1}^{k}\gamma_{j,t}\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\lambda_j = 2\pi j/s\)&lt;/span&gt; is the &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt;-th seasonal frequency, &lt;span class=&#34;math inline&#34;&gt;\(j = 1,\cdots, k\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; is the number of time steps required for the longest cycle to repeat (i.e. number of seasosns).&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
 ss &amp;lt;- list()
 # The harmonic method is strongly preferred to the direct method.
-ss &amp;lt;- bsts::AddTrig(ss, y, period = s, frequencies = 1:k, method = &amp;quot;harmonic&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+# For a time series collected hourly with daily 
+# seasonality, we can try 
+# the component below, where frequencies = 1:4 specifies the frequencis of sin, cos functions we will use.
+ss &amp;lt;- bsts::AddTrig(ss, y, period = 24, frequencies = 1:4, method = &amp;quot;harmonic&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;linear-regression&#34; class=&#34;section level2&#34;&gt;
@@ -298,7 +493,7 @@ bsts::bsts(y ~ x2, ss, niter = 500)&lt;/code&gt;&lt;/pre&gt;
 &lt;h1&gt;Model diagnostic&lt;/h1&gt;
 &lt;div id=&#34;prediction-errors&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Prediction errors&lt;/h2&gt;
-&lt;p&gt;As part of the model fitting process, the algorithm in &lt;em&gt;bsts&lt;/em&gt; generates the one-step-ahead prediction errors &lt;span class=&#34;math inline&#34;&gt;\(y_t−E(y_t|Y_{t−1},\theta)\)&lt;/span&gt; , where &lt;span class=&#34;math inline&#34;&gt;\(Y_{t−1}=y_1,\cdots,y_{t−1}\)&lt;/span&gt;, and the vector of model parameters &lt;span class=&#34;math inline&#34;&gt;\(\theta\)&lt;/span&gt; is fixed at its current value in the MCMC algorithm. The one-step-ahead prediction errors can be obtained from the bsts model by calling&lt;/p&gt;
+&lt;p&gt;As part of the model fitting process, the algorithm in &lt;em&gt;bsts&lt;/em&gt; generates the one-step-ahead prediction errors &lt;span class=&#34;math inline&#34;&gt;\(y_tbE(y_t|Y_{tb1},\theta)\)&lt;/span&gt; , where &lt;span class=&#34;math inline&#34;&gt;\(Y_{tb1}=y_1,\cdots,y_{tb1}\)&lt;/span&gt;, and the vector of model parameters &lt;span class=&#34;math inline&#34;&gt;\(\theta\)&lt;/span&gt; is fixed at its current value in the MCMC algorithm. The one-step-ahead prediction errors can be obtained from the bsts model by calling&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;bsts.prediction.errors(model1)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The one step prediction errors are a useful diagnostic for comparing several bsts models that have been fit to the same data. They are used to implement the function &lt;code&gt;CompareBstsModels&lt;/code&gt;, which is called as shown below.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;CompareBstsModels(list(&amp;quot;Model 1&amp;quot; = model1,
@@ -316,7 +511,7 @@ bsts::bsts(y ~ x2, ss, niter = 500)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;
-&lt;p&gt;STEVEN L. SCOTT. (2017). Fitting Bayesian structural time series with the bsts R package. &lt;a href=&#34;http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html&#34; class=&#34;uri&#34;&gt;http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Steven L. Scott. (2017). Fitting Bayesian structural time series with the bsts R package. &lt;a href=&#34;http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html&#34; class=&#34;uri&#34;&gt;http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Chatfield, Chris. (2016). The analysis of time series: an introduction. CRC press.&lt;/p&gt;
 &lt;p&gt;Montgomery, Douglas C., Cheryl L. Jennings, and Murat Kulahci. (2015). Introduction to time series analysis and forecasting. John Wiley &amp;amp; Sons.&lt;/p&gt;
 &lt;/div&gt;

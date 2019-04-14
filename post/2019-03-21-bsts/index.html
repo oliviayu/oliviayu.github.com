@@ -478,11 +478,14 @@ ss &lt;- bsts::AddSeasonal(ss, y, nseasons = 7, season.duration = 24)</code></pr
 &amp; y_t = \gamma_t +\epsilon_t, \\
 &amp; \gamma_{j, t+1} = \gamma_{j,t}\times \cos(\lambda_j) - \gamma^*_{j,t}\times \sin(\lambda_j) + \omega_{j, t},\\
 &amp; \gamma^*_{j, t+1} = \gamma^*_{j,t}\times \cos(\lambda_j) - \gamma_{j,t}\times \sin(\lambda_j) + \omega^*_{j,t},\\
-\end{split}\]</span> where <span class="math inline">\(\gamma_t = \sum_{j=1}^{k}\gamma_{j,t}\)</span>, <span class="math inline">\(\lambda_j = 2\pi j/s\)</span> is the <span class="math inline">\(j\)</span>-th seasonal frequency, <span class="math inline">\(j = 1,\cdots, k\)</span>, and <span class="math inline">\(s\)</span> is the number of time steps required for the longest cycle to repeat (e.g. number of seasosn).</p>
+\end{split}\]</span> where <span class="math inline">\(\gamma_t = \sum_{j=1}^{k}\gamma_{j,t}\)</span>, <span class="math inline">\(\lambda_j = 2\pi j/s\)</span> is the <span class="math inline">\(j\)</span>-th seasonal frequency, <span class="math inline">\(j = 1,\cdots, k\)</span>, and <span class="math inline">\(s\)</span> is the number of time steps required for the longest cycle to repeat (i.e. number of seasosns).</p>
 <pre class="r"><code># R code
 ss &lt;- list()
 # The harmonic method is strongly preferred to the direct method.
-ss &lt;- bsts::AddTrig(ss, y, period = s, frequencies = 1:k, method = &quot;harmonic&quot;)</code></pre>
+# For a time series collected hourly with daily 
+# seasonality, we can try 
+# the component below, where frequencies = 1:4 specifies the frequencis of sin, cos functions we will use.
+ss &lt;- bsts::AddTrig(ss, y, period = 24, frequencies = 1:4, method = &quot;harmonic&quot;)</code></pre>
 </div>
 </div>
 <div id="linear-regression" class="section level2">
@@ -548,7 +551,7 @@ bsts::bsts(y ~ x2, ss, niter = 500)</code></pre>
 <h1>Model diagnostic</h1>
 <div id="prediction-errors" class="section level2">
 <h2>Prediction errors</h2>
-<p>As part of the model fitting process, the algorithm in <em>bsts</em> generates the one-step-ahead prediction errors <span class="math inline">\(y_t−E(y_t|Y_{t−1},\theta)\)</span> , where <span class="math inline">\(Y_{t−1}=y_1,\cdots,y_{t−1}\)</span>, and the vector of model parameters <span class="math inline">\(\theta\)</span> is fixed at its current value in the MCMC algorithm. The one-step-ahead prediction errors can be obtained from the bsts model by calling</p>
+<p>As part of the model fitting process, the algorithm in <em>bsts</em> generates the one-step-ahead prediction errors <span class="math inline">\(y_tbE(y_t|Y_{tb1},\theta)\)</span> , where <span class="math inline">\(Y_{tb1}=y_1,\cdots,y_{tb1}\)</span>, and the vector of model parameters <span class="math inline">\(\theta\)</span> is fixed at its current value in the MCMC algorithm. The one-step-ahead prediction errors can be obtained from the bsts model by calling</p>
 <pre class="r"><code>bsts.prediction.errors(model1)</code></pre>
 <p>The one step prediction errors are a useful diagnostic for comparing several bsts models that have been fit to the same data. They are used to implement the function <code>CompareBstsModels</code>, which is called as shown below.</p>
 <pre class="r"><code>CompareBstsModels(list(&quot;Model 1&quot; = model1,
@@ -566,7 +569,7 @@ bsts::bsts(y ~ x2, ss, niter = 500)</code></pre>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
-<p>STEVEN L. SCOTT. (2017). Fitting Bayesian structural time series with the bsts R package. <a href="http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html" class="uri">http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html</a>.</p>
+<p>Steven L. Scott. (2017). Fitting Bayesian structural time series with the bsts R package. <a href="http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html" class="uri">http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html</a>.</p>
 <p>Chatfield, Chris. (2016). The analysis of time series: an introduction. CRC press.</p>
 <p>Montgomery, Douglas C., Cheryl L. Jennings, and Murat Kulahci. (2015). Introduction to time series analysis and forecasting. John Wiley &amp; Sons.</p>
 </div>
@@ -644,6 +647,23 @@ bsts::bsts(y ~ x2, ss, niter = 500)</code></pre>
       <li>
         <a itemprop="sameAs" href="https://github.com/oliviayu" target="_blank" rel="noopener">
           <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.linkedin.com/in/tingting-yu-40852594/" target="_blank" rel="noopener">
+          <i class="fab fa-linkedin"></i>
         </a>
       </li>
       

@@ -28,10 +28,11 @@
   
     
   
-  <meta name="description" content="">
+  <meta name="description" content="Introduction The ARIMA (autoregressive integrated moving average) models are also known as Box–Jenkins models. ARIMA models are applied in some cases where data show evidence of non-stationarity, where an initial differencing step (corresponding to the “integrated” part of the model) can be applied one or more times to eliminate the non-stationarity.
+The AR part of ARIMA indicates that the evolving variable of interest is regressed on its own lagged (i.">
 
   
-  <link rel="alternate" hreflang="en-us" href="/experience/experience/">
+  <link rel="alternate" hreflang="en-us" href="/post/2019-04-03-arima/">
 
   
 
@@ -106,7 +107,7 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/experience/experience/">
+  <link rel="canonical" href="/post/2019-04-03-arima/">
 
   
   
@@ -118,13 +119,15 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Tingting&#39;s Blog">
-  <meta property="og:url" content="/experience/experience/">
-  <meta property="og:title" content="Experience | Tingting&#39;s Blog">
-  <meta property="og:description" content=""><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:url" content="/post/2019-04-03-arima/">
+  <meta property="og:title" content="ARIMA | Tingting&#39;s Blog">
+  <meta property="og:description" content="Introduction The ARIMA (autoregressive integrated moving average) models are also known as Box–Jenkins models. ARIMA models are applied in some cases where data show evidence of non-stationarity, where an initial differencing step (corresponding to the “integrated” part of the model) can be applied one or more times to eliminate the non-stationarity.
+The AR part of ARIMA indicates that the evolving variable of interest is regressed on its own lagged (i."><meta property="og:image" content="/img/icon-192.png">
   <meta property="og:locale" content="en-us">
   
+  <meta property="article:published_time" content="2019-04-03T00:00:00&#43;00:00">
   
-  
+  <meta property="article:modified_time" content="2019-04-03T00:00:00&#43;00:00">
   
 
   
@@ -157,7 +160,7 @@
 
   
 
-  <title>Experience | Tingting&#39;s Blog</title>
+  <title>ARIMA | Tingting&#39;s Blog</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
@@ -269,7 +272,7 @@
   
   
 <div class="article-container pt-3">
-  <h1 itemprop="name">Experience</h1>
+  <h1 itemprop="name">ARIMA</h1>
 
   
 
@@ -278,8 +281,8 @@
 
 
 
-<meta content="" itemprop="datePublished">
-<meta content="" itemprop="dateModified">
+<meta content="2019-04-03 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2019-04-03 00:00:00 &#43;0000 UTC" itemprop="dateModified">
 
 <div class="article-metadata">
 
@@ -292,7 +295,7 @@
     
       
     
-    <time>0001-01-01</time>
+    <time>2019-04-03</time>
   </span>
   
 
@@ -337,9 +340,74 @@
 
     <div class="article-style" itemprop="articleBody">
       
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The ARIMA (autoregressive integrated moving average) models are also known as <strong>Box–Jenkins models</strong>. ARIMA models are applied in some cases where data show evidence of non-stationarity, where an initial differencing step (corresponding to the “integrated” part of the model) can be applied one or more times to eliminate the non-stationarity.</p>
+<p>The AR part of ARIMA indicates that the evolving variable of interest is regressed on its own lagged (i.e., prior) values. The MA part indicates that the regression error is actually a linear combination of error terms whose values occurred contemporaneously and at various times in the past. The I (for “integrated”) indicates that the data values have been replaced with the difference between their values and the previous values (and this differencing process may have been performed more than once).</p>
+<p>When two out of the three model parameters are zeros, the model may be referred to based on the non-zero parameter, dropping “AR”, “I” or “MA” from the acronym describing the model. For example, <span class="math inline">\(ARIMA (1,0,0)\)</span> is <span class="math inline">\(AR(1)\)</span>, <span class="math inline">\(ARIMA(0,1,0)\)</span> is <span class="math inline">\(I(1)\)</span>, and <span class="math inline">\(ARIMA(0,0,1)\)</span> is <span class="math inline">\(MA(1)\)</span>.</p>
+</div>
+<div id="arp" class="section level1">
+<h1>AR(p)</h1>
+<p>An autoregressive (AR) model is a representation of a type of random process. The AR model specifies that the output variable depends <em>linearly</em> on its own previous values and on a stochastic term. In general, the AR model of order <span class="math inline">\(p\)</span>, i.e. <span class="math inline">\(AR(p)\)</span>, is defined as <span class="math display">\[y_t = c + \sum_{i=1}^p \phi_i y_{t-i} +\epsilon_t,\]</span> where <span class="math inline">\(\phi_1,\cdots,\phi_p\)</span> are the parameters, <span class="math inline">\(c\)</span> is a constant, and <span class="math inline">\(\epsilon_t\)</span> is white noise often assumed following <span class="math inline">\(N(0,\sigma^2)\)</span>.</p>
+<p>For AR(1), <span class="math inline">\(|\phi|&lt;1\)</span> is necessary for the process to be stationary, such that <span class="math display">\[E(y_t) = E(y_{t-1}) = \mu,\]</span> <span class="math display">\[\text{var}(y_t) = \text{var}(y_{t-1})=\frac{\sigma^2}{1-\phi^2} = \sigma_y^2,\]</span> assuming <span class="math inline">\(y_{t}\)</span>’s and <span class="math inline">\(\epsilon_t\)</span>’s are independent from each other. The condition <span class="math inline">\(|\phi|&lt;1\)</span> appears in the variance term so that <span class="math inline">\(\sigma_y^2\)</span> is finite and positive. Note that <span class="math inline">\(\text{var}(y_t)\)</span> in AR(1) is larger than in AR(0) i.e. regular linear models without autoregressions.</p>
+</div>
+<div id="id" class="section level1">
+<h1>I(d)</h1>
+<p><strong>Differencing</strong> in statistics is a transformation applied to time-series data in order to make it stationary. Differencing removes the changes in the level of a time series, eliminating trend and seasonality and consequently stabilizing the mean of the time series. The differenced data is then used for the estimation of an ARMA model.</p>
+<p>The I(1) model of first-order differencing can be written as <span class="math display">\[D(y_t) = y_t - y_{t-1} = \epsilon_t,\]</span> and the I(2) model of second-order differencing can be written as <span class="math display">\[D^2(y_t)  = D(y_t) - D(y_{t-1})  = y_t - 2y_{t-1}+y_{t-2} = \epsilon_t,\]</span> where <span class="math inline">\(D()\)</span> is the operator of differencing and <span class="math inline">\(D^d(y_t) = D^{d-1}(y_t) - D^{d-1}(y_{t-1})\)</span>.</p>
+<p>Another method of differencing data is <strong>seasonal differencing</strong>, which involves computing the difference between an observation and the corresponding observation in the previous period. For example, <span class="math display">\[y&#39;_t = y_t - y_{t-s},\]</span> where <span class="math inline">\(s\)</span> is the duration of season. We denote it as <span class="math inline">\(D_s(y_t)\)</span>.</p>
+</div>
+<div id="maq" class="section level1">
+<h1>MA(q)</h1>
+<p>The moving average model of order <span class="math inline">\(q\)</span>, i.e. <span class="math inline">\(MA(q)\)</span>, is given as <span class="math display">\[y_t = \mu + \epsilon_t + \sum_{i=1}^q\theta_i\epsilon_{t-i},\]</span> where <span class="math inline">\(\theta_1,\cdots,\theta_q\)</span> are the parameters, <span class="math inline">\(\mu\)</span> is the expectation of <span class="math inline">\(y_t\)</span>, and <span class="math inline">\(\epsilon_t, \epsilon_{t-1},\cdots\)</span> are white noise error terms.</p>
+</div>
+<div id="arimapdq" class="section level1">
+<h1>ARIMA(p,d,q)</h1>
+<div id="non-seasonal-arima" class="section level2">
+<h2>Non-seasonal ARIMA</h2>
+<p>Non-seasonal ARIMA models are generally denoted <span class="math inline">\(ARIMA(p,d,q)\)</span> where parameters <span class="math inline">\(p, d, q\)</span> are non-negative integers, <span class="math inline">\(p\)</span> is the order (number of time lags) of the autoregressive model, <span class="math inline">\(d\)</span> is the degree of differencing (the number of times the data have had past values subtracted), and <span class="math inline">\(q\)</span> is the order of the moving-average model. In general, an <span class="math inline">\(ARIMA(p,d, q)\)</span> model is given as <span class="math display">\[D^d(y_t) = \delta + \sum_{i=1}^p\phi_i D^d(y_{t-i}) + \epsilon_t +
+\sum_{i=1}^q \theta_i \epsilon_{t-i},\]</span> where <span class="math inline">\(D^d(y_t)\)</span> is the <span class="math inline">\(d\)</span>-order difference of <span class="math inline">\(y_t\)</span>.</p>
+</div>
+<div id="seasonal-arima" class="section level2">
+<h2>Seasonal ARIMA</h2>
+<p>Seasonal ARIMA models are usually denoted <span class="math inline">\(ARIMA(p,d,q)\times(P,D,Q)_s\)</span>, where <span class="math inline">\(s\)</span> refers to the time span of repeating seasonal pattern, and the uppercase <span class="math inline">\(P,D,Q\)</span> refer to the autoregressive, differencing, and moving average terms for the seasonal part of the ARIMA model.</p>
+<p>The non-seasonal components are the same as in non-seasonal ARIMA. As for the seasonal components, we have, for example,</p>
+<ul>
+<li><p>Seasonal AR: <span class="math inline">\(y_t = c + \sum_{i=1}^P\psi_i y_{t-si}\)</span></p></li>
+<li><p>Seasonal MA: <span class="math inline">\(y_t = \mu+ \epsilon_t + \sum_{i=1}^Q\eta_i\epsilon_{t-si}\)</span></p></li>
+<li><p>Seasonal I: <span class="math inline">\(D^D_s(y_t) = D^{D-1}_s(y_t)- D_s^{D-1}(y_{t-s})\)</span></p></li>
+</ul>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<p>Some well-known special cases arise naturally or are mathematically equivalent to other popular forecasting models. For example:</p>
+<ul>
+<li><p>An <span class="math inline">\(ARIMA(0,1,0)\)</span> model (or <span class="math inline">\(I(1)\)</span> model) is given by <span class="math inline">\(X_{t}=X_{t-1}+\epsilon_{t}\)</span>, which is simply a random walk.</p></li>
+<li><p>An <span class="math inline">\(ARIMA(0,1,0)\)</span> with a constant, given by <span class="math inline">\(X_{t}=c+X_{t-1}+\epsilon_{t}\)</span>, which is a random walk with drift.</p></li>
+<li><p>An <span class="math inline">\(ARIMA(0,0,0)\)</span> model is a white noise model.</p></li>
+<li><p>An <span class="math inline">\(ARIMA(0,1,2)\)</span> model is a Damped Holt’s model.</p></li>
+<li><p>An <span class="math inline">\(ARIMA(0,1,1)\)</span> model without constant is a <strong>basic exponential smoothing model</strong>.</p></li>
+<li><p>An <span class="math inline">\(ARIMA(0,2,2)\)</span> model is given by <span class="math inline">\(X_{t}=2X_{t-1}-X_{t-2}+(\alpha +\beta -2)\epsilon_{t-1}+(1-\alpha )\epsilon_{t-2}+\epsilon_{t}\)</span>, which is equivalent to Holt’s linear method with additive errors, or <strong>second-order exponential smoothing</strong>.</p></li>
+</ul>
+</div>
+</div>
+
     </div>
 
     
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/arima/">arima</a>
+  
+  <a class="badge badge-light" href="/tags/time-series/">time-series</a>
+  
+</div>
+
+
 
 
     
@@ -426,6 +494,16 @@
 
 
       
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/2019-03-21-bsts/">Structural Time-Series Models</a></li>
+          
+        </ul>
+      </div>
       
     
 

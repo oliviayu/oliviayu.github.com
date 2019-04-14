@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.1.0">
+  <meta name="generator" content="Hugo 0.54.0" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Tingting Yu">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction The R programming language, along with RStudio, has become one of the most popular tools for data analysis as it contains a large amount of open-source packages developed by a community of statisticians. However, R or RStudio is not ideal for Big Data analysis as mostly the data would not fit into R memory. On the other hand, Spark has become the leading platform for big-data analytics. It works with the system to distribute data across clusters and process data in parallel.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/2019-04-10-sparklyr/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Tingting&#39;s Blog">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Tingting&#39;s Blog">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/2019-04-10-sparklyr/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Tingting&#39;s Blog">
+  <meta property="og:url" content="/post/2019-04-10-sparklyr/">
+  <meta property="og:title" content="sparklyr (Spark in R) | Tingting&#39;s Blog">
+  <meta property="og:description" content="Introduction The R programming language, along with RStudio, has become one of the most popular tools for data analysis as it contains a large amount of open-source packages developed by a community of statisticians. However, R or RStudio is not ideal for Big Data analysis as mostly the data would not fit into R memory. On the other hand, Spark has become the leading platform for big-data analytics. It works with the system to distribute data across clusters and process data in parallel."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2019-04-10T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2019-04-10T00:00:00&#43;00:00">
+  
+
+  
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+<script>
+  window.addEventListener("load", function(){
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": {
+          "background": "#2962ff",
+          "text": "#fff"
+        },
+        "button": {
+          "background": "#fff",
+          "text": "#2962ff"
+        }
+      },
+      "theme": "classic",
+      "content": {
+        "message": "This website uses cookies to ensure you get the best experience on our website.",
+        "dismiss": "Got it!",
+        "link": "Learn more",
+        "href": "https://cookies.insites.com"
+      }
+    })});
+</script>
+
+
+  
+
+  <title>sparklyr (Spark in R) | Tingting&#39;s Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  
+<aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+      
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Tingting&#39;s Blog</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/post/">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">sparklyr (Spark in R)</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2019-04-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2019-04-10 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>2019-04-10</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+    
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The <code>R</code> programming language, along with <code>RStudio</code>, has become one of the most popular tools for data analysis as it contains a large amount of open-source packages developed by a community of statisticians. However, <code>R</code> or <code>RStudio</code> is not ideal for Big Data analysis as mostly the data would not fit into R memory. On the other hand, Spark has become the leading platform for big-data analytics. It works with the system to distribute data across clusters and process data in parallel. Moreover it provides native bindings for different languages such as Java, Python, Scala, and R.</p>
+<p><code>sparklyr</code> is an R package that allows us to analyze data in Spark from R. It supports <code>dplyr</code>, a popular tool for working with data frame like objects both in memory and out of memory, and many machine learning algorithms to run classifiers, regressions, and so on in Spark. It is extensible that you can create R packages that depend on <code>sparklyr</code> to call the full Spark API, such as H2O’s <code>rsparkling</code>, an R package that works with H2O’s machine learning algorithm. With <code>sparklyr</code> and <code>rsparkling</code>, we have access to all the tools in H2O for analysis with R and Spark.</p>
+</div>
+<div id="connect-to-spark" class="section level1">
+<h1>Connect to Spark</h1>
+<p>Suppose that <code>sparklyr</code> has been successfully installed in your <code>R</code> environment. To get start with Spark using <code>sparklyr</code> and a local cluster,</p>
+<pre class="r"><code>library(sparklyr)
+spark_install()
+sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
+<p>or if a Spark cluster has been made available to you</p>
+<pre class="r"><code>sc &lt;- spark_connect(master = &quot;&lt;cluster-master&gt;&quot;)</code></pre>
+<p>When I run <code>spark_connect(master = &quot;local&quot;)</code>, I got the error message</p>
+<pre><code>&quot;Java 9 is currently unsupported in Spark distributions unless you manually install Hadoop 2.8 and manually configure Spark. Please consider uninstalling Java 9 and reinstalling Java 8. To override this failure set &#39;options(sparklyr.java9 = TRUE)&#39;.&quot;</code></pre>
+<p>That’s because on my Windows 10 laptop, my JAVA_HOME was set to <code>C:\Java\jdk</code>, which has Version 11, in the system environment. I change it to</p>
+<pre><code>JAVA_HOME = &quot;C:\Java\jre1.8.0_151&quot;</code></pre>
+<p>Note that my Java folder was in <code>C:\Program Files (x86)\..</code> and it created an issue when connecting to Spark. So I moved the folder directly to <code>C:\..</code> to solve the problem. Howoever, another error triggers when connecting to Spark</p>
+<pre><code>---- Output Log ----
+Error occurred during initialization of VM
+Could not reserve enough space for 2097152KB object heap</code></pre>
+<p>It cannot allocate 2GB and this seems a common issue under Windows with a Java version using x86. To solve this, we can either install java x64 or reduce the default memory</p>
+<pre class="r"><code>config &lt;- spark_config()
+config[[&quot;sparklyr.shell.driver-memory&quot;]] &lt;- &quot;512m&quot;
+sc &lt;- spark_connect(master = &quot;local&quot;, config = config)</code></pre>
+<p>Finally, I get connected to Spark! Now I can run analyses and build models using Spark from R.</p>
+<p>To monitor and analyze execution, we can go to the Spark’s web interface:</p>
+<pre class="r"><code>spark_web(sc)</code></pre>
+<p>Once we are done with analysis, we can disconnect spark,</p>
+<pre class="r"><code>spark_disconnect(sc)</code></pre>
+<!--I'm using a local cluster with Spark 2.4.0 and Hadoop 2.7 on Windows 10. However my computer has Java 11 installed and it gives me an error when running
+This means I have to either install Hadoop 2.8 or later or rollback Java to version 8. Emmm... 
+I chose the first option and installed Hadoop 2.9.1 in my computer, following the well written instructions by Parixit Odedara (https://exitcondition.com/install-hadoop-windows/). To unpack the compressed files of hadoop, I use the `tar` command in git bash 
+```
+tar xvf hadoop-2.9.1.tar.gz
+```
+When editing the PATH in the system environment setting, 
+```
+%JAVA_HOME%
+%HADOOP_HOME%
+%HADOOP_BIN%
+%HADOOP_HOME%\sbin
+```
+didn't work out for me, so I just set the complete paths in the PATH
+```
+C:\Program Files (x86)\Java\jdk
+C:\hadoop-2.9.1
+C:\hadoop-2.9.1\bin
+C:\hadoop-2.9.1\sbin
+```
+Similarly in the `etc\hadoop\hadoop-env.cmd` file, I set 
+```
+set JAVA_HOME="C:\Program Files (x86)\Java\jdk"
+```
+-->
+<!--
+To check which versions are available or installed:
+```r
+spark_available_versions()
+spark_installed_versions()
+```
+-->
+</div>
+<div id="data-analysis" class="section level1">
+<h1>Data Analysis</h1>
+<div id="copy-data-to-spark" class="section level2">
+<h2>Copy data to Spark</h2>
+<p>The data set <code>mtcars</code> is a dataframe available in <code>R</code>. Run <code>?mtcars</code> to see more details. To copy the data set into Apache Spark</p>
+<pre class="r"><code>cars &lt;- copy_to(sc, mtcars)</code></pre>
+<p>Now we can access the data that was copied into Spark from R using the <code>cars</code> reference.</p>
+<p>To read data from existing data sources in csv format and copy to Spark,</p>
+<pre class="r"><code>cars &lt;- spark_read_csv(sc, &quot;cars.csv&quot;)</code></pre>
+<p>To export data as a csv file,</p>
+<pre class="r"><code>spark_write_csv(cars, &quot;cars.csv&quot;)</code></pre>
+<p>Other formats like plain text, JSON, JDBC are supported as well.</p>
+</div>
+<div id="exploratory-data-analysis" class="section level2">
+<h2>Exploratory data analysis</h2>
+<p>When using Spark from R to analyze data, most regular <code>R</code> functions, such as <code>nrow</code>, won’t work directly on the Spark reference <code>cars</code>. Instead, we can either use SQL through the <code>DBI</code> package or use <code>dplyr</code> (strongly preferred). Most of the data transformation made available by <code>dplyr</code> to work with local data frames are also available to use with a Spark connection. This means that a general approach to learning <code>dplyr</code> can be taken in order to gain more proficiency with data exploration and preparation with Spark. For example, to count how many records are available in <code>cars</code>,</p>
+<pre class="r"><code>dplyr::count(cars)  # = nrow(mtcars)</code></pre>
+<p>To select columns, sample rows, and collect data from Spark,</p>
+<pre class="r"><code>df_in_r &lt;- dplyr::select(cars, hp, mpg) %&gt;% 
+             dplyr::sample_n(100) %&gt;% 
+             dplyr::collect()</code></pre>
+<p>Then we can apply regular <code>R</code> functions on the dataframe <code>df_in_r</code>, for example</p>
+<pre class="r"><code>dim(df_in_r)
+plot(df_in_r)</code></pre>
+<p>If a particular functionality is not available in Spark and no extension has been developed, we can distribute the R code across the Spark cluster. For example,</p>
+<pre class="r"><code>cars %&gt;% spark_apply(nrow)</code></pre>
+<p>This is a powerful tools but comes with additional complexity that we should only use as a last resort option. We should learn how to do proper data analysis and modeling without having to distribute custom R code across our cluster!</p>
+<p>The <code>corrr</code> package specializes in correlations. It contains friendly functions to prepare and visualize the results.</p>
+<pre class="r"><code>library(corrr)
+cars %&gt;%
+  correlate(use = &quot;pairwise.complete.obs&quot;, method = &quot;pearson&quot;) %&gt;% 
+  shave() %&gt;%
+  rplot()</code></pre>
+<p>The <code>sparklyr</code> package also provides some functions for data transformation and exploratory data analysis. Those functions usually have <code>sdf_</code> as a prefix.</p>
+</div>
+<div id="modeling" class="section level2">
+<h2>Modeling</h2>
+<p>Spark MLlib is the component of Spark that allows one to write high level code to perform machine learning tasks on distributed data. Sparklyr provides an interface to the ML algorithms that should be familiar to R users. For example, you can run a linear regression as follows:</p>
+<pre class="r"><code>model &lt;- ml_linear_regression(cars, mpg ~ hp)
+model %&gt;%
+  ml_predict(copy_to(sc, data.frame(hp = 250 + 10 * 1:10))) %&gt;%
+  transmute(hp = hp, mpg = prediction) %&gt;%
+  full_join(select(cars, hp, mpg)) %&gt;%
+  collect() %&gt;%
+  plot()</code></pre>
+<p>To retrieve additional statistics from the model,</p>
+<pre class="r"><code>broom::glance(model)</code></pre>
+<p>Spark provides a wide range of algorithms and feature transformers. Those functions usually have <code>ml_</code> or <code>ft_</code> as prefix.</p>
+</div>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p><a href="https://therinspark.com/starting.html#starting-spark-web-interface" class="uri">https://therinspark.com/starting.html#starting-spark-web-interface</a></p>
+</div>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/spark/">spark</a>
+  
+  <a class="badge badge-light" href="/tags/big-data/">big-data</a>
+  
+</div>
+
+
+
+
+    
+      
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  
+  <img class="portrait mr-3" src="/author/admin/avatar_hu52a603635ecebd45650b162dadabb4e5_12861_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+  
+
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/authors/admin">Tingting Yu</a></h5>
+    <h6 class="card-subtitle">Developer, Data Scientist</h6>
+    <p class="card-text" itemprop="description">My research interests include time-series analysis, longitudinal analysis, image analysis &hellip;</p>
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://scholar.google.se/citations?user=xcVUeE4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+          <i class="ai ai-google-scholar"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://github.com/oliviayu" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.linkedin.com/in/tingting-yu-40852594/" target="_blank" rel="noopener">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.76a41a243fcea75defe7d35a07d3aaa3.js"></script>
+
+  </body>
+</html>
+

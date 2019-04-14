@@ -8,7 +8,7 @@
   
     <url>
     
-      <loc>/post/post/</loc>
+      <loc>/post/</loc>
     </url>
   
     <url>
@@ -23,7 +23,7 @@
   
     <url>
     
-      <loc>/posts/</loc>
+      <loc>/recent_posts/</loc>
     </url>
   
     <url>
@@ -39,6 +39,18 @@
     <url>
     
       <loc>/author/contact/</loc>
+    </url>
+  
+    <url>
+    
+      <loc>/post/2019-04-10-sparklyr/</loc>
+      <lastmod>2019-04-10T00:00:00+00:00</lastmod>
+    </url>
+  
+    <url>
+    
+      <loc>/post/2019-04-03-arima/</loc>
+      <lastmod>2019-04-03T00:00:00+00:00</lastmod>
     </url>
   
     <url>
@@ -100,7 +112,7 @@
     <url>
     
       <loc>/post/</loc>
-      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
+      <lastmod>2019-04-10T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
@@ -135,13 +147,21 @@
     <url>
     
       <loc>/</loc>
-      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
+      <lastmod>2019-04-10T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
     <url>
     
-      <loc>/authors/admin/</loc>
+      <loc>/tags/arima/</loc>
+      <lastmod>2019-04-03T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+  
+    <url>
+    
+      <loc>/tags/big-data/</loc>
+      <lastmod>2019-04-10T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
@@ -154,8 +174,15 @@
   
     <url>
     
+      <loc>/tags/spark/</loc>
+      <lastmod>2019-04-10T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+  
+    <url>
+    
       <loc>/tags/time-series/</loc>
-      <lastmod>2019-03-21T00:00:00+00:00</lastmod>
+      <lastmod>2019-04-03T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
