@@ -17,7 +17,7 @@
       <pubDate>Thu, 21 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/2019-03-21-bsts/</guid>
-      <description>Introduction State-space models were originally developed by control engineers, particularly for applications that require continuous updating of the current position. An example, from the field of navigation systems, is updating an user equipment’s position. The models have also found increasing use in many types of time-series problems, including parameter estimation, smoothing, and prediction. Structural time-series models are state-space models for time-series data. They are useful in practice because they are</description>
+      <description>IntroductionState-space models were originally developed by control engineers, particularly for applications that require continuous updating of the current position. An example, from the field of navigation systems, is updating an user equipment’s position. The models have also found increasing use in many types of time-series problems, including parameter estimation, smoothing, and prediction. Structural time-series models are state-space models for time-series data. They are useful in practice because they are</description>
     </item>
     
   </channel>

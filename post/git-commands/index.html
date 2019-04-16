@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.1.0">
+  <meta name="generator" content="Hugo 0.54.0" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Tingting Yu">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Configuration Set up global configuration variables if you haven&rsquo;t done so
+$ git config --global user.name &quot;&lt;name&gt;&quot; $ git config --global user.email &quot;&lt;email&gt;&quot;  Git should automatically do a rebase when you do a pull, which is what you want
+$ git config branch.autosetuprebase always  To set up configuration for DiffMerge, follow the guide http://coding4streetcred.com/blog/post/configure-diffmerge-for-your-git-difftool.
+Local Usage of Git Staging Check if there is any unstaged or untracked files">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/git-commands/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Tingting&#39;s Blog">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Tingting&#39;s Blog">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/git-commands/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Tingting&#39;s Blog">
+  <meta property="og:url" content="/post/git-commands/">
+  <meta property="og:title" content="Git commands | Tingting&#39;s Blog">
+  <meta property="og:description" content="Configuration Set up global configuration variables if you haven&rsquo;t done so
+$ git config --global user.name &quot;&lt;name&gt;&quot; $ git config --global user.email &quot;&lt;email&gt;&quot;  Git should automatically do a rebase when you do a pull, which is what you want
+$ git config branch.autosetuprebase always  To set up configuration for DiffMerge, follow the guide http://coding4streetcred.com/blog/post/configure-diffmerge-for-your-git-difftool.
+Local Usage of Git Staging Check if there is any unstaged or untracked files"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2019-04-16T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2019-04-16T00:00:00&#43;00:00">
+  
+
+  
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+<script>
+  window.addEventListener("load", function(){
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": {
+          "background": "#2962ff",
+          "text": "#fff"
+        },
+        "button": {
+          "background": "#fff",
+          "text": "#2962ff"
+        }
+      },
+      "theme": "classic",
+      "content": {
+        "message": "This website uses cookies to ensure you get the best experience on our website.",
+        "dismiss": "Got it!",
+        "link": "Learn more",
+        "href": "https://cookies.insites.com"
+      }
+    })});
+</script>
+
+
+  
+
+  <title>Git commands | Tingting&#39;s Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  
+<aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+      
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Tingting&#39;s Blog</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/post/">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Git commands</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2019-04-16 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2019-04-16 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>2019-04-16</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="/categories/programming/">programming</a>
+    
+  </span>
+  
+  
+
+  
+    
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<h1 id="configuration">Configuration</h1>
+
+<p>Set up global configuration variables if you haven&rsquo;t done so</p>
+
+<pre><code>$ git config --global user.name &quot;&lt;name&gt;&quot;
+$ git config --global user.email &quot;&lt;email&gt;&quot;
+</code></pre>
+
+<p>Git should automatically do a rebase when you do a pull, which is what you want</p>
+
+<pre><code>$ git config branch.autosetuprebase always
+</code></pre>
+
+<p>To set up configuration for <code>DiffMerge</code>,  follow the guide
+<a href="http://coding4streetcred.com/blog/post/configure-diffmerge-for-your-git-difftool" target="_blank">http://coding4streetcred.com/blog/post/configure-diffmerge-for-your-git-difftool</a>.</p>
+
+<h1 id="local-usage-of-git">Local Usage of Git</h1>
+
+<h2 id="staging">Staging</h2>
+
+<p>Check if there is any unstaged or untracked files</p>
+
+<pre><code>$ git status
+</code></pre>
+
+<p>Add files to the staging</p>
+
+<pre><code>$ git add &lt;file.name&gt;           // add a specific file
+$ git add .                     // add all files from the current folder
+$ git add myfolder/             // add all files from the subfolder 'myfolder'
+$ git add (-A)                  // add all files from entire working tree, even from upper directory
+$ git add --no-all myfolder/    // add all but deleted files from myfolder: ``
+$ git add -u or --update        // add all but new or untracked files
+</code></pre>
+
+<p>Remove files from the staging</p>
+
+<pre><code>$ git reset HEAD &lt;file.name&gt;    // remove a specific file
+$ git reset                     // remove everything from the staging area
+</code></pre>
+
+<p>Reset</p>
+
+<pre><code>$ git checkout -- &lt;filename&gt;    // discard the changes in a file
+$ git reset --soft HEAD~1       // leave all your changed files &quot;Changes to be committed&quot;, as git status would put it
+
+$ git reset --soft &lt;commit hash&gt;    // move back to staging dir and keep the modification
+$ git reset &lt;commit hash&gt;           // move back to working dir and keep the modification
+$ git reset --hard &lt;commit hash&gt;    // revert tracked files back before modification
+</code></pre>
+
+<pre><code>$ git clean -df         // get rid of any untracked dir and files
+$ git reflog            // lifesaver if you accidently delete something important
+$ git revert &lt;hash&gt;     // ?
+</code></pre>
+
+<h2 id="commit">Commit</h2>
+
+<p>Commit changes</p>
+
+<pre><code>$ git commit -m &quot;&lt;messages&gt;&quot;                // commit with a message created
+$ git commit --amend -m &quot;&lt;new messages&gt;&quot;    // edit the commit message
+$ git commit --amend                        // commit changes to the previous commit
+</code></pre>
+
+<p>Show commit history</p>
+
+<pre><code>$ git log
+</code></pre>
+
+<h3 id="how-to-write-a-great-git-commit-message">How to write a great Git commit message</h3>
+
+<ul>
+<li>Separate subject from body with a blank line</li>
+<li>Limit the subject line to 50 characters</li>
+<li>Capitalize the subject line</li>
+<li>Do not end the subject line with a period</li>
+<li>Use the imperative mood in the subject line</li>
+<li>Wrap the body at 72 characters</li>
+<li>Use the body to explain what and why vs. how</li>
+</ul>
+
+<h3 id="edit-a-specific-commit">Edit a specific commit</h3>
+
+<pre><code>$ git rebase -i @~3   # Show the last 3 commits in a text editor
+</code></pre>
+
+<p>Find the commit you want, change <code>pick</code> to <code>e</code> (edit), and save and close the file.
+Git will rewind to that commit, allowing you to either:</p>
+
+<ul>
+<li><p>use <code>$ git commit --amend</code> to make changes, or</p></li>
+
+<li><p>use <code>$ git reset @~</code> to discard the last commit, but not the changes to the files
+    (i.e. take you to the point you were at when you&rsquo;d edited the files, but hadn&rsquo;t committed yet).</p></li>
+</ul>
+
+<p>Then run <code>$ git rebase --continue</code> and Git will replay the subsequent changes on top of your modified commit. You may be asked to fix some merge conflicts.
+Note: <code>@</code> is shorthand for HEAD, and <code>~</code> is the commit before the specified commit.</p>
+
+<p>Other approaches: <a href="https://stackoverflow.com/questions/1186535/how-to-modify-a-specified-commit-in-git" target="_blank">https://stackoverflow.com/questions/1186535/how-to-modify-a-specified-commit-in-git</a></p>
+
+<h3 id="squash-several-commits-into-one">Squash several commits into one</h3>
+
+<p><strong>Step 1</strong>: Invoke git to start an interactive rebase session:</p>
+
+<p><code>$ git rebase -i HEAD~[N]</code></p>
+
+<p>where N is the number of commits you want to join, starting from the most resent one. For example <code>$ git rebase -i HEAD~3</code>.</p>
+
+<p>OR if you have too many commits to count, try</p>
+
+<p><code>$ git rebase -i [commit-hash]</code></p>
+
+<p>where <code>[commit-hash]</code> is the hash of the commit just before the first one you want to rewrite from. For example, <code>$ git rebase -i 5392bc</code> to join the top 3 commits in below</p>
+
+<pre><code>fdascc Fix at 13:00
+asfdsd Fix at 12:00
+kgfdas Fix at 11:00
+5392bc Fix at 10:00
+</code></pre>
+
+<p><strong>Step 2</strong>: Picking and squashing</p>
+
+<p>At this point your editor of choice will pop up, showing the list of commits you want to merge in a reverse order. For example,</p>
+
+<pre><code>pick kgfdas Fix at 11:00
+pick asfdsd Fix at 12:00
+pick fdascc Fix at 13:00
+</code></pre>
+
+<p>Our task here is to mark all the commits as squashable, except the first/older one: it will be used as a starting point. You mark a commit as squashable by changing the work <code>pick</code> into <code>squash</code> next to it (or <code>s</code> for brevity, as stated in the comments). The result would be:</p>
+
+<pre><code>pick kgfdas Fix at 11:00
+s asfdsd Fix at 12:00
+s fdascc Fix at 13:00
+</code></pre>
+
+<p>Save the file and close the editor.</p>
+
+<p><strong>Step 3</strong>: Create the new commit</p>
+
+<p>You have just told Git to combine all three commits into the the first commit in the list. It&rsquo;s now time to give it a name: your editor pops up again with a default message, made of the names of all the commits you have squashed.</p>
+
+<p>You can leave it as it is and the commit message will result in a list of all the intermediate commits, or wipe out the default message and use something more self-explanatory.</p>
+
+<h2 id="branch">Branch</h2>
+
+<p>You can edit and commit under a branch which wont affect the master branch at all</p>
+
+<pre><code>$ git branch                    // check which branch you are currently in (with *)
+$ git branch &lt;branch_name&gt;      // create a branch
+$ git checkout &lt;branch_name&gt;    // switch to the selected branch
+
+</code></pre>
+
+<pre><code>$ git cherry-pick &lt;commit hash&gt;    # bring the commit to the current branch
+</code></pre>
+
+<p>Merge Branch</p>
+
+<pre><code>$ git checkout master
+$ git merge &lt;branch_name&gt;
+$ git branch --merged       // check if it's merged successfully
+</code></pre>
+
+<p>Delete a branch</p>
+
+<pre><code>$ git branch -d &lt;branch_name&gt;                // delete branch locally
+$ git push origin --delete &lt;branch_name&gt;     // delete branch remotely
+</code></pre>
+
+<h2 id="stash">Stash</h2>
+
+<p>You can save changes in a temporary place so you can work on other things and come back later. Note that stash won&rsquo;t create anything to commit.</p>
+
+<pre><code>$ git stash save &quot;&lt;message&gt;&quot;     // save changes in stash
+$ git stash list                 // check existing stash
+$ git stash apply &lt;stash name&gt;   // fetch the changes in the stash
+$ git stash pop                  // apply changes in the top stash (the newest) and drop it from the stash list
+$ git stash drop &lt;stash name&gt;    // drop the selected stash
+$ git stash clear                // remove all the changes made
+</code></pre>
+
+<h2 id="visual-tool">Visual Tool</h2>
+
+<p>DiffMerge</p>
+
+<pre><code>$ git difftool
+$ git mergetool
+</code></pre>
+
+<p>Gitk</p>
+
+<pre><code>$ gitk
+</code></pre>
+
+<h2 id="others">Others</h2>
+
+<p>Check changes made in the code:</p>
+
+<pre><code>$ git diff &lt;old hash&gt; &lt;new hash&gt; 
+</code></pre>
+
+<p>Create an ignore file:</p>
+
+<pre><code>$ touch .gitignore
+</code></pre>
+
+<p>The .gitignore file is a text file that list the files you want to ignore for tracking.</p>
+
+<h1 id="remote-usage-of-git">Remote Usage of Git</h1>
+
+<p>Clone a project:</p>
+
+<pre><code>$ git clone &lt;url&gt; &lt;where to clone&gt;
+$ git clone &lt;url&gt; .    // clone to current directory
+</code></pre>
+
+<p>View info about the remote repository:</p>
+
+<pre><code>$ git remote -v       // list repository info
+$ git branch -a       // list all the branches, localy and remotely
+</code></pre>
+
+<p>Pull from the remote repository</p>
+
+<pre><code>$ git pull origin master
+</code></pre>
+
+<p>Push changes to the remote repository after making local commitments:</p>
+
+<pre><code>$ git push origin master                // push to Git
+$ git push origin HEAD:refs/for/master  // push to Gerrit
+</code></pre>
+
+<p>Push branch to the remote repository</p>
+
+<pre><code>$ git push -u origin &lt;branch_name&gt;    // -u is used so in future you can just simply use $git pull and $git push
+</code></pre>
+
+<h1 id="references">References</h1>
+
+<p><strong>Git Development workflow</strong>:
+<a href="https://wcdma-confluence.rnd.ki.sw.ericsson.se/display/TAE/WMR+GIT+Development+workflow" target="_blank">https://wcdma-confluence.rnd.ki.sw.ericsson.se/display/TAE/WMR+GIT+Development+workflow</a></p>
+
+<p><strong>Git Basic Commands</strong>:
+<a href="https://wcdma-confluence.rnd.ki.sw.ericsson.se/display/TAE/Git+Basic+Commands" target="_blank">https://wcdma-confluence.rnd.ki.sw.ericsson.se/display/TAE/Git+Basic+Commands</a></p>
+
+<p><strong>Git Gerrit</strong>:
+<a href="https://wcdma-confluence.rnd.ki.sw.ericsson.se/display/TAE/Git+Gerrit" target="_blank">https://wcdma-confluence.rnd.ki.sw.ericsson.se/display/TAE/Git+Gerrit</a></p>
+
+<p><strong>More</strong>:</p>
+
+<p><a href="https://git-scm.com/docs" target="_blank">https://git-scm.com/docs</a></p>
+
+<p><a href="https://gerrit-review.googlesource.com/Documentation/intro-user.html#gerrit" target="_blank">https://gerrit-review.googlesource.com/Documentation/intro-user.html#gerrit</a></p>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/git/">git</a>
+  
+</div>
+
+
+
+
+    
+      
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.76a41a243fcea75defe7d35a07d3aaa3.js"></script>
+
+  </body>
+</html>
+

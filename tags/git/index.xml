@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>git on Tingting&#39;s Blog</title>
+    <link>/tags/git/</link>
+    <description>Recent content in git on Tingting&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Git commands</title>
+      <link>/post/git-commands/</link>
+      <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/git-commands/</guid>
+      <description>Configuration Set up global configuration variables if you haven&amp;rsquo;t done so
+$ git config --global user.name &amp;quot;&amp;lt;name&amp;gt;&amp;quot; $ git config --global user.email &amp;quot;&amp;lt;email&amp;gt;&amp;quot;  Git should automatically do a rebase when you do a pull, which is what you want
+$ git config branch.autosetuprebase always  To set up configuration for DiffMerge, follow the guide http://coding4streetcred.com/blog/post/configure-diffmerge-for-your-git-difftool.
+Local Usage of Git Staging Check if there is any unstaged or untracked files</description>
+    </item>
+    
+  </channel>
+</rss>

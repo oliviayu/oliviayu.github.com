@@ -17,7 +17,7 @@
       <pubDate>Wed, 10 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/2019-04-10-sparklyr/</guid>
-      <description>Introduction The R programming language, along with RStudio, has become one of the most popular tools for data analysis as it contains a large amount of open-source packages developed by a community of statisticians. However, R or RStudio is not ideal for Big Data analysis as mostly the data would not fit into R memory. On the other hand, Spark has become the leading platform for big-data analytics. It works with the system to distribute data across clusters and process data in parallel.</description>
+      <description>IntroductionThe R programming language, along with RStudio, has become one of the most popular tools for data analysis as it contains a large amount of open-source packages developed by a community of statisticians. However, R or RStudio is not ideal for Big Data analysis as mostly the data would not fit into R memory. On the other hand, Spark has become the leading platform for big-data analytics. It works with the system to distribute data across clusters and process data in parallel.</description>
     </item>
     
   </channel>
