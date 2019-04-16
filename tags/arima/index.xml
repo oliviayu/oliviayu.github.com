@@ -17,7 +17,7 @@
       <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/2019-04-03-arima/</guid>
-      <description>IntroductionThe ARIMA (autoregressive integrated moving average) models are also known as Box–Jenkins models. ARIMA models are applied in some cases where data show evidence of non-stationarity, where an initial differencing step (corresponding to the “integrated” part of the model) can be applied one or more times to eliminate the non-stationarity.
+      <description>Introduction The ARIMA (autoregressive integrated moving average) models are also known as Box–Jenkins models. ARIMA models are applied in some cases where data show evidence of non-stationarity, where an initial differencing step (corresponding to the “integrated” part of the model) can be applied one or more times to eliminate the non-stationarity.
 The AR part of ARIMA indicates that the evolving variable of interest is regressed on its own lagged (i.</description>
     </item>
     
