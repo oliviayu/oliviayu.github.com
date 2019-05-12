@@ -426,7 +426,9 @@ spark_installed_versions()
 &lt;div id=&#34;copy-data-to-spark&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Copy data to Spark&lt;/h2&gt;
 &lt;p&gt;The data set &lt;code&gt;mtcars&lt;/code&gt; is a dataframe available in &lt;code&gt;R&lt;/code&gt;. Run &lt;code&gt;?mtcars&lt;/code&gt; to see more details. To copy the data set into Apache Spark&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cars &amp;lt;- copy_to(sc, mtcars)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cars &amp;lt;- copy_to(sc, mtcars)
+# or
+cars &amp;lt;- sdf_copy_to(sc, mtcars)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now we can access the data that was copied into Spark from R using the &lt;code&gt;cars&lt;/code&gt; reference.&lt;/p&gt;
 &lt;p&gt;To read data from existing data sources in csv format and copy to Spark,&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cars &amp;lt;- spark_read_csv(sc, &amp;quot;cars.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -470,10 +472,25 @@ model %&amp;gt;%
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;broom::glance(model)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Spark provides a wide range of algorithms and feature transformers. Those functions usually have &lt;code&gt;ml_&lt;/code&gt; or &lt;code&gt;ft_&lt;/code&gt; as prefix.&lt;/p&gt;
 &lt;/div&gt;
+&lt;div id=&#34;extensions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Extensions&lt;/h2&gt;
+&lt;p&gt;Many extensions to &lt;code&gt;sparklyr&lt;/code&gt; have been made available, such as &lt;code&gt;sparklyr.nested&lt;/code&gt;, &lt;code&gt;rsparkling&lt;/code&gt;, and &lt;code&gt;Mleap&lt;/code&gt;. The &lt;code&gt;sparklyr.nested&lt;/code&gt; package helps you manage values that contain nested information, for example JSON files. The &lt;code&gt;Mleap&lt;/code&gt; enables Spark pipelines in production. The &lt;code&gt;rsparkling&lt;/code&gt; package provides H2O support. For example, you may convert a Spark dataframe to an H2O frame and then use &lt;code&gt;h2o&lt;/code&gt; package to run basic H2O commands in R.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;h2o_df &amp;lt;- rsparkling::as_h2o_frame(sc, cars)
+model &amp;lt;- h2o::h2o.glm(x = &amp;quot;gp&amp;quot;, y = &amp;quot;mpg&amp;quot;, h2o_df, alpha = 0, lambda = 0)
+summary(model)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can use the &lt;code&gt;invoke&lt;/code&gt; family of functions to generate the objects you want and write extension function that calls functions in Java or Scala. For example,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;count_lines &amp;lt;- function(sc, &amp;quot;file&amp;quot;) {
+  spark_context(sc) %&amp;gt;%
+    invoke(&amp;quot;textFile&amp;quot;, file, 1L) %&amp;gt;%
+    invoke(&amp;quot;count&amp;quot;)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;count_lines&lt;/code&gt; function calls the &lt;code&gt;textFile().count()&lt;/code&gt; method in Java [2].&lt;/p&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://therinspark.com/starting.html#starting-spark-web-interface&#34; class=&#34;uri&#34;&gt;https://therinspark.com/starting.html#starting-spark-web-interface&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[1] The R in Spark: Learning Apache Spark with R. &lt;a href=&#34;https://therinspark.com/starting.html#starting-spark-web-interface&#34; class=&#34;uri&#34;&gt;https://therinspark.com/starting.html#starting-spark-web-interface&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;[2] Sparklyr from Rstudio. &lt;a href=&#34;https://spark.rstudio.com/extensions/&#34; class=&#34;uri&#34;&gt;https://spark.rstudio.com/extensions/&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>

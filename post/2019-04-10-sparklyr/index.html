@@ -419,7 +419,9 @@ spark_installed_versions()
 <div id="copy-data-to-spark" class="section level2">
 <h2>Copy data to Spark</h2>
 <p>The data set <code>mtcars</code> is a dataframe available in <code>R</code>. Run <code>?mtcars</code> to see more details. To copy the data set into Apache Spark</p>
-<pre class="r"><code>cars &lt;- copy_to(sc, mtcars)</code></pre>
+<pre class="r"><code>cars &lt;- copy_to(sc, mtcars)
+# or
+cars &lt;- sdf_copy_to(sc, mtcars)</code></pre>
 <p>Now we can access the data that was copied into Spark from R using the <code>cars</code> reference.</p>
 <p>To read data from existing data sources in csv format and copy to Spark,</p>
 <pre class="r"><code>cars &lt;- spark_read_csv(sc, &quot;cars.csv&quot;)</code></pre>
@@ -463,10 +465,25 @@ model %&gt;%
 <pre class="r"><code>broom::glance(model)</code></pre>
 <p>Spark provides a wide range of algorithms and feature transformers. Those functions usually have <code>ml_</code> or <code>ft_</code> as prefix.</p>
 </div>
+<div id="extensions" class="section level2">
+<h2>Extensions</h2>
+<p>Many extensions to <code>sparklyr</code> have been made available, such as <code>sparklyr.nested</code>, <code>rsparkling</code>, and <code>Mleap</code>. The <code>sparklyr.nested</code> package helps you manage values that contain nested information, for example JSON files. The <code>Mleap</code> enables Spark pipelines in production. The <code>rsparkling</code> package provides H2O support. For example, you may convert a Spark dataframe to an H2O frame and then use <code>h2o</code> package to run basic H2O commands in R.</p>
+<pre class="r"><code>h2o_df &lt;- rsparkling::as_h2o_frame(sc, cars)
+model &lt;- h2o::h2o.glm(x = &quot;gp&quot;, y = &quot;mpg&quot;, h2o_df, alpha = 0, lambda = 0)
+summary(model)</code></pre>
+<p>You can use the <code>invoke</code> family of functions to generate the objects you want and write extension function that calls functions in Java or Scala. For example,</p>
+<pre class="r"><code>count_lines &lt;- function(sc, &quot;file&quot;) {
+  spark_context(sc) %&gt;%
+    invoke(&quot;textFile&quot;, file, 1L) %&gt;%
+    invoke(&quot;count&quot;)
+}</code></pre>
+<p>The <code>count_lines</code> function calls the <code>textFile().count()</code> method in Java [2].</p>
+</div>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
-<p><a href="https://therinspark.com/starting.html#starting-spark-web-interface" class="uri">https://therinspark.com/starting.html#starting-spark-web-interface</a></p>
+<p>[1] The R in Spark: Learning Apache Spark with R. <a href="https://therinspark.com/starting.html#starting-spark-web-interface" class="uri">https://therinspark.com/starting.html#starting-spark-web-interface</a>.</p>
+<p>[2] Sparklyr from Rstudio. <a href="https://spark.rstudio.com/extensions/" class="uri">https://spark.rstudio.com/extensions/</a>.</p>
 </div>
 
     </div>
