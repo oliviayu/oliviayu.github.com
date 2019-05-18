@@ -159,7 +159,7 @@ println(&amp;quot;(%d -- %f -- %s)&amp;quot;.format(num1, num2, str1));&lt;/code
 &lt;/div&gt;
 &lt;div id=&#34;arrays&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Arrays&lt;/h1&gt;
-&lt;p&gt;An array is a data structure which can store fixed-sized sequencial elements of same data type.&lt;/p&gt;
+&lt;p&gt;An array is a data structure which can store fixed-sized sequential elements of same data type.&lt;/p&gt;
 &lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val myarray: Array[Int] = new Array[Int](4);
 
 // index starts from 0 in Scala
@@ -193,7 +193,7 @@ for(x &amp;lt;- result){
 &lt;h1&gt;Collections&lt;/h1&gt;
 &lt;div id=&#34;lists&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Lists&lt;/h2&gt;
-&lt;p&gt;Lists are immutable and represent the link lists wheares arrays are mutable and flat.&lt;/p&gt;
+&lt;p&gt;Lists are immutable and represent the link lists whereas arrays are mutable and flat.&lt;/p&gt;
 &lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mylist: List[Int] = List(1, 2, 5, 8);
 val names: List[String] = List(&amp;quot;Max&amp;quot;, &amp;quot;Tom&amp;quot;, &amp;quot;John&amp;quot;)
 println(mylist)
@@ -376,7 +376,7 @@ i match {
 &lt;h1&gt;Loops&lt;/h1&gt;
 &lt;div id=&#34;while-loop&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;while loop&lt;/h2&gt;
-&lt;p&gt;check the condition before excuting&lt;/p&gt;
+&lt;p&gt;check the condition before executing&lt;/p&gt;
 &lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var x = 0
 while(x &amp;lt; 10){
     println(&amp;quot;x = &amp;quot; + x)
@@ -385,7 +385,7 @@ while(x &amp;lt; 10){
 &lt;/div&gt;
 &lt;div id=&#34;do-while-loop&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;do-while loop&lt;/h2&gt;
-&lt;p&gt;excute at least once regardless of the condition&lt;/p&gt;
+&lt;p&gt;execute at least once regardless of the condition&lt;/p&gt;
 &lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var y = 0
 do {
     println(&amp;quot;y = &amp;quot; + y)
@@ -659,7 +659,7 @@ class Triangle(var width: Double, var height: Double) extends Polygon {
 &lt;p&gt;An abstract class does a few things for the inheriting subclass:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;define methods which can be used by the inheriting subclass;&lt;/li&gt;
-&lt;li&gt;define abstract methods which the inheriting subclass must implement, in another work, it makes sure that we must implement methods inside subclasses;&lt;/li&gt;
+&lt;li&gt;define abstract methods which the inheriting subclass must implement, in another word, it makes sure that we must implement methods inside subclasses;&lt;/li&gt;
 &lt;li&gt;provide a common interface which allows the subclass to be interchanged with all other subclasses i.e. inheritance.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance

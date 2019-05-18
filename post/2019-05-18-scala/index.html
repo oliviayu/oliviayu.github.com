@@ -420,7 +420,7 @@ println(&quot;(%d -- %f -- %s)&quot;.format(num1, num2, str1));</code></pre>
 </div>
 <div id="arrays" class="section level1">
 <h1>Arrays</h1>
-<p>An array is a data structure which can store fixed-sized sequencial elements of same data type.</p>
+<p>An array is a data structure which can store fixed-sized sequential elements of same data type.</p>
 <pre class="java"><code>val myarray: Array[Int] = new Array[Int](4);
 
 // index starts from 0 in Scala
@@ -454,7 +454,7 @@ for(x &lt;- result){
 <h1>Collections</h1>
 <div id="lists" class="section level2">
 <h2>Lists</h2>
-<p>Lists are immutable and represent the link lists wheares arrays are mutable and flat.</p>
+<p>Lists are immutable and represent the link lists whereas arrays are mutable and flat.</p>
 <pre class="java"><code>val mylist: List[Int] = List(1, 2, 5, 8);
 val names: List[String] = List(&quot;Max&quot;, &quot;Tom&quot;, &quot;John&quot;)
 println(mylist)
@@ -637,7 +637,7 @@ i match {
 <h1>Loops</h1>
 <div id="while-loop" class="section level2">
 <h2>while loop</h2>
-<p>check the condition before excuting</p>
+<p>check the condition before executing</p>
 <pre class="java"><code>var x = 0
 while(x &lt; 10){
     println(&quot;x = &quot; + x)
@@ -646,7 +646,7 @@ while(x &lt; 10){
 </div>
 <div id="do-while-loop" class="section level2">
 <h2>do-while loop</h2>
-<p>excute at least once regardless of the condition</p>
+<p>execute at least once regardless of the condition</p>
 <pre class="java"><code>var y = 0
 do {
     println(&quot;y = &quot; + y)
@@ -920,7 +920,7 @@ class Triangle(var width: Double, var height: Double) extends Polygon {
 <p>An abstract class does a few things for the inheriting subclass:</p>
 <ul>
 <li>define methods which can be used by the inheriting subclass;</li>
-<li>define abstract methods which the inheriting subclass must implement, in another work, it makes sure that we must implement methods inside subclasses;</li>
+<li>define abstract methods which the inheriting subclass must implement, in another word, it makes sure that we must implement methods inside subclasses;</li>
 <li>provide a common interface which allows the subclass to be interchanged with all other subclasses i.e. inheritance.</li>
 </ul>
 <pre class="java"><code>package Inheritance
