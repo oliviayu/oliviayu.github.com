@@ -6,10 +6,19 @@
     <description>Recent content in big-data on Tingting&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 18 May 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/big-data/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Scala notes I</title>
+      <link>/post/2019-05-18-scala/</link>
+      <pubDate>Sat, 18 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-05-18-scala/</guid>
+      <description>Data types Boolean true or false Byte 8 bit signed value Short 16 bit signed value Char 16 bit unsigned Unicode character Int 32 bit signed value Long 64 bit signed value Float 32 bit IEEE 754 single-precision float Double 64 bit IEEE 754 double-precision float String A sequence of characters Unit Corresponds to no value Null null or empty references Nothing subtype of every other type; includes no .</description>
+    </item>
     
     <item>
       <title>sparklyr (Spark in R)</title>

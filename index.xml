@@ -6,7 +6,7 @@
     <description>Recent content in Tingting&#39;s Blog on Tingting&#39;s Blog</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 18 May 2019 00:00:00 +0000</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
@@ -79,6 +79,729 @@
       
       <guid>/author/contact/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>Scala notes I</title>
+      <link>/post/2019-05-18-scala/</link>
+      <pubDate>Sat, 18 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-05-18-scala/</guid>
+      <description>
+
+
+&lt;div id=&#34;data-types&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Data types&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;Boolean  true or false 
+Byte     8 bit signed value
+Short    16 bit signed value
+Char     16 bit unsigned Unicode character
+Int      32 bit signed value
+Long     64 bit signed value
+Float    32 bit IEEE 754 single-precision float
+Double   64 bit IEEE 754 double-precision float
+String   A sequence of characters
+
+Unit     Corresponds to no value
+Null     null or empty references
+Nothing  subtype of every other type; includes no ...
+Any      The supertype of any type; any object is of ..
+AnyRef   The supertype of any reference type&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;More on datatype: &lt;a href=&#34;https://www.tutorialspoint.com/scala/scala_data_types.htm&#34; class=&#34;uri&#34;&gt;https://www.tutorialspoint.com/scala/scala_data_types.htm&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;variables&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Variables &lt;a name=&#34;variables&#34;&gt;&lt;/a&gt;&lt;/h1&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;// mutable variable: variable value can be changed
+var myVar : String = &amp;quot;Foo&amp;quot; 
+// imutable variable: variable value cannot be changed
+val myVar : Int = 10
+// Note: scala will detect the data types by the initial values.
+val x = {val a: Int = 200; val b: Int = 300; a+b}
+// this value is not assigned until x is used (you are only using memory in demand)
+lazy val x = 500&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;string&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;String &lt;a name=&#34;string&#34;&gt;&lt;/a&gt;&lt;/h1&gt;
+&lt;div id=&#34;string-interpolation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;String interpolation&lt;/h2&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val name = &amp;quot;mark&amp;quot;
+val age = 18
+println(name + &amp;quot; is&amp;quot; + age + &amp;quot; year old.&amp;quot;)
+println(s&amp;quot;$name is $age years old.&amp;quot;)
+println(f&amp;quot;$name%s is $age%d years old.&amp;quot;)  //typesafe: %s specifies string type and %d specifies double type
+// mark is 18 years old.
+
+println(raw&amp;quot;Hello \nworld.&amp;quot;)
+// Hello \nworld.
+println(s&amp;quot;Hello \nworld.&amp;quot;)
+// Hello 
+// world.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;methods-for-strings&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Methods for Strings&lt;/h2&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val str1: String = &amp;quot;Hello world&amp;quot;;
+val str2: String = &amp;quot; Max&amp;quot;;
+
+// calculate length
+println(str1.length())  // returns 11
+
+// concatenate
+println(str1.concat(str2)) // returns &amp;quot;Hellow world Max&amp;quot;
+println(str1 + str2)
+
+// formating 
+val num1 = 75;
+val num2 = 100.25;
+val result = printf(&amp;quot;(%d -- %f -- %s)&amp;quot;, num1, num2, str1);
+println(result);
+println(&amp;quot;(%d -- %f -- %s)&amp;quot;.format(num1, num2, str1));&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;arrays&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Arrays&lt;/h1&gt;
+&lt;p&gt;An array is a data structure which can store fixed-sized sequencial elements of same data type.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val myarray: Array[Int] = new Array[Int](4);
+
+// index starts from 0 in Scala
+myarray(0) = 20; 
+myarray(1) = 50; 
+myarray(2) = 10; 
+myarray(3) = 10;
+
+// println(myarray) // won&amp;#39;t work
+for(x &amp;lt;- myarray){
+  println(x);
+}
+
+// Default values of an array
+val myarray2 = new Array[Int](5);  // default value is 0
+val myarray2 = new Array[String](5);  // default value is null
+val myarray2 = new Array[Double](5);  // default value is 0.0
+val myarray2 = new Array[Boolean](5);  // default value is false
+
+// concatenate 
+import Array._
+val myarray3 = Array(1, 2, 3, 5, 8);
+println(myarray3.length)
+
+val result = concat(myarray3, myarray3);
+for(x &amp;lt;- result){
+  println(x)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;collections&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Collections&lt;/h1&gt;
+&lt;div id=&#34;lists&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Lists&lt;/h2&gt;
+&lt;p&gt;Lists are immutable and represent the link lists wheares arrays are mutable and flat.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mylist: List[Int] = List(1, 2, 5, 8);
+val names: List[String] = List(&amp;quot;Max&amp;quot;, &amp;quot;Tom&amp;quot;, &amp;quot;John&amp;quot;)
+println(mylist)
+println(names)
+println(mylist(0))
+//mylist(0) = 5  // cannot change the value of a list
+
+println(0 :: mylist) // prepend 0 but won&amp;#39;t change mylist
+println(Nil)  // create a empty list
+println(1 :: 5 :: 9 :: Nil) // create a list
+println(List.fill(5)(2))  // returns List(2, 2, 2, 2, 2)
+
+println(mylist.head)
+println(names.tail) // print everything except for the first element
+println(names.isEmpty)
+println(mylist.reverse)
+println(mylist.max)
+
+// iterate over each element and run the given function
+mylist.foreach( println )
+
+var sum: Int = 0;
+mylist.foreach( sum += _)
+println(sum)   // sum up all the elements&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;sets&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Sets&lt;/h2&gt;
+&lt;p&gt;A set is a collection of different elements of CM data types. So a set cannot have duplicated values inside them.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val myset: Set[Int] = Set(1, 2, 2, 5)
+println(myset)  // returns Set(1, 2, 5)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;By default, set is immutable in Scala. If we need to declare a mutable set, we can use &lt;em&gt;scala.collection.mutable.Set&lt;/em&gt; instead.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val myset2 = scala.collection.mutable.Set(1, 3, 5)
+println(myset2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To add a value into the set&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(myset + 10)  
+println(myset) // myset is not changed because it&amp;#39;s immutable&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Set is not ordered, which means the new element is assigned to a random location and you cannot index an element.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(myset(8))  // check if 8 exists in myset or not&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Other useful functions in set:&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(myset.head)
+println(myset.tail)
+println(myset.isEmpty)
+
+// concatenate two sets
+println(myset ++ myset2) 
+println(myset.++(myset2))  
+
+// find intersection of two sets
+println(myset.&amp;amp;(myset2))
+println(myset.intersect(myset2))
+
+// find min &amp;amp; max
+println(myset.min)
+println(myset.max)
+
+// for loop
+myset.foreach(println)
+for(x &amp;lt;- myset){ println(x) }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;maps&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Maps&lt;/h2&gt;
+&lt;p&gt;A map is a collection of key-value pairs, for example 801-max, 802-tom, 804-july.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mymap : Map[Int, String] = Map(801 -&amp;gt; &amp;quot;max&amp;quot;, 802 -&amp;gt; &amp;quot;tom&amp;quot;, 804 -&amp;gt; &amp;quot;july&amp;quot;);
+println(mymap)
+println(mymap(802))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Duplication of keys is not possible in a map.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mymap : Map[Int, String] = Map(801 -&amp;gt; &amp;quot;max&amp;quot;, 802 -&amp;gt; &amp;quot;tom&amp;quot;, 804 -&amp;gt; &amp;quot;july&amp;quot;, 804 -&amp;gt; &amp;quot;jully&amp;quot;);
+println(mymap); // it takes the last entry of 804&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(mymap.keys)  // returns a set
+println(mymap.values)
+println(mymap.isEmpty)
+println(mymap.contains(801000)) // check if a key (or exception case) is valid/exist in the map
+
+//for loop
+mymap.keys.foreach{ key =&amp;gt;
+  println(&amp;quot;key &amp;quot; + key);
+  println(&amp;quot;value &amp;quot; + mymap(key));
+}
+
+//concatenate
+val mymap2 : Map[Int, String] = Map( 805 -&amp;gt; &amp;quot;lua&amp;quot;);
+println(mymap ++ mymap2);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tuples&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Tuples&lt;/h2&gt;
+&lt;p&gt;A tuple is a class that can contain different kinds of elements, unlike array. A tuple is immutable in scala. You cannot change a tuple once it’s declared. A tuple can contain 22 elements at most.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mytuple = (1, 2, &amp;quot;hello&amp;quot;, true);
+println(mytuple);
+
+val mytuple2 = new Tuple3(1, 2, &amp;quot;hello&amp;quot;); // have to indicate the number of elements in a tuple right after the &amp;quot;Tuple&amp;quot; keyword; maximum number is 22.
+
+println(mytuple._3) // returns the third element
+
+val mytuple3 = new Tuple3(1, &amp;quot;hello&amp;quot;, (2,3))
+println(mytuple3._3._2); // print 3
+
+//for loop
+mytuple.productIterator.foreach{
+  i =&amp;gt; println(i) 
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;options&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Options&lt;/h2&gt;
+&lt;p&gt;An option is a container which can give you two values (Some or None).&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3);
+val map = Map(1 -&amp;gt; &amp;quot;Tom&amp;quot;, 2 -&amp;gt; &amp;quot;Max&amp;quot;, 3 -&amp;gt; &amp;quot;John&amp;quot;);
+println(lst.find(_ &amp;gt; 6));  // return None
+println(lst.find(_ &amp;gt; 2));  // return Some(3)
+println(map.get(1)); // return Some(Tom)
+println(map.get(4)); // return None
+
+// to abstract the values
+println(lst.find(_ &amp;gt; 2).get); // return the element value 3
+println(map.get(5).get); // get an exception error message
+
+// to avoid exception error message
+println(map.get(5).getOrElse(&amp;quot;No name found.&amp;quot;)); 
+
+// to define options
+val opt : Option[Int] = None;
+println(opt.isEmpty); // returns true
+
+val opt2 : Option[Int] = Some(55); // returns false&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;comment-code&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Comment code&lt;/h1&gt;
+&lt;p&gt;Comment one line&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;// println(&amp;quot;Hello&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Comment multiple lines&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;/*  
+println(&amp;quot;Hello&amp;quot;)
+println(&amp;quot;world&amp;quot;)
+*/&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;ifelse-statement&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Ifelse statement&lt;/h1&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val x = 20
+var res = &amp;quot;&amp;quot;
+
+if(x == 20){
+  res = &amp;quot;x==20&amp;quot;
+} else {
+  res = &amp;quot;x!=20&amp;quot;
+}
+println(res)
+
+val res2 = if(x == 20) &amp;quot;x==20&amp;quot; else &amp;quot;x!=20&amp;quot;
+println(res2)
+
+println(if(x == 20) &amp;quot;x==20&amp;quot; else &amp;quot;x!=20&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Use &amp;amp;&amp;amp; for &lt;em&gt;and&lt;/em&gt; and || for &lt;em&gt;or&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;match-expressions&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Match expressions&lt;/h1&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val age: Int = 18
+
+age match {
+  case 18 =&amp;gt; println(&amp;quot;age 18&amp;quot;)
+  case 20 =&amp;gt; println(&amp;quot;age 20&amp;quot;)
+  case _ =&amp;gt; println(&amp;quot;default&amp;quot;)  // catch default/unmatched case
+}
+
+// use as expression
+val result = age match {
+  case 18 =&amp;gt; &amp;quot;age 18&amp;quot;
+  case 20 =&amp;gt; &amp;quot;age 20&amp;quot;
+  case _ =&amp;gt; &amp;quot;default&amp;quot;  // catch default/unmatched case
+}
+println(&amp;quot;result = &amp;quot; + result)
+
+// mutiple expressions
+val i =8;
+i match {
+  case 1|3|5|7|9 =&amp;gt; println(&amp;quot;odd&amp;quot;)
+  case 2|4|6|8|10 =&amp;gt; println(&amp;quot;even&amp;quot;)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;loops&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Loops&lt;/h1&gt;
+&lt;div id=&#34;while-loop&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;while loop&lt;/h2&gt;
+&lt;p&gt;check the condition before excuting&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var x = 0
+while(x &amp;lt; 10){
+    println(&amp;quot;x = &amp;quot; + x)
+    x += 1  // x = x + 1
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;do-while-loop&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;do-while loop&lt;/h2&gt;
+&lt;p&gt;excute at least once regardless of the condition&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var y = 0
+do {
+    println(&amp;quot;y = &amp;quot; + y)
+    y += 1  
+} while (y &amp;lt; 0);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;for-loop&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;for loop&lt;/h2&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;for ( i &amp;lt;- 1 to 5){
+  println(&amp;quot;i using to &amp;quot; + i)
+}
+// identical
+for ( i &amp;lt;- 1 until 6){
+  println(&amp;quot;i using to &amp;quot; + i)
+}
+
+
+for ( i &amp;lt;- 1 to 5; j &amp;lt;- 1 to 3){
+println(&amp;quot;i,j using to &amp;quot; + i + &amp;quot;,&amp;quot; + j)
+}
+
+
+val lst = List(1, 5, 3, 2, 8)
+for( i &amp;lt;- lst; if i &amp;lt; 3){
+  println(&amp;quot;i using to &amp;quot; + i)
+}
+// Use for loop as an expression
+val result = for { i &amp;lt;- lst; if i &amp;lt; 3 } yield {
+  i * i
+}
+println(&amp;quot;result = &amp;quot; + result) // return a List&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;functions&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Functions&lt;/h1&gt;
+&lt;div id=&#34;basice-functions&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Basice functions&lt;/h3&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;def add(x: Int, y: Int): Int = {
+  return x + y;
+}
+println(add(21, 19));
+// Other variants
+def multiply(x: Int, y: Int): Int = x * y  // simplified version
+def divide(x: Int, y: Int) = x / y  // can ignore the output type if it&amp;#39;s obvious
+def substract(x: Int = 10, y: Int = 2) = x - y  // set default values&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can define the function names as operator, e.g. +, *, /, -&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;def +(x: Int, y: Int) = x + y&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;anonymous-functions&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Anonymous functions&lt;/h3&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var add = (x: Int, y: Int) =&amp;gt; x + y
+println(add(300, 500))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;higher-order-functions&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Higher-order functions&lt;/h3&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;def math(x: Double, y: Double, z:Double, f: (Double, Double) =&amp;gt; Double): Double = {
+  f(f(x, y), z);
+}
+
+def main(args: Array[String]) {
+  val result = math(50, 20, 10, (x, y) =&amp;gt; x min y);  // find the minimum number
+  println(result);
+}
+
+(x, y) =&amp;gt; _+_   // i.e. (x, y) =&amp;gt; x+y
+(x, y) =&amp;gt; _max _   // i.e. (x, y) =&amp;gt; x max y&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;partially-applied-functions&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Partially applied functions&lt;/h3&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val sum = (a: Int, b: Int, c: Int) =&amp;gt; a+b+c
+val f = sum(10, 20, _:Int)
+println(f(100)) // returns 130
+
+import java.util.Date
+def log(date: Date, message: String) = {
+  println(date + &amp;quot;   &amp;quot; + message);
+}
+val date = new Date;
+val newLog = log(date, _ :String);
+newLog(&amp;quot;The message 1.&amp;quot;)
+newLog(&amp;quot;The message 2.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;closures&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Closures&lt;/h1&gt;
+&lt;p&gt;A closure is a function which uses one or more variables declared outside this function.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var number = 10;
+
+//Example 1
+val add = (x:Int) =&amp;gt; x + number;
+println(add(20))
+
+number = 100
+println(add(20))  // If the value of the variable changes, the result changes too.
+
+//Example 2
+val add2 = (x:Int) =&amp;gt; {
+  number = x+number;
+  number
+}
+println(add2(20))
+println(number)  // numbder is 120 now
+
+//Example 3
+val number = 10;  // The result won&amp;#39;t change since number is fixed.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;currying&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Currying&lt;/h1&gt;
+&lt;p&gt;Currying is the technique of transforming a function that takes multiple arguments into a function that takes a single argument.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;def add(x: Int) = (y: Int) =&amp;gt; x + y;
+println(add(20)(10));
+
+// You can also apply partial applied function in currying
+val sum40 = add(40);
+println(sum40(100));
+
+//Simpler version in scala
+def add2 (x: Int) (y: Int) = x + y;
+val sum50 = add2(50)_;  //have to add _
+println(sum50(10))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;map-flatten-and-filter&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Map, flatten, and filter&lt;/h1&gt;
+&lt;p&gt;Map method&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3, 5, 7, 9, 10);
+val mymap = Map(1 -&amp;gt; &amp;quot;Tom&amp;quot;, 2 -&amp;gt; &amp;quot;Max&amp;quot;, 3 -&amp;gt; &amp;quot;John&amp;quot;);
+
+// double every element in lst
+println(lst.map(x =&amp;gt; x*2))
+println(lst.map(_ *2))
+
+println(mymap.mapValues(x =&amp;gt; &amp;quot;hi &amp;quot; + x));
+
+// apply toUpper to every element in the string &amp;quot;hello&amp;quot;
+println(&amp;quot;hello&amp;quot;.map(_.toUpper))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Flatten method&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;// flatten contents of a list of lists
+println(List(List(1, 2, 3), List(3, 4, 5)).flatten)
+println(lst.flatMap(x =&amp;gt; List(x, x+1)))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Filter method&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;// abstract even numbers
+println(lst.filter(x =&amp;gt; x%2 == 0))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reduce-fold-and-scan-leftright&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Reduce, fold, and scan (left/right)&lt;/h1&gt;
+&lt;p&gt;Reduce method&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3, 4, 6, 7, 8);
+val lst2 = List(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;C&amp;quot;);
+
+println(lst.reduceLeft(_ + _)) // returns sum of all elements
+println(lst2.reduceLeft(_ + _)) // returns &amp;quot;ABC&amp;quot; by (AB)C
+println(lst2.reduceRight(_ + _)) // returns &amp;quot;ABC&amp;quot; by A(BC)
+
+println(lst.reduceLeft((x, y) =&amp;gt; {println(x + &amp;quot;,&amp;quot;, + y); x+y;}))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Fold method is similar to reduce method but can insert initial argument.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(lst.foldLeft(10)(_ + _)) // return 10 + sum(lst) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Scan method takes initial value and applies it to each element in reduce method. It returns the map of intermediate results.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(lst.scanLeft(10)(_ + _))
+println(lst2.scanLeft(&amp;quot;z&amp;quot;)(_ + _))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;object-oriented-program&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Object oriented program&lt;/h1&gt;
+&lt;div id=&#34;objects&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Objects&lt;/h2&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;object Math {
+    def divide(x: Int, y: Int) = x / y
+    def square(x: Int) = x*x
+}
+
+println(Math.square(3))
+println(Math square 3)  // works if there is only one augment&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;class&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Class&lt;/h2&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;class User(var name: String, var age: Int);
+
+object Demo {
+  def main(args: Array[String]) {
+    var user = new User(&amp;quot;Max&amp;quot;, 28);
+    println(user.name);
+    println(user.age);
+    user.name = &amp;quot;Tom&amp;quot;;  // rewritable because name is var
+    user.age = 23;
+    println(user.name);
+    println(user.age);
+  }
+}
+
+//          Getter?     Setter?
+// -------  -------    ---------
+// var        yes         yes
+// val        yes         no
+// default    no          no
+
+// you cannot access name outside the class if it&amp;#39;s private
+class User2(private var name: String, var age: Int) {
+  def printName{ println(name) }
+};
+
+var user2 = new User2(&amp;quot;Max&amp;quot;, 28);
+println(user2.name); // returns error
+
+// to access name inside a class
+user2.printName&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;auxiliary-constructor&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Auxiliary constructor&lt;/h2&gt;
+&lt;p&gt;An alternative constructor for a class.&lt;/p&gt;
+&lt;p&gt;With primary constructors, you must have different signatures for your auxiliary constructors; you must call previously defined constructors in your auxiliary constructors.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;class User(val name: String, var age: Int) { // primary constructor
+  def this() {  // auxiliary constructor
+    this(&amp;quot;Tim&amp;quot;, 21);
+  }
+
+  def this(name: String) {
+    this(name, 32);
+  }
+}
+
+object Demo{
+  def main(args: Array[String]) {
+    var user1 = new User(&amp;quot;Max&amp;quot;, 28);
+    var user2 = new User();
+    var user3 = new User(&amp;quot;Max&amp;quot;);
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;class-inheritance-extending-a-class&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Class inheritance: extending a class&lt;/h2&gt;
+&lt;p&gt;Scala doesn’t allow multiple inheritance from more than one class.&lt;/p&gt;
+&lt;p&gt;A super class Polygon:&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
+
+class Polygon {
+  def area: Double = 0.0;
+}
+
+object Polygon {
+  def main(args: Array[String]) {
+    var poly = new Polygon;
+    printArea(poly);
+
+    var rect = new Rectangle(55.2, 20.0);
+    printArea(rect);
+
+    var tri = new Triangle(55.2, 20.0);
+    printArea(tri);
+  }
+
+  def printArea(p: Polygon) {
+    println(p.area);
+  }    
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A subclass Rectangle:&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
+
+class Rectangle(var width: Double, var height: Double) extends Polygon {
+  override def area: Double = width * height; 
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A subclass Triangle:&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
+
+class Triangle(var width: Double, var height: Double) extends Polygon {
+  override def area: Double = width * height / 2; 
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;abstract-class&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Abstract class&lt;/h2&gt;
+&lt;p&gt;If a class is declared abstract, it cannot be instantiated.&lt;/p&gt;
+&lt;p&gt;An abstract class does a few things for the inheriting subclass:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;define methods which can be used by the inheriting subclass;&lt;/li&gt;
+&lt;li&gt;define abstract methods which the inheriting subclass must implement, in another work, it makes sure that we must implement methods inside subclasses;&lt;/li&gt;
+&lt;li&gt;provide a common interface which allows the subclass to be interchanged with all other subclasses i.e. inheritance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
+
+abstract class Polygon {
+  def area: Double; // doesn&amp;#39;t provide any body to this method
+}
+
+object Polygon {
+  def main(args: Array[String]) {
+    // var poly = new Polygon;   // cannot be instantiated
+    // printArea(poly);
+
+    var rect = new Rectangle(55.2, 20.0);
+    printArea(rect);
+
+    var tri = new Triangle(55.2, 20.0);
+    printArea(tri);
+  }
+
+  def printArea(p: Polygon) {
+    println(p.area);
+  }    
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;trait&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Trait&lt;/h2&gt;
+&lt;p&gt;Scala doesn’t allow multiple inheritance and instead they use interface. A trait is a partially created interface.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
+
+trait Shape {
+  def shape: String;
+}
+
+class Rectangle(var width: Double, var height: Double) extends Polygon with Shape {
+  override def area: Double = height * width;
+  def shape: String = &amp;quot;rectangle&amp;quot;;  // can remove override when inheriting from a trait
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;lazy-evaluation&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Lazy evaluation&lt;/h1&gt;
+&lt;p&gt;Lazy evaluation is an evaluation strategy that delays the evaluation of an expression until it’s needed. Scala supports strict evaluation by default and lazy evaluation if specified.&lt;/p&gt;
+&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val e = 9; // strict evaluation
+lazy val l = 9; // lazy evaluation
+
+
+// object Demo {
+  def method1(n: Int) {
+    println(&amp;quot;Method 1&amp;quot;);
+    println(n);
+  }
+  def method2(n: =&amp;gt; Int) {
+    println(&amp;quot;Method 2&amp;quot;);
+    println(n);
+  }
+  // def main(args: Array[String]) {
+    val add = (a: Int, b: Int) =&amp;gt; {
+      println(&amp;quot;Add&amp;quot;);
+      a + b
+    }
+
+    method1(add(5, 6))
+    method2(add(5, 6))
+//   }
+// }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;scala-in-intellij-idea&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Scala in IntelliJ IDEA&lt;/h1&gt;
+&lt;div id=&#34;sbt-tasks&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;SBT tasks&lt;/h2&gt;
+&lt;p&gt;The following tasks can be run in sbt shell:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Scala interpreter: type &lt;code&gt;console&lt;/code&gt; to start and type &lt;Ctrl+D\&gt; to quit&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Type &lt;code&gt;compile&lt;/code&gt; to compile the source code located in the directory src/main/scala&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Type &lt;code&gt;test&lt;/code&gt; to test the unit tests for the project located in src/test/scala&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If your project has an object with a main method (or an object extending the trait App), then you can run the code in sbt easily by typing &lt;code&gt;run&lt;/code&gt;. In case sbt finds multiple main methods, it will ask you which one you’d like to execute.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;unit-test&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Unit test&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;package example
+
+import java.util.NoSuchElementException
+
+import org.scalatest.FunSuite
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+
+/**
+ * This class implements a ScalaTest test suite for the methods in object
+ * `Lists` that need to be implemented as part of this assignment. A test
+ * suite is simply a collection of individual tests for some specific
+ * component of a program.
+ *
+ * A test suite is created by defining a class which extends the type
+ * `org.scalatest.FunSuite`. When running ScalaTest, it will automatically
+ * find this class and execute all of its tests.
+ *
+ * Adding the `@RunWith` annotation enables the test suite to be executed
+ * inside eclipse using the built-in JUnit test runner.
+ *
+ * You have two options for running this test suite:
+ *
+ * - Start the sbt console and run the &amp;quot;test&amp;quot; command
+ * - Right-click this file in eclipse and chose &amp;quot;Run As&amp;quot; - &amp;quot;JUnit Test&amp;quot;
+ */
+ @RunWith(classOf[JUnitRunner])
+  class ListsSuite extends FunSuite {
+ 
+  // We fist import all members of the `List` object.
+  import Lists._
+
+  test(&amp;quot;sum of a few numbers&amp;quot;) {
+    assert(sum(List(1,2,0)) === 3)
+    assert(sum(List(-2, -1, -5)) === -8)
+    assert(sum(List(0, 0, 0)) === 0)
+    assert(sum(List()) === 0)
+  }
+
+  test(&amp;quot;max of a few numbers&amp;quot;) {
+    assert(max(List(3, 7, 2)) === 7)
+    assert(max(List(-3, -7, -2)) === -2)
+    assert(max(List(2, 2, 2)) === 2)
+    assert(max(List(-3, 0, 3, -5)) === 3)
+    intercept[NoSuchElementException]{ max(List()) }
+  }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;useful-links&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Useful links &lt;a name=&#34;links&#34;&gt;&lt;/a&gt;&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PLS1QulWo1RIagob5D6kMIAvu7DQC5VTh3&#34;&gt;Youtube tutorial&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.coursera.org/learn/progfun1/home/welcome&#34;&gt;Coursera: Functional Programming Principles in Scala&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.coursera.org/learn/scala-spark-big-data?authMode=login&amp;amp;errorCode=invalidCredential&#34;&gt;Coursera: Big Data Analysis with Scala and Spark&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.tutorialspoint.com/scala/scala_variables.htm&#34;&gt;Document tutorial&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://scalafiddle.io/&#34;&gt;ScalaFiddle&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
