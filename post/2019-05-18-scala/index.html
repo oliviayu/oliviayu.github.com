@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.1.0">
+  <meta name="generator" content="Hugo 0.54.0" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Tingting Yu">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Data types Boolean true or false Byte 8 bit signed value Short 16 bit signed value Char 16 bit unsigned Unicode character Int 32 bit signed value Long 64 bit signed value Float 32 bit IEEE 754 single-precision float Double 64 bit IEEE 754 double-precision float String A sequence of characters Unit Corresponds to no value Null null or empty references Nothing subtype of every other type; includes no .">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/2019-05-18-scala/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Tingting&#39;s Blog">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Tingting&#39;s Blog">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/2019-05-18-scala/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Tingting&#39;s Blog">
+  <meta property="og:url" content="/post/2019-05-18-scala/">
+  <meta property="og:title" content="Scala notes I | Tingting&#39;s Blog">
+  <meta property="og:description" content="Data types Boolean true or false Byte 8 bit signed value Short 16 bit signed value Char 16 bit unsigned Unicode character Int 32 bit signed value Long 64 bit signed value Float 32 bit IEEE 754 single-precision float Double 64 bit IEEE 754 double-precision float String A sequence of characters Unit Corresponds to no value Null null or empty references Nothing subtype of every other type; includes no ."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2019-05-18T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2019-05-18T00:00:00&#43;00:00">
+  
+
+  
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+<script>
+  window.addEventListener("load", function(){
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": {
+          "background": "#2962ff",
+          "text": "#fff"
+        },
+        "button": {
+          "background": "#fff",
+          "text": "#2962ff"
+        }
+      },
+      "theme": "classic",
+      "content": {
+        "message": "This website uses cookies to ensure you get the best experience on our website.",
+        "dismiss": "Got it!",
+        "link": "Learn more",
+        "href": "https://cookies.insites.com"
+      }
+    })});
+</script>
+
+
+  
+
+  <title>Scala notes I | Tingting&#39;s Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  
+<aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+      
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Tingting&#39;s Blog</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/post/">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Scala notes I</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2019-05-18 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2019-05-18 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>2019-05-18</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="/categories/programming/">programming</a>
+    
+  </span>
+  
+  
+
+  
+    
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<div id="data-types" class="section level1">
+<h1>Data types</h1>
+<pre><code>Boolean  true or false 
+Byte     8 bit signed value
+Short    16 bit signed value
+Char     16 bit unsigned Unicode character
+Int      32 bit signed value
+Long     64 bit signed value
+Float    32 bit IEEE 754 single-precision float
+Double   64 bit IEEE 754 double-precision float
+String   A sequence of characters
+
+Unit     Corresponds to no value
+Null     null or empty references
+Nothing  subtype of every other type; includes no ...
+Any      The supertype of any type; any object is of ..
+AnyRef   The supertype of any reference type</code></pre>
+<p>More on datatype: <a href="https://www.tutorialspoint.com/scala/scala_data_types.htm" class="uri">https://www.tutorialspoint.com/scala/scala_data_types.htm</a></p>
+</div>
+<div id="variables" class="section level1">
+<h1>Variables <a name="variables"></a></h1>
+<pre class="java"><code>// mutable variable: variable value can be changed
+var myVar : String = &quot;Foo&quot; 
+// imutable variable: variable value cannot be changed
+val myVar : Int = 10
+// Note: scala will detect the data types by the initial values.
+val x = {val a: Int = 200; val b: Int = 300; a+b}
+// this value is not assigned until x is used (you are only using memory in demand)
+lazy val x = 500</code></pre>
+</div>
+<div id="string" class="section level1">
+<h1>String <a name="string"></a></h1>
+<div id="string-interpolation" class="section level2">
+<h2>String interpolation</h2>
+<pre class="java"><code>val name = &quot;mark&quot;
+val age = 18
+println(name + &quot; is&quot; + age + &quot; year old.&quot;)
+println(s&quot;$name is $age years old.&quot;)
+println(f&quot;$name%s is $age%d years old.&quot;)  //typesafe: %s specifies string type and %d specifies double type
+// mark is 18 years old.
+
+println(raw&quot;Hello \nworld.&quot;)
+// Hello \nworld.
+println(s&quot;Hello \nworld.&quot;)
+// Hello 
+// world.</code></pre>
+</div>
+<div id="methods-for-strings" class="section level2">
+<h2>Methods for Strings</h2>
+<pre class="java"><code>val str1: String = &quot;Hello world&quot;;
+val str2: String = &quot; Max&quot;;
+
+// calculate length
+println(str1.length())  // returns 11
+
+// concatenate
+println(str1.concat(str2)) // returns &quot;Hellow world Max&quot;
+println(str1 + str2)
+
+// formating 
+val num1 = 75;
+val num2 = 100.25;
+val result = printf(&quot;(%d -- %f -- %s)&quot;, num1, num2, str1);
+println(result);
+println(&quot;(%d -- %f -- %s)&quot;.format(num1, num2, str1));</code></pre>
+</div>
+</div>
+<div id="arrays" class="section level1">
+<h1>Arrays</h1>
+<p>An array is a data structure which can store fixed-sized sequencial elements of same data type.</p>
+<pre class="java"><code>val myarray: Array[Int] = new Array[Int](4);
+
+// index starts from 0 in Scala
+myarray(0) = 20; 
+myarray(1) = 50; 
+myarray(2) = 10; 
+myarray(3) = 10;
+
+// println(myarray) // won&#39;t work
+for(x &lt;- myarray){
+  println(x);
+}
+
+// Default values of an array
+val myarray2 = new Array[Int](5);  // default value is 0
+val myarray2 = new Array[String](5);  // default value is null
+val myarray2 = new Array[Double](5);  // default value is 0.0
+val myarray2 = new Array[Boolean](5);  // default value is false
+
+// concatenate 
+import Array._
+val myarray3 = Array(1, 2, 3, 5, 8);
+println(myarray3.length)
+
+val result = concat(myarray3, myarray3);
+for(x &lt;- result){
+  println(x)
+}</code></pre>
+</div>
+<div id="collections" class="section level1">
+<h1>Collections</h1>
+<div id="lists" class="section level2">
+<h2>Lists</h2>
+<p>Lists are immutable and represent the link lists wheares arrays are mutable and flat.</p>
+<pre class="java"><code>val mylist: List[Int] = List(1, 2, 5, 8);
+val names: List[String] = List(&quot;Max&quot;, &quot;Tom&quot;, &quot;John&quot;)
+println(mylist)
+println(names)
+println(mylist(0))
+//mylist(0) = 5  // cannot change the value of a list
+
+println(0 :: mylist) // prepend 0 but won&#39;t change mylist
+println(Nil)  // create a empty list
+println(1 :: 5 :: 9 :: Nil) // create a list
+println(List.fill(5)(2))  // returns List(2, 2, 2, 2, 2)
+
+println(mylist.head)
+println(names.tail) // print everything except for the first element
+println(names.isEmpty)
+println(mylist.reverse)
+println(mylist.max)
+
+// iterate over each element and run the given function
+mylist.foreach( println )
+
+var sum: Int = 0;
+mylist.foreach( sum += _)
+println(sum)   // sum up all the elements</code></pre>
+</div>
+<div id="sets" class="section level2">
+<h2>Sets</h2>
+<p>A set is a collection of different elements of CM data types. So a set cannot have duplicated values inside them.</p>
+<pre class="java"><code>val myset: Set[Int] = Set(1, 2, 2, 5)
+println(myset)  // returns Set(1, 2, 5)</code></pre>
+<p>By default, set is immutable in Scala. If we need to declare a mutable set, we can use <em>scala.collection.mutable.Set</em> instead.</p>
+<pre class="java"><code>val myset2 = scala.collection.mutable.Set(1, 3, 5)
+println(myset2)</code></pre>
+<p>To add a value into the set</p>
+<pre class="java"><code>println(myset + 10)  
+println(myset) // myset is not changed because it&#39;s immutable</code></pre>
+<p>Set is not ordered, which means the new element is assigned to a random location and you cannot index an element.</p>
+<pre class="java"><code>println(myset(8))  // check if 8 exists in myset or not</code></pre>
+<p>Other useful functions in set:</p>
+<pre class="java"><code>println(myset.head)
+println(myset.tail)
+println(myset.isEmpty)
+
+// concatenate two sets
+println(myset ++ myset2) 
+println(myset.++(myset2))  
+
+// find intersection of two sets
+println(myset.&amp;(myset2))
+println(myset.intersect(myset2))
+
+// find min &amp; max
+println(myset.min)
+println(myset.max)
+
+// for loop
+myset.foreach(println)
+for(x &lt;- myset){ println(x) }</code></pre>
+</div>
+<div id="maps" class="section level2">
+<h2>Maps</h2>
+<p>A map is a collection of key-value pairs, for example 801-max, 802-tom, 804-july.</p>
+<pre class="java"><code>val mymap : Map[Int, String] = Map(801 -&gt; &quot;max&quot;, 802 -&gt; &quot;tom&quot;, 804 -&gt; &quot;july&quot;);
+println(mymap)
+println(mymap(802))</code></pre>
+<p>Duplication of keys is not possible in a map.</p>
+<pre class="java"><code>val mymap : Map[Int, String] = Map(801 -&gt; &quot;max&quot;, 802 -&gt; &quot;tom&quot;, 804 -&gt; &quot;july&quot;, 804 -&gt; &quot;jully&quot;);
+println(mymap); // it takes the last entry of 804</code></pre>
+<pre class="java"><code>println(mymap.keys)  // returns a set
+println(mymap.values)
+println(mymap.isEmpty)
+println(mymap.contains(801000)) // check if a key (or exception case) is valid/exist in the map
+
+//for loop
+mymap.keys.foreach{ key =&gt;
+  println(&quot;key &quot; + key);
+  println(&quot;value &quot; + mymap(key));
+}
+
+//concatenate
+val mymap2 : Map[Int, String] = Map( 805 -&gt; &quot;lua&quot;);
+println(mymap ++ mymap2);</code></pre>
+</div>
+<div id="tuples" class="section level2">
+<h2>Tuples</h2>
+<p>A tuple is a class that can contain different kinds of elements, unlike array. A tuple is immutable in scala. You cannot change a tuple once it’s declared. A tuple can contain 22 elements at most.</p>
+<pre class="java"><code>val mytuple = (1, 2, &quot;hello&quot;, true);
+println(mytuple);
+
+val mytuple2 = new Tuple3(1, 2, &quot;hello&quot;); // have to indicate the number of elements in a tuple right after the &quot;Tuple&quot; keyword; maximum number is 22.
+
+println(mytuple._3) // returns the third element
+
+val mytuple3 = new Tuple3(1, &quot;hello&quot;, (2,3))
+println(mytuple3._3._2); // print 3
+
+//for loop
+mytuple.productIterator.foreach{
+  i =&gt; println(i) 
+}</code></pre>
+</div>
+<div id="options" class="section level2">
+<h2>Options</h2>
+<p>An option is a container which can give you two values (Some or None).</p>
+<pre class="java"><code>val lst = List(1, 2, 3);
+val map = Map(1 -&gt; &quot;Tom&quot;, 2 -&gt; &quot;Max&quot;, 3 -&gt; &quot;John&quot;);
+println(lst.find(_ &gt; 6));  // return None
+println(lst.find(_ &gt; 2));  // return Some(3)
+println(map.get(1)); // return Some(Tom)
+println(map.get(4)); // return None
+
+// to abstract the values
+println(lst.find(_ &gt; 2).get); // return the element value 3
+println(map.get(5).get); // get an exception error message
+
+// to avoid exception error message
+println(map.get(5).getOrElse(&quot;No name found.&quot;)); 
+
+// to define options
+val opt : Option[Int] = None;
+println(opt.isEmpty); // returns true
+
+val opt2 : Option[Int] = Some(55); // returns false</code></pre>
+</div>
+</div>
+<div id="comment-code" class="section level1">
+<h1>Comment code</h1>
+<p>Comment one line</p>
+<pre class="java"><code>// println(&quot;Hello&quot;)</code></pre>
+<p>Comment multiple lines</p>
+<pre class="java"><code>/*  
+println(&quot;Hello&quot;)
+println(&quot;world&quot;)
+*/</code></pre>
+</div>
+<div id="ifelse-statement" class="section level1">
+<h1>Ifelse statement</h1>
+<pre class="java"><code>val x = 20
+var res = &quot;&quot;
+
+if(x == 20){
+  res = &quot;x==20&quot;
+} else {
+  res = &quot;x!=20&quot;
+}
+println(res)
+
+val res2 = if(x == 20) &quot;x==20&quot; else &quot;x!=20&quot;
+println(res2)
+
+println(if(x == 20) &quot;x==20&quot; else &quot;x!=20&quot;)</code></pre>
+<p>Use &amp;&amp; for <em>and</em> and || for <em>or</em>.</p>
+</div>
+<div id="match-expressions" class="section level1">
+<h1>Match expressions</h1>
+<pre class="java"><code>val age: Int = 18
+
+age match {
+  case 18 =&gt; println(&quot;age 18&quot;)
+  case 20 =&gt; println(&quot;age 20&quot;)
+  case _ =&gt; println(&quot;default&quot;)  // catch default/unmatched case
+}
+
+// use as expression
+val result = age match {
+  case 18 =&gt; &quot;age 18&quot;
+  case 20 =&gt; &quot;age 20&quot;
+  case _ =&gt; &quot;default&quot;  // catch default/unmatched case
+}
+println(&quot;result = &quot; + result)
+
+// mutiple expressions
+val i =8;
+i match {
+  case 1|3|5|7|9 =&gt; println(&quot;odd&quot;)
+  case 2|4|6|8|10 =&gt; println(&quot;even&quot;)
+}</code></pre>
+</div>
+<div id="loops" class="section level1">
+<h1>Loops</h1>
+<div id="while-loop" class="section level2">
+<h2>while loop</h2>
+<p>check the condition before excuting</p>
+<pre class="java"><code>var x = 0
+while(x &lt; 10){
+    println(&quot;x = &quot; + x)
+    x += 1  // x = x + 1
+}</code></pre>
+</div>
+<div id="do-while-loop" class="section level2">
+<h2>do-while loop</h2>
+<p>excute at least once regardless of the condition</p>
+<pre class="java"><code>var y = 0
+do {
+    println(&quot;y = &quot; + y)
+    y += 1  
+} while (y &lt; 0);</code></pre>
+</div>
+<div id="for-loop" class="section level2">
+<h2>for loop</h2>
+<pre class="java"><code>for ( i &lt;- 1 to 5){
+  println(&quot;i using to &quot; + i)
+}
+// identical
+for ( i &lt;- 1 until 6){
+  println(&quot;i using to &quot; + i)
+}
+
+
+for ( i &lt;- 1 to 5; j &lt;- 1 to 3){
+println(&quot;i,j using to &quot; + i + &quot;,&quot; + j)
+}
+
+
+val lst = List(1, 5, 3, 2, 8)
+for( i &lt;- lst; if i &lt; 3){
+  println(&quot;i using to &quot; + i)
+}
+// Use for loop as an expression
+val result = for { i &lt;- lst; if i &lt; 3 } yield {
+  i * i
+}
+println(&quot;result = &quot; + result) // return a List</code></pre>
+</div>
+</div>
+<div id="functions" class="section level1">
+<h1>Functions</h1>
+<div id="basice-functions" class="section level3">
+<h3>Basice functions</h3>
+<pre class="java"><code>def add(x: Int, y: Int): Int = {
+  return x + y;
+}
+println(add(21, 19));
+// Other variants
+def multiply(x: Int, y: Int): Int = x * y  // simplified version
+def divide(x: Int, y: Int) = x / y  // can ignore the output type if it&#39;s obvious
+def substract(x: Int = 10, y: Int = 2) = x - y  // set default values</code></pre>
+<p>You can define the function names as operator, e.g. +, *, /, -</p>
+<pre class="java"><code>def +(x: Int, y: Int) = x + y</code></pre>
+</div>
+<div id="anonymous-functions" class="section level3">
+<h3>Anonymous functions</h3>
+<pre class="java"><code>var add = (x: Int, y: Int) =&gt; x + y
+println(add(300, 500))</code></pre>
+</div>
+<div id="higher-order-functions" class="section level3">
+<h3>Higher-order functions</h3>
+<pre class="java"><code>def math(x: Double, y: Double, z:Double, f: (Double, Double) =&gt; Double): Double = {
+  f(f(x, y), z);
+}
+
+def main(args: Array[String]) {
+  val result = math(50, 20, 10, (x, y) =&gt; x min y);  // find the minimum number
+  println(result);
+}
+
+(x, y) =&gt; _+_   // i.e. (x, y) =&gt; x+y
+(x, y) =&gt; _max _   // i.e. (x, y) =&gt; x max y</code></pre>
+</div>
+<div id="partially-applied-functions" class="section level3">
+<h3>Partially applied functions</h3>
+<pre class="java"><code>val sum = (a: Int, b: Int, c: Int) =&gt; a+b+c
+val f = sum(10, 20, _:Int)
+println(f(100)) // returns 130
+
+import java.util.Date
+def log(date: Date, message: String) = {
+  println(date + &quot;   &quot; + message);
+}
+val date = new Date;
+val newLog = log(date, _ :String);
+newLog(&quot;The message 1.&quot;)
+newLog(&quot;The message 2.&quot;)</code></pre>
+</div>
+</div>
+<div id="closures" class="section level1">
+<h1>Closures</h1>
+<p>A closure is a function which uses one or more variables declared outside this function.</p>
+<pre class="java"><code>var number = 10;
+
+//Example 1
+val add = (x:Int) =&gt; x + number;
+println(add(20))
+
+number = 100
+println(add(20))  // If the value of the variable changes, the result changes too.
+
+//Example 2
+val add2 = (x:Int) =&gt; {
+  number = x+number;
+  number
+}
+println(add2(20))
+println(number)  // numbder is 120 now
+
+//Example 3
+val number = 10;  // The result won&#39;t change since number is fixed.</code></pre>
+</div>
+<div id="currying" class="section level1">
+<h1>Currying</h1>
+<p>Currying is the technique of transforming a function that takes multiple arguments into a function that takes a single argument.</p>
+<pre class="java"><code>def add(x: Int) = (y: Int) =&gt; x + y;
+println(add(20)(10));
+
+// You can also apply partial applied function in currying
+val sum40 = add(40);
+println(sum40(100));
+
+//Simpler version in scala
+def add2 (x: Int) (y: Int) = x + y;
+val sum50 = add2(50)_;  //have to add _
+println(sum50(10))</code></pre>
+</div>
+<div id="map-flatten-and-filter" class="section level1">
+<h1>Map, flatten, and filter</h1>
+<p>Map method</p>
+<pre class="java"><code>val lst = List(1, 2, 3, 5, 7, 9, 10);
+val mymap = Map(1 -&gt; &quot;Tom&quot;, 2 -&gt; &quot;Max&quot;, 3 -&gt; &quot;John&quot;);
+
+// double every element in lst
+println(lst.map(x =&gt; x*2))
+println(lst.map(_ *2))
+
+println(mymap.mapValues(x =&gt; &quot;hi &quot; + x));
+
+// apply toUpper to every element in the string &quot;hello&quot;
+println(&quot;hello&quot;.map(_.toUpper))</code></pre>
+<p>Flatten method</p>
+<pre class="java"><code>// flatten contents of a list of lists
+println(List(List(1, 2, 3), List(3, 4, 5)).flatten)
+println(lst.flatMap(x =&gt; List(x, x+1)))
+</code></pre>
+<p>Filter method</p>
+<pre class="java"><code>// abstract even numbers
+println(lst.filter(x =&gt; x%2 == 0))</code></pre>
+</div>
+<div id="reduce-fold-and-scan-leftright" class="section level1">
+<h1>Reduce, fold, and scan (left/right)</h1>
+<p>Reduce method</p>
+<pre class="java"><code>val lst = List(1, 2, 3, 4, 6, 7, 8);
+val lst2 = List(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;);
+
+println(lst.reduceLeft(_ + _)) // returns sum of all elements
+println(lst2.reduceLeft(_ + _)) // returns &quot;ABC&quot; by (AB)C
+println(lst2.reduceRight(_ + _)) // returns &quot;ABC&quot; by A(BC)
+
+println(lst.reduceLeft((x, y) =&gt; {println(x + &quot;,&quot;, + y); x+y;}))</code></pre>
+<p>Fold method is similar to reduce method but can insert initial argument.</p>
+<pre class="java"><code>println(lst.foldLeft(10)(_ + _)) // return 10 + sum(lst) </code></pre>
+<p>Scan method takes initial value and applies it to each element in reduce method. It returns the map of intermediate results.</p>
+<pre class="java"><code>println(lst.scanLeft(10)(_ + _))
+println(lst2.scanLeft(&quot;z&quot;)(_ + _))</code></pre>
+</div>
+<div id="object-oriented-program" class="section level1">
+<h1>Object oriented program</h1>
+<div id="objects" class="section level2">
+<h2>Objects</h2>
+<pre class="java"><code>object Math {
+    def divide(x: Int, y: Int) = x / y
+    def square(x: Int) = x*x
+}
+
+println(Math.square(3))
+println(Math square 3)  // works if there is only one augment</code></pre>
+</div>
+<div id="class" class="section level2">
+<h2>Class</h2>
+<pre class="java"><code>class User(var name: String, var age: Int);
+
+object Demo {
+  def main(args: Array[String]) {
+    var user = new User(&quot;Max&quot;, 28);
+    println(user.name);
+    println(user.age);
+    user.name = &quot;Tom&quot;;  // rewritable because name is var
+    user.age = 23;
+    println(user.name);
+    println(user.age);
+  }
+}
+
+//          Getter?     Setter?
+// -------  -------    ---------
+// var        yes         yes
+// val        yes         no
+// default    no          no
+
+// you cannot access name outside the class if it&#39;s private
+class User2(private var name: String, var age: Int) {
+  def printName{ println(name) }
+};
+
+var user2 = new User2(&quot;Max&quot;, 28);
+println(user2.name); // returns error
+
+// to access name inside a class
+user2.printName</code></pre>
+</div>
+<div id="auxiliary-constructor" class="section level2">
+<h2>Auxiliary constructor</h2>
+<p>An alternative constructor for a class.</p>
+<p>With primary constructors, you must have different signatures for your auxiliary constructors; you must call previously defined constructors in your auxiliary constructors.</p>
+<pre class="java"><code>class User(val name: String, var age: Int) { // primary constructor
+  def this() {  // auxiliary constructor
+    this(&quot;Tim&quot;, 21);
+  }
+
+  def this(name: String) {
+    this(name, 32);
+  }
+}
+
+object Demo{
+  def main(args: Array[String]) {
+    var user1 = new User(&quot;Max&quot;, 28);
+    var user2 = new User();
+    var user3 = new User(&quot;Max&quot;);
+  }
+}</code></pre>
+</div>
+<div id="class-inheritance-extending-a-class" class="section level2">
+<h2>Class inheritance: extending a class</h2>
+<p>Scala doesn’t allow multiple inheritance from more than one class.</p>
+<p>A super class Polygon:</p>
+<pre class="java"><code>package Inheritance
+
+class Polygon {
+  def area: Double = 0.0;
+}
+
+object Polygon {
+  def main(args: Array[String]) {
+    var poly = new Polygon;
+    printArea(poly);
+
+    var rect = new Rectangle(55.2, 20.0);
+    printArea(rect);
+
+    var tri = new Triangle(55.2, 20.0);
+    printArea(tri);
+  }
+
+  def printArea(p: Polygon) {
+    println(p.area);
+  }    
+}</code></pre>
+<p>A subclass Rectangle:</p>
+<pre class="java"><code>package Inheritance
+
+class Rectangle(var width: Double, var height: Double) extends Polygon {
+  override def area: Double = width * height; 
+}</code></pre>
+<p>A subclass Triangle:</p>
+<pre class="java"><code>package Inheritance
+
+class Triangle(var width: Double, var height: Double) extends Polygon {
+  override def area: Double = width * height / 2; 
+}</code></pre>
+</div>
+<div id="abstract-class" class="section level2">
+<h2>Abstract class</h2>
+<p>If a class is declared abstract, it cannot be instantiated.</p>
+<p>An abstract class does a few things for the inheriting subclass:</p>
+<ul>
+<li>define methods which can be used by the inheriting subclass;</li>
+<li>define abstract methods which the inheriting subclass must implement, in another work, it makes sure that we must implement methods inside subclasses;</li>
+<li>provide a common interface which allows the subclass to be interchanged with all other subclasses i.e. inheritance.</li>
+</ul>
+<pre class="java"><code>package Inheritance
+
+abstract class Polygon {
+  def area: Double; // doesn&#39;t provide any body to this method
+}
+
+object Polygon {
+  def main(args: Array[String]) {
+    // var poly = new Polygon;   // cannot be instantiated
+    // printArea(poly);
+
+    var rect = new Rectangle(55.2, 20.0);
+    printArea(rect);
+
+    var tri = new Triangle(55.2, 20.0);
+    printArea(tri);
+  }
+
+  def printArea(p: Polygon) {
+    println(p.area);
+  }    
+}</code></pre>
+</div>
+<div id="trait" class="section level2">
+<h2>Trait</h2>
+<p>Scala doesn’t allow multiple inheritance and instead they use interface. A trait is a partially created interface.</p>
+<pre class="java"><code>package Inheritance
+
+trait Shape {
+  def shape: String;
+}
+
+class Rectangle(var width: Double, var height: Double) extends Polygon with Shape {
+  override def area: Double = height * width;
+  def shape: String = &quot;rectangle&quot;;  // can remove override when inheriting from a trait
+}</code></pre>
+</div>
+</div>
+<div id="lazy-evaluation" class="section level1">
+<h1>Lazy evaluation</h1>
+<p>Lazy evaluation is an evaluation strategy that delays the evaluation of an expression until it’s needed. Scala supports strict evaluation by default and lazy evaluation if specified.</p>
+<pre class="java"><code>val e = 9; // strict evaluation
+lazy val l = 9; // lazy evaluation
+
+
+// object Demo {
+  def method1(n: Int) {
+    println(&quot;Method 1&quot;);
+    println(n);
+  }
+  def method2(n: =&gt; Int) {
+    println(&quot;Method 2&quot;);
+    println(n);
+  }
+  // def main(args: Array[String]) {
+    val add = (a: Int, b: Int) =&gt; {
+      println(&quot;Add&quot;);
+      a + b
+    }
+
+    method1(add(5, 6))
+    method2(add(5, 6))
+//   }
+// }</code></pre>
+</div>
+<div id="scala-in-intellij-idea" class="section level1">
+<h1>Scala in IntelliJ IDEA</h1>
+<div id="sbt-tasks" class="section level2">
+<h2>SBT tasks</h2>
+<p>The following tasks can be run in sbt shell:</p>
+<ul>
+<li><p>Scala interpreter: type <code>console</code> to start and type <Ctrl+D\> to quit</p></li>
+<li><p>Type <code>compile</code> to compile the source code located in the directory src/main/scala</p></li>
+<li><p>Type <code>test</code> to test the unit tests for the project located in src/test/scala</p></li>
+<li><p>If your project has an object with a main method (or an object extending the trait App), then you can run the code in sbt easily by typing <code>run</code>. In case sbt finds multiple main methods, it will ask you which one you’d like to execute.</p></li>
+</ul>
+</div>
+</div>
+<div id="unit-test" class="section level1">
+<h1>Unit test</h1>
+<pre><code>package example
+
+import java.util.NoSuchElementException
+
+import org.scalatest.FunSuite
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+
+/**
+ * This class implements a ScalaTest test suite for the methods in object
+ * `Lists` that need to be implemented as part of this assignment. A test
+ * suite is simply a collection of individual tests for some specific
+ * component of a program.
+ *
+ * A test suite is created by defining a class which extends the type
+ * `org.scalatest.FunSuite`. When running ScalaTest, it will automatically
+ * find this class and execute all of its tests.
+ *
+ * Adding the `@RunWith` annotation enables the test suite to be executed
+ * inside eclipse using the built-in JUnit test runner.
+ *
+ * You have two options for running this test suite:
+ *
+ * - Start the sbt console and run the &quot;test&quot; command
+ * - Right-click this file in eclipse and chose &quot;Run As&quot; - &quot;JUnit Test&quot;
+ */
+ @RunWith(classOf[JUnitRunner])
+  class ListsSuite extends FunSuite {
+ 
+  // We fist import all members of the `List` object.
+  import Lists._
+
+  test(&quot;sum of a few numbers&quot;) {
+    assert(sum(List(1,2,0)) === 3)
+    assert(sum(List(-2, -1, -5)) === -8)
+    assert(sum(List(0, 0, 0)) === 0)
+    assert(sum(List()) === 0)
+  }
+
+  test(&quot;max of a few numbers&quot;) {
+    assert(max(List(3, 7, 2)) === 7)
+    assert(max(List(-3, -7, -2)) === -2)
+    assert(max(List(2, 2, 2)) === 2)
+    assert(max(List(-3, 0, 3, -5)) === 3)
+    intercept[NoSuchElementException]{ max(List()) }
+  }
+
+}</code></pre>
+</div>
+<div id="useful-links" class="section level1">
+<h1>Useful links <a name="links"></a></h1>
+<ul>
+<li><p><a href="https://www.youtube.com/playlist?list=PLS1QulWo1RIagob5D6kMIAvu7DQC5VTh3">Youtube tutorial</a></p></li>
+<li><p><a href="https://www.coursera.org/learn/progfun1/home/welcome">Coursera: Functional Programming Principles in Scala</a></p></li>
+<li><p><a href="https://www.coursera.org/learn/scala-spark-big-data?authMode=login&amp;errorCode=invalidCredential">Coursera: Big Data Analysis with Scala and Spark</a></p></li>
+<li><p><a href="https://www.tutorialspoint.com/scala/scala_variables.htm">Document tutorial</a></p></li>
+<li><p><a href="https://scalafiddle.io/">ScalaFiddle</a></p></li>
+</ul>
+</div>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/scala/">scala</a>
+  
+  <a class="badge badge-light" href="/tags/big-data/">big-data</a>
+  
+</div>
+
+
+
+
+    
+      
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  
+  <img class="portrait mr-3" src="/author/admin/avatar_hu52a603635ecebd45650b162dadabb4e5_12861_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+  
+
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/authors/admin">Tingting Yu</a></h5>
+    <h6 class="card-subtitle">Developer, Data Scientist</h6>
+    <p class="card-text" itemprop="description">My research interests include time-series analysis, longitudinal analysis, image analysis &hellip;</p>
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://scholar.google.se/citations?user=xcVUeE4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+          <i class="ai ai-google-scholar"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://github.com/oliviayu" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.linkedin.com/in/tingting-yu-40852594/" target="_blank" rel="noopener">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/2019-04-10-sparklyr/">sparklyr (Spark in R)</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.76a41a243fcea75defe7d35a07d3aaa3.js"></script>
+
+  </body>
+</html>
+
