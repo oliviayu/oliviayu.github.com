@@ -23,10 +23,10 @@ dplyr::group_by(ex_dat, group) %&amp;gt;% dplyr::summarise(total_y = sum(y)) ## 
     
     <item>
       <title>SQL notes</title>
-      <link>/post/2019-07-14-sql/</link>
+      <link>/post/sql-notes/</link>
       <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/2019-07-14-sql/</guid>
+      <guid>/post/sql-notes/</guid>
       <description>Introduction Structured Query Language (SQL) is a standard computer language for relational database management and data manipulation. It can be used to read, write, and update data. For data scientists, it is mainly used for data retrieval. There are several relational database management systems, such as Oracle, MySQL, and SQLite. Depending on the system you are using, the SQL syntax may be a little bit different.
 Retrieve data Use SELECT statement to query database, filtered by some conditions (optional).</description>
     </item>
@@ -98,15 +98,6 @@ The AR part of ARIMA indicates that the evolving variable of interest is regress
       
       <guid>/post/2019-03-21-bsts/</guid>
       <description>Introduction State-space models were originally developed by control engineers, particularly for applications that require continuous updating of the current position. An example, from the field of navigation systems, is updating an user equipment’s position. The models have also found increasing use in many types of time-series problems, including parameter estimation, smoothing, and prediction. Structural time-series models are state-space models for time-series data. They are useful in practice because they are</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/2019-07-14-sql/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2019-07-14-sql/</guid>
-      <description>SQL notes       code{white-space: pre;} pre:not([class]) { background-color: white; }  if (window.hljs) { hljs.configure({languages: []}); hljs.initHighlightingOnLoad(); if (document.readyState &amp;&amp; document.readyState === &#34;complete&#34;) { window.setTimeout(function() { hljs.initHighlighting(); }, 0); } }  h1 { font-size: 34px; } h1.title { font-size: 38px; } h2 { font-size: 30px; } h3 { font-size: 24px; } h4 { font-size: 18px; } h5 { font-size: 16px; } h6 { font-size: 12px; } .</description>
     </item>
     
   </channel>

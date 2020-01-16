@@ -197,10 +197,10 @@ df %&amp;gt;% dplyr::top_n(2, value1) # select top 2 entries in value1&lt;/code&
     
     <item>
       <title>SQL notes</title>
-      <link>/post/2019-07-14-sql/</link>
+      <link>/post/sql-notes/</link>
       <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/2019-07-14-sql/</guid>
+      <guid>/post/sql-notes/</guid>
       <description>
 
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;

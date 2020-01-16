@@ -23,10 +23,10 @@ dplyr::group_by(ex_dat, group) %&amp;gt;% dplyr::summarise(total_y = sum(y)) ## 
     
     <item>
       <title>SQL notes</title>
-      <link>/post/2019-07-14-sql/</link>
+      <link>/post/sql-notes/</link>
       <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/2019-07-14-sql/</guid>
+      <guid>/post/sql-notes/</guid>
       <description>Introduction Structured Query Language (SQL) is a standard computer language for relational database management and data manipulation. It can be used to read, write, and update data. For data scientists, it is mainly used for data retrieval. There are several relational database management systems, such as Oracle, MySQL, and SQLite. Depending on the system you are using, the SQL syntax may be a little bit different.
 Retrieve data Use SELECT statement to query database, filtered by some conditions (optional).</description>
     </item>
