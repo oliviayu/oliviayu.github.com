@@ -6,7 +6,7 @@
     <description>Recent content in Tingting&#39;s Blog on Tingting&#39;s Blog</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 18 May 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 07 Aug 2019 00:00:00 +0000</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
@@ -82,11 +82,935 @@
     </item>
     
     <item>
+      <title>Data manipulation in R</title>
+      <link>/post/2019-08-07-data_manipulation/</link>
+      <pubDate>Wed, 07 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-08-07-data_manipulation/</guid>
+      <description>
+
+
+&lt;div id=&#34;aggregation&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Aggregation&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(magrittr)
+set.seed(1)
+ex_dat &amp;lt;- data.frame(group = rep(1:3, each = 2),
+                     y = rnorm(6), x = rnorm(6))
+ex_dat&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   group          y          x
+## 1     1 -0.6264538  0.4874291
+## 2     1  0.1836433  0.7383247
+## 3     2 -0.8356286  0.5757814
+## 4     2  1.5952808 -0.3053884
+## 5     3  0.3295078  1.5117812
+## 6     3 -0.8204684  0.3898432&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Summarise selected columns by group&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dplyr::group_by(ex_dat, group) %&amp;gt;%
+  dplyr::summarise(total_y = sum(y))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 3 x 2
+##   group total_y
+##   &amp;lt;int&amp;gt;   &amp;lt;dbl&amp;gt;
+## 1     1  -0.443
+## 2     2   0.760
+## 3     3  -0.491&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Summarise all the columns by group&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dplyr::group_by(ex_dat, group) %&amp;gt;%
+  dplyr::summarise_all(sum)  # you can replace sum() by any function&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 3 x 3
+##   group      y     x
+##   &amp;lt;int&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1     1 -0.443 1.23 
+## 2     2  0.760 0.270
+## 3     3 -0.491 1.90&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reshape&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Reshape&lt;/h1&gt;
+&lt;p&gt;Reshaping data is often needed before ploting.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;long_dat &amp;lt;- reshape2::melt(ex_dat, id.vars = &amp;quot;group&amp;quot;)
+long_dat&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    group variable      value
+## 1      1        y -0.6264538
+## 2      1        y  0.1836433
+## 3      2        y -0.8356286
+## 4      2        y  1.5952808
+## 5      3        y  0.3295078
+## 6      3        y -0.8204684
+## 7      1        x  0.4874291
+## 8      1        x  0.7383247
+## 9      2        x  0.5757814
+## 10     2        x -0.3053884
+## 11     3        x  1.5117812
+## 12     3        x  0.3898432&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;reshape2::dcast(long_dat, group ~ variable, mean)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   group          y         x
+## 1     1 -0.2214052 0.6128769
+## 2     2  0.3798261 0.1351965
+## 3     3 -0.2454803 0.9508122&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;complete-a-data-frame&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Complete a data frame&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df &amp;lt;- tibble::tibble(
+  group = c(1:2, 1),
+  item_id = c(1:2, 2),
+  item_name = c(&amp;quot;a&amp;quot;, &amp;quot;b&amp;quot;, &amp;quot;b&amp;quot;),
+  value1 = 1:3,
+  value2 = 4:6
+)
+df %&amp;gt;% tidyr::complete(group, tidyr::nesting(item_id, item_name))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 4 x 5
+##   group item_id item_name value1 value2
+##   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;      &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;
+## 1     1       1 a              1      4
+## 2     1       2 b              3      6
+## 3     2       1 a             NA     NA
+## 4     2       2 b              2      5&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df %&amp;gt;% tidyr::complete(group, item_id, item_name)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 8 x 5
+##   group item_id item_name value1 value2
+##   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;      &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;
+## 1     1       1 a              1      4
+## 2     1       1 b             NA     NA
+## 3     1       2 a             NA     NA
+## 4     1       2 b              3      6
+## 5     2       1 a             NA     NA
+## 6     2       1 b             NA     NA
+## 7     2       2 a             NA     NA
+## 8     2       2 b              2      5&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;extract-subset-of-data&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Extract subset of data&lt;/h1&gt;
+&lt;p&gt;Extract variables&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df %&amp;gt;% dplyr::select(group)
+df %&amp;gt;% dplyr::select(tidyselect::starts_with(&amp;quot;item_&amp;quot;))
+df %&amp;gt;% dplyr::select(tidyselect::ends_with(&amp;quot;_name&amp;quot;))
+df %&amp;gt;% dplyr::select(tidyselect::num_range(&amp;quot;value&amp;quot;, 1:2))
+df %&amp;gt;% dplyr::select(tidyselect::contains(&amp;quot;item&amp;quot;))
+df %&amp;gt;% dplyr::select(tidyselect::matches(&amp;quot;value.&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Filter rows&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df %&amp;gt;% dplyr::filter(group == 1)
+df %&amp;gt;% dplyr::distinct(group, .keep_all = TRUE)
+df %&amp;gt;% dplyr::slice(2:3)  # select rows by position
+df %&amp;gt;% dplyr::top_n(2, value1) # select top 2 entries in value1&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SQL notes</title>
+      <link>/post/2019-07-14-sql/</link>
+      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-07-14-sql/</guid>
+      <description>
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;Structured Query Language (SQL) is a standard computer language for &lt;strong&gt;relational&lt;/strong&gt; database management and data manipulation. It can be used to read, write, and  update data. For data scientists, it is mainly used for data retrieval. There are several relational database management systems, such as Oracle, MySQL, and SQLite. Depending on the system you are using, the SQL syntax may be a little bit different.&lt;/p&gt;
+
+&lt;h1 id=&#34;retrieve-data&#34;&gt;Retrieve data&lt;/h1&gt;
+
+&lt;p&gt;Use SELECT statement to query database, filtered by some conditions (optional). The [ ] is used to state optional clauses. To select all columns, use * after the SELECT keyword.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT &amp;lt;col1&amp;gt;, &amp;lt;col2&amp;gt; 
+FROM &amp;lt;tablename&amp;gt;
+[WHERE &amp;lt;condition&amp;gt;];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Conditional selections used in the WHERE clause:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;=              Equal
+&amp;lt;&amp;gt;             Not equal to
+&amp;gt;              Greater than
+&amp;lt;              Less than
+&amp;gt;=             Greater than or equal
+&amp;lt;=             Less than or equal
+BETWEEN AND    Within a range
+IS NULL        Is a null
+LIKE           Pattern matching operator
+IN (&amp;lt;val1&amp;gt;, &amp;lt;val2&amp;gt;, ...)           
+OR
+AND
+NOT
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Sometimes IN and OR can accomplish the same thing. But in general, IN executes faster than OR and it allows to use another SELECT for subqueries.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;SQL processes AND before OR. Use ( ) when using AND and OR together to avoid confusion in the order of operations.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Wildcards for pattern matching:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Using % for pattern matching: &amp;lsquo;%a&amp;rsquo;, end with a; &amp;lsquo;a%&amp;rsquo;, start with a; &amp;lsquo;%a%&amp;rsquo;, with a in between; &amp;lsquo;a%z&amp;rsquo;, start with a and end with z; &amp;lsquo;a%@gmail.com&amp;rsquo;, grab gmail addresses start with a.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Using underscore _ for matching a single character:  &amp;lsquo;_day&amp;rsquo;, grab four-letter words that end with &amp;lsquo;day&amp;rsquo;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Wildcards take longer to run than regular operators. Avoid using them if they can be replaced by other operators.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The code below select two columns from a table named nameInfo and only select rows where the lastname ends in &amp;ldquo;son&amp;rdquo;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT firstname, lastname
+FROM nameInfo
+WHERE lastname LIKE &#39;%son&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;create-table&#34;&gt;Create table&lt;/h1&gt;
+
+&lt;p&gt;Use CREATE TABLE statement to create a new table, with optional constraints associated with each column respectively. The table and column names must start with a letter and can be followed by letters, numbers, or underscores The maximum length of a name is 30 characters.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;CREATE TABLE &amp;lt;tablename&amp;gt;
+(&amp;lt;column1&amp;gt; &amp;lt;data type&amp;gt; [constraint],
+ &amp;lt;column2&amp;gt; &amp;lt;data type&amp;gt; [constraint]
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use CREATE TEMPORARY TABLE statement to create a temporary table. It is faster to create a temporary table than a real table. However, temporary tables will be deleted when current session is terminated.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;CREATE TEMPORARY TABLE &amp;lt;temp_tablename&amp;gt; AS
+(
+  SELECT *
+  FROM &amp;lt;tablename&amp;gt;
+  [WHERE &amp;lt;conditions&amp;gt;]
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Common data types in SQL&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char(size)			Character string with a fixed length.
+Varchar(size)		Character string with a maximum number of length.
+date				Date value
+number(size)		Number value with a maximum number of integer digits.
+number(size, d)		Number value with a maximum number of &amp;quot;size&amp;quot; integer digits and a maximum number of &amp;quot;d&amp;quot; fraction digits.
+decimal(n, d)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Common constraints&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;UNIQUE			No two records can have the same value in a particular column.
+NOT NULL		A column can&#39;t be left blank.
+PRIMARY KEY 	Defines a unique identification of each record (or row) in a table. Cannot contain NULL.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;CREATE TABLE nameInfo
+(idnumber number(12) UNIQUE,
+ firstname Varchar(20),
+ lastname Varchar(20),
+ age number(3),
+ country Varchar(10)
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;insert-and-delete-rows&#34;&gt;Insert and delete rows&lt;/h1&gt;
+
+&lt;p&gt;Use INSERT INTO statement to insert rows into a table. All strings should be enclosed in &lt;strong&gt;single&lt;/strong&gt; quotes, for example &amp;lsquo;September&amp;rsquo;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;INSERT INTO &amp;lt;tablename&amp;gt;
+       (col_1, ... , col_n)
+VALUES (value_1, ..., value_n);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use DELETE FROM statement to delete rows from a table.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;DELETE FROM &amp;lt;tablename&amp;gt;
+WHERE &amp;lt;col_1&amp;gt; OPERATOR &amp;lt;value_1&amp;gt;
+[AND|OR &amp;lt;col_2&amp;gt; OPERATOR &amp;lt;value_2&amp;gt;];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Examples&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;INSERT INTO nameInfo
+  (idnumber, firstname, lastname, age, country)
+VALUES (1234567, &#39;John&#39;, &#39;Lee&#39;, 45, &#39;Canada&#39;);
+
+DELETE FROM nameInfo
+WHERE lastname = &#39;May&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;insert-column&#34;&gt;Insert column&lt;/h1&gt;
+
+&lt;p&gt;Add column to a table in a database:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;AFTER TABLE &amp;lt;tablename&amp;gt;
+ADD &amp;lt;columnname&amp;gt; &amp;lt;datatype&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT &amp;lt;col1&amp;gt;, &amp;lt;col2&amp;gt;, &amp;lt;col1&amp;gt; + &amp;lt;col2&amp;gt; AS &amp;lt;col3&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;update-records&#34;&gt;Update records&lt;/h1&gt;
+
+&lt;p&gt;Use UPDATE statement to update records that match a specified criteria.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;UPDATE &amp;lt;tablename&amp;gt;
+SET &amp;lt;columnname&amp;gt; = &amp;lt;newvalue&amp;gt; [, &amp;lt;nextcolumn&amp;gt; = &amp;lt;newvalue2&amp;gt;, ... ]
+WHERE &amp;lt;columnname&amp;gt; OPERATOR &amp;lt;value&amp;gt; 
+[AND|OR &amp;lt;column&amp;gt; OPERATOR &amp;lt;value&amp;gt;];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;UPDATE nameInfo
+SET lastname = &#39;Li&#39;, age = 48,
+WHERE lastname = &#39;Lee&#39; AND firstname = &#39;John&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;drop-a-table&#34;&gt;Drop a table&lt;/h1&gt;
+
+&lt;p&gt;Use DROP TABLE command to delete a table and all rows in the table. It is different from deleting all the records in the table. The former removes the table definition as well as all of its rows and the latter leaves the table including column and constraint information.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;DROP TABLE &amp;lt;tablename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;sort-a-table&#34;&gt;Sort a table&lt;/h1&gt;
+
+&lt;p&gt;Use ORDER BY statement to sort a table. It must be the last clause in a select statement.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT &amp;lt;col1&amp;gt;, &amp;lt;col2&amp;gt;
+FROM &amp;lt;tablename&amp;gt;
+ORDER BY &amp;lt;col1&amp;gt; DESC, &amp;lt;col2&amp;gt; ASC, &amp;lt;col3&amp;gt; ASC;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can sort by a column not retrieved and use DESC or ASC for descending or ascending (default) order.&lt;/p&gt;
+
+&lt;h1 id=&#34;aggregate-functions&#34;&gt;Aggregate functions&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;AVG()
+COUNT()
+MIN()
+MAX()
+SUM()
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Rows containing NULL values are ignored by AVG(), MIN(), MAX().&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;COUNT(*)&lt;/code&gt;: count all the rows containing values or NULL;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;COUNT(&amp;lt;colname&amp;gt;)&lt;/code&gt;: count all the rows in a specific column ignoring NULL values;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Use DISTINCT on aggregate functions. For example, &lt;code&gt;COUNT( DISTINCT &amp;lt;colname&amp;gt;)&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Examples&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT AVG(score) AS average_score
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;group-data&#34;&gt;Group data&lt;/h1&gt;
+
+&lt;p&gt;Use GROUP BY clause to group data and use HAVING clause for filtering for groups.
+They are used after WHERE clause and hence rows filtered out by WHERE will not be included in GROUP BY clause.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT &amp;lt;col1&amp;gt;, &amp;lt;col2&amp;gt;, [some aggregated calculations]
+FROM &amp;lt;tablename&amp;gt;
+GROUP BY &amp;lt;col1&amp;gt;, &amp;lt;col2&amp;gt;
+[HAVING &amp;lt;condition&amp;gt;]; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Every column in your SELECT statement must be present in a GROUP BY clause, except for aggregated calculations.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT customerID, COUNT(*) AS orders
+FROM Orders
+GROUP BY customerID
+HAVING COUNT(*) &amp;gt;= 2 ; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;using-subqueries&#34;&gt;Using subqueries&lt;/h1&gt;
+
+&lt;p&gt;Subqueries are queries embedded into other queries. Since data is often stored in multiple tables, subqueries are useful when it comes to getting information from multiple tables. Moreover, they are often used for adding additional criteria, such as filtering criteria, from another table into your query. Subquery selects can only retrieve a single column.&lt;/p&gt;
+
+&lt;p&gt;There is no limit to the number of subqueries you can have. But the performance in obtaining the results slows down when the subqueries are deeply nested.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT studentID, firstname, lastname, major
+FROM studentList
+WHERE studentiID IN (
+  SELECT studentID
+  FROM gradeList
+  WHERE score &amp;gt; 80
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;joining-tables&#34;&gt;Joining tables&lt;/h1&gt;
+
+&lt;p&gt;A join allows you to retrieve the data from multiple tables in just one query. The result only exists for the duration of the query execution.&lt;/p&gt;
+
+&lt;h2 id=&#34;cartesian-cross-joins&#34;&gt;Cartesian (cross) joins&lt;/h2&gt;
+
+&lt;p&gt;A Cartesian join allows you to take each record from the first table and match it with all of the records from the second table. If the first table contains &lt;code&gt;x&lt;/code&gt; rows and second table contains &lt;code&gt;y&lt;/code&gt; rows, you will have &lt;code&gt;x*y&lt;/code&gt; rows in the end result. It is computationally taxing and is not matching on anything. So it is not frequently used.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT &amp;lt;col1&amp;gt;, &amp;lt;col2&amp;gt;, &amp;lt;col3&amp;gt;
+FROM  &amp;lt;table1&amp;gt;  CROSS JOIN &amp;lt;table2&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;inner-joins&#34;&gt;Inner joins&lt;/h2&gt;
+
+&lt;p&gt;An inner join is used to select records that have matching values in both tables on some keys.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT &amp;lt;col1&amp;gt;, &amp;lt;col2&amp;gt;, &amp;lt;col3&amp;gt;
+FROM &amp;lt;table1&amp;gt;  INNER JOIN &amp;lt;table2&amp;gt; 
+ON &amp;lt;prequalified key1&amp;gt; = &amp;lt;prequalified key2&amp;gt; ;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT studentID, firstname, lastname, score
+FROM studentList INNER JOIN gradeList
+ON studentList.studentID = gradeList.studentID;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;aliases-and-self-joins&#34;&gt;Aliases and self joins&lt;/h2&gt;
+
+&lt;p&gt;An alias is helpful because it can help you by just shortening names and simplifying how we are pre-qualifying them. It doesn&amp;rsquo;t rewrite anything of the table permanently and is only stored for the duration of the query.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT studentID, firstname, lastname
+FROM studentList AS stud, gradeList AS grade
+WHERE stud.studentID = grade.studentID ;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A self join takes the table and treat it like two separate tables. The following example matches customers that are from the same city.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT A.name AS name1, B.name AS name2, A.city
+FROM Customers A, Customers B
+WHERE A.customerID = B.customberID
+AND A.city = B.city
+ORDER BY A.city;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;left-right-full-outer-joins&#34;&gt;Left, right, full outer joins&lt;/h2&gt;
+
+&lt;p&gt;The left join returns all the records from the table on the left side and the matched records from the right table. The following example selects all customers and any orders they might have:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT C.name, O.orderID
+FROM Customers C
+LEFT JOIN Orders O 
+ON C.customerID = O.customerID
+ORDER BY C.name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The difference between the right and left joins is the order the tables are relating. Right joins can be turned into left joins by reversing the order of the tables.&lt;/p&gt;
+
+&lt;p&gt;The full outer join returns all records when there is a match in either left or right table. The following example selects all customers and all orders.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT C.name, O.orderID
+FROM Customers C
+FULL OUTER JOIN Orders O 
+ON C.customerID = O.customerID
+ORDER BY C.name ;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;unions&#34;&gt;Unions&lt;/h2&gt;
+
+&lt;p&gt;The UNION is used to combine the result set of two or more SELECT statements. Each SELECT statement within UNION must have the same number of columns and the columns must be in the same order with similar data types.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT &amp;lt;colnames&amp;gt; FROM &amp;lt;table1&amp;gt;
+UNION
+SELECT &amp;lt;colnames&amp;gt; FROM &amp;lt;table2&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The following example selects the German cities that have suppliers.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT city, country FROM Customers
+WHERE country = &#39;germany&#39;
+UNION
+SELECT city, country FROM supplier
+WHERE country = &#39;germany&#39;
+ORDER BY city;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;working-with-text-strings&#34;&gt;Working with text strings&lt;/h1&gt;
+
+&lt;h2 id=&#34;concatenations&#34;&gt;Concatenations&lt;/h2&gt;
+
+&lt;p&gt;Use &lt;code&gt;||&lt;/code&gt; to concatenate strings. SQL server supports &lt;code&gt;+&lt;/code&gt; instead of &lt;code&gt;||&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT CompanyName, ContactName, CompanyName || &#39;(&#39; || ContactName || &#39;)&#39;
+FROM customers
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;trimming&#34;&gt;Trimming&lt;/h2&gt;
+
+&lt;p&gt;Use LTRIM, RTRIM, TRIM to trim the leading, trailing, or both space from a string.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT TRIM(&amp;quot;	Hello.	&amp;quot;) AS TrimmedString
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;substring&#34;&gt;Substring&lt;/h2&gt;
+
+&lt;p&gt;Use SUBSTR to return the specified number of characters from a particular position of a given string.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT firstname, SUBSTR (firstname, 2, 4)	# pull 4 characters, starting at the 2nd character 
+FROM employees
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;upper-and-lower&#34;&gt;Upper and lower&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT UPPER(firstname) FROM employees;
+SELECT LOWER(firstname) FROM employees;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;working-with-date-and-time-strings&#34;&gt;Working with date and time strings&lt;/h1&gt;
+
+&lt;p&gt;SQLite supports 5 date and time functions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;DATE(timestring, modifier, modifier, ...)
+
+TIME(timestring, modifier, modifier, ...)
+
+DATETIME(timestring, modifier, modifier, ...)
+
+JULIANDAY(timestring, modifier, modifier, ...)
+
+# Extract certain parts of a date or time string.
+# format components: %Y %m %d %H %M %S %s
+STRFTIME(format, timestring, modifier, modifier, ...)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A timestring can be in any of the following formats&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;YYYY-MM-DD
+YYYY-MM-DD HH:MM
+YYYY-MM-DD HH:MM:SS
+YYYY-MM-DD HH:MM:SS.SSS
+YYYY-MM-DDTHH:MM
+YYYY-MM-DDTHH:MM:SS
+YYYY-MM-DDTHH:MM:SS.SSS
+HH:MM
+HH:MM:SS
+HH:MM:SS.SSS
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Examples&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT DATE(&#39;now&#39;)	# compute current date
+SELECT STRFTIME(&#39;%Y %m %d&#39;, &#39;now&#39;)
+
+SELECT Birthdate, 
+	   STRFTIME(&#39;%Y&#39;, Birthdate) AS Year,
+	   STRFTIME(&#39;%m&#39;, Birthdate) AS Month,
+	   STRFTIME(&#39;%d&#39;, Birthdate) AS Day,
+	   DATE((&#39;now&#39;) - Birthdate) AS Age
+FROM employees
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;case-statements&#34;&gt;Case statements&lt;/h1&gt;
+
+&lt;p&gt;A case statement mimics if-else statement found in most programming languages. It can be used in SELECT, INSERT, UPDATE, and DELETE statements.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;CASE [input_var_name]
+WHEN C1 THEN E1
+WHEN C2 THEN E2
+...
+[ELSE else_result]
+END new_var_name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT studentid, firstname, lastname, score, 
+	   CASE 
+			WHEN score &amp;gt;= 60 THEN &#39;pass&#39;
+			WHEN score &amp;lt; 60 THEN &#39;fail&#39;
+			ELSE &#39;other&#39;
+	   END score_category
+FROM exam_result
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;views&#34;&gt;Views&lt;/h1&gt;
+
+&lt;p&gt;A view is essentially a stored query. It will be removed after database connect has ended.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Benefits&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;It can add or remove columns without changing the schema.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;It provides a simpler option to creating a new table.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;It helps us clean up our queries and simplify the queries when we have to write&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;It can be used to encapsulate complex queries or calculations that you are trying to write.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;CREATE [TEMP] VIEW [IF NOT EXISTS] view_name AS
+SELECT &amp;lt;list of column names&amp;gt;
+FROM datatable
+
+# To see the view
+SELECT *
+FROM view_name
+
+# Remove the view
+DROP VIEW view_name
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Scala notes III -- Classes and Objects</title>
+      <link>/post/2019-06-25-scala3/</link>
+      <pubDate>Tue, 25 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-06-25-scala3/</guid>
+      <description>
+
+
+&lt;div id=&#34;classes-and-objects&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Classes and objects&lt;/h1&gt;
+&lt;p&gt;In Scala, a class is a blueprint for objects. Once you define a class, you can create objects from the class blueprint with the keyword new. Through the object you can use all functionalities of the defined class.&lt;/p&gt;
+&lt;p&gt;An object is a named instance with members such as fields and methods. It is a class that has exactly one instance. There are three uses of objects.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Contain fields and methods that are independent of any environment;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;object Math {
+    def divide(x: Int, y: Int) = x / y
+    def square(x: Int) = x*x
+}
+
+println(Math.square(3))
+println(Math square 3)  // works if there is only one augment&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Create instances of classes with the keyword &lt;code&gt;new&lt;/code&gt;;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;class Circle(radius: Double) {
+  def area: Double = calculateArea(radius)
+}
+
+object Circle {
+  private def calculateArea(radius: Double): Double = Pi * pow(radius, 2.0)
+}
+
+val circle1 = new Circle(5.0)
+println(circle1.area)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;An object with the same name as a class is called a &lt;em&gt;companion object&lt;/em&gt;. Conversely, the class is the object’s companion class. A companion class or object can access the private members of its companion. Use a companion object for methods and values which are not specific to instances of the companion class.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create the entry point to a Scala program by defining a &lt;code&gt;main&lt;/code&gt; method with a specific signature.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;object &amp;lt;object name&amp;gt; {
+  def main(args: &amp;lt;arg type&amp;gt;) = {
+
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;class User(var name: String, var age: Int);
+
+object Demo {
+  def main(args: Array[String]) {
+    var user = new User(&amp;quot;Max&amp;quot;, 28);
+    println(user.name);
+    println(user.age);
+    user.name = &amp;quot;Tom&amp;quot;;  // rewritable because name is var
+    user.age = 23;
+    println(user.name);
+    println(user.age);
+  }
+}
+
+//          Getter?     Setter?
+// -------  -------    ---------
+// var        yes         yes
+// val        yes         no
+// default    no          no
+
+// you cannot access name outside the class if it&amp;#39;s private
+class User2(private var name: String, var age: Int) {
+  def printName{ println(name) }
+};
+
+var user2 = new User2(&amp;quot;Max&amp;quot;, 28);
+println(user2.name); // returns error
+
+// to access name inside a class
+user2.printName&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;class-hierarchies&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Class Hierarchies&lt;/h1&gt;
+&lt;div id=&#34;auxiliary-constructor&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Auxiliary constructor&lt;/h2&gt;
+&lt;p&gt;An alternative constructor for a class.&lt;/p&gt;
+&lt;p&gt;With primary constructors, you must have different signatures for your auxiliary constructors; you must call previously defined constructors in your auxiliary constructors.&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;class User(val name: String, var age: Int) { // primary constructor
+  def this() {  // auxiliary constructor
+    this(&amp;quot;Tim&amp;quot;, 21);
+  }
+
+  def this(name: String) {
+    this(name, 32);
+  }
+}
+
+object Demo{
+  def main(args: Array[String]) {
+    var user1 = new User(&amp;quot;Max&amp;quot;, 28);
+    var user2 = new User();
+    var user3 = new User(&amp;quot;Max&amp;quot;);
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;class-inheritance-extending-a-class&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Class inheritance: extending a class&lt;/h2&gt;
+&lt;p&gt;Scala doesn’t allow multiple inheritance from more than one class.&lt;/p&gt;
+&lt;p&gt;A super class Polygon:&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;package Inheritance
+
+class Polygon {
+  def area: Double = 0.0;
+}
+
+object Polygon {
+  def main(args: Array[String]) {
+    var poly = new Polygon;
+    printArea(poly);
+
+    var rect = new Rectangle(55.2, 20.0);
+    printArea(rect);
+
+    var tri = new Triangle(55.2, 20.0);
+    printArea(tri);
+  }
+
+  def printArea(p: Polygon) {
+    println(p.area);
+  }    
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A subclass Rectangle:&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;package Inheritance
+
+class Rectangle(var width: Double, var height: Double) extends Polygon {
+  override def area: Double = width * height; 
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A subclass Triangle:&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;package Inheritance
+
+class Triangle(var width: Double, var height: Double) extends Polygon {
+  override def area: Double = width * height / 2; 
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;override&lt;/code&gt; redefines an existing, non-abstract definition in a subclass.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;abstract-class&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Abstract class&lt;/h2&gt;
+&lt;p&gt;An abstract class can contain members which are missing an implementation. Consequently, it cannot be instantiated with the operator &lt;code&gt;new&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;An abstract class does a few things for the inheriting subclass:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;define methods which can be used by the inheriting subclass;&lt;/li&gt;
+&lt;li&gt;define abstract methods which the inheriting subclass must implement, in another word, it makes sure that we must implement methods inside subclasses;&lt;/li&gt;
+&lt;li&gt;provide a common interface which allows the subclass to be interchanged with all other subclasses i.e. inheritance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;package Inheritance
+
+abstract class Polygon {
+  def area: Double; // doesn&amp;#39;t provide any body to this method
+}
+
+object Polygon {
+  def main(args: Array[String]) {
+    // var poly = new Polygon;   // cannot be instantiated
+    // printArea(poly);
+
+    var rect = new Rectangle(55.2, 20.0);
+    printArea(rect);
+
+    var tri = new Triangle(55.2, 20.0);
+    printArea(tri);
+  }
+
+  def printArea(p: Polygon) {
+    println(p.area);
+  }    
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;trait&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Trait&lt;/h2&gt;
+&lt;p&gt;Scala doesn’t allow multiple inheritance and instead they use interface. A trait is a partially created interface.&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;package Inheritance
+
+trait Shape {
+  def shape: String;
+}
+
+class Rectangle(var width: Double, var height: Double) extends Polygon with Shape {
+  override def area: Double = height * width;
+  def shape: String = &amp;quot;rectangle&amp;quot;;  // can remove override when inheriting from a trait
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Scala notes II -- Functions</title>
+      <link>/post/2019-05-26-scala2/</link>
+      <pubDate>Sun, 26 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-05-26-scala2/</guid>
+      <description>
+
+
+&lt;div id=&#34;function-syntax&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Function Syntax&lt;/h1&gt;
+&lt;p&gt;Scala is a functional programming language, which means that functions are first-class citizens and you can pass them around as parameters or values.&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;def add(x: Int, y: Int): Int = {
+  return x + y;
+}
+println(add(21, 19));
+// Other variants
+def multiply(x: Int, y: Int): Int = x * y  // simplified version
+def divide(x: Int, y: Int) = x / y  // can ignore the output type if it&amp;#39;s obvious
+def substract(x: Int = 10, y: Int = 2) = x - y  // set default values&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can define the function names as operator, e.g. +, *, /, -&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;def +(x: Int, y: Int) = x + y&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;partially-applied-functions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Partially applied functions&lt;/h2&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val sum = (a: Int, b: Int, c: Int) =&amp;gt; a+b+c
+val f = sum(10, 20, _:Int)
+println(f(100)) // returns 130
+
+import java.util.Date
+def log(date: Date, message: String) = {
+  println(date + &amp;quot;   &amp;quot; + message);
+}
+val date = new Date;
+val newLog = log(date, _ :String);
+newLog(&amp;quot;The message 1.&amp;quot;)
+newLog(&amp;quot;The message 2.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;closures&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Closures&lt;/h2&gt;
+&lt;p&gt;A closure is a function which uses one or more variables declared outside this function.&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;var number = 10;
+
+//Example 1
+val add = (x:Int) =&amp;gt; x + number;
+println(add(20))
+
+number = 100
+println(add(20))  // If the value of the variable changes, the result changes too.
+
+//Example 2
+val add2 = (x:Int) =&amp;gt; {
+  number = x+number;
+  number
+}
+println(add2(20))
+println(number)  // numbder is 120 now
+
+//Example 3
+val number = 10;  // The result won&amp;#39;t change since number is fixed.&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;blocks-and-lexical-scope&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Blocks and Lexical Scope&lt;/h2&gt;
+&lt;p&gt;We can write nested functions in blocks to avoid name-space pollution. A block is delimited by braces { … } and it contains a sequence of definitions or expressions. The definitions inside a block are only visible from within the block. The definitions inside a block shadow definitions of the same names outside the block.&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val x = 0
+def f(y: Int) = y + 1
+val result = {
+  val x = f(3)  // x = 4, f() is visible inside the block
+  x * x         // 16, x shadows the x outside the block
+} + x           // + 0
+// return 16&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;recursive-functions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Recursive functions&lt;/h2&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;def factorial(n: Int): Int =
+  if (n == 0) 1 else n * factorial(n - 1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This function has a buildup of intermediate results that we have to keep until we can compute the final value so it is not a tail recursive function.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tail Recursion&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If a function calls itself as its last action, the function’s stack frame can be reused. This is called tail recursion. In general, if the last action of a function consists of calling a function (which may be the same), one stack frame would be sufficient for both functions. Such calls are called tail-calls.&lt;/p&gt;
+&lt;p&gt;One can require that a function is tail-recursive using a &lt;code&gt;@tailrec&lt;/code&gt; annotation. If the annotation is given and the implementation of a function is not tail recursive, an error would be issued.&lt;/p&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;@tailrec
+def factorial(n: Int): Int = {
+  def loop(acc: Int, n: Int): Int = 
+    if (n == 0) acc 
+    else loop(acc * n, n-1)
+  loop(1, n)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The interest of tail recursion is mostly to avoid very deep recursive chains. If your input data are such that deep recursive chains could happen, then it’s a good idea to reformulate your function to be tail recursive, to run in constant stack frame, so as to avoid stack overflow exceptions.&lt;/p&gt;
+&lt;p&gt;On the other hand, if your input data are not susceptible to deep recursive chains then write your function the clearest way you can, which often is not tail recursive, and don’t worry about the stack frames that are spent. For example, the tail recursive function of factorial above grows very quickly even after very low number of recursive steps. So it is &lt;strong&gt;not worth making factorial a tail recursive function&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;higher-order-functions&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Higher-order functions&lt;/h1&gt;
+&lt;p&gt;An important concept in functional programming is called &lt;strong&gt;higher-order function&lt;/strong&gt;. It lets you pass functions as arguments and return them as results. For example,&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;def sum(a: Int, b: Int, f: Int =&amp;gt; Int): Int = {
+  if(a &amp;gt; b) 0
+  else f(a) + sum(a+1, b, f)
+}
+def sumInts(a: Int, b: Int) = sum(a, b, x =&amp;gt; x);  
+def sumCubes(a: Int, b: Int) = sum(a, b, x =&amp;gt; x * x * x)&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The &lt;code&gt;Int =&amp;gt; Int&lt;/code&gt; is a &lt;strong&gt;function type&lt;/strong&gt; that maps &lt;code&gt;Int&lt;/code&gt; to &lt;code&gt;Int&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;code&gt;x =&amp;gt; x&lt;/code&gt; and &lt;code&gt;x =&amp;gt; x * x * x&lt;/code&gt; are &lt;strong&gt;anonymous functions&lt;/strong&gt; (aka function literals) that do not contain function names. Instead of defining a function &lt;code&gt;cube&lt;/code&gt;, for example&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;def cube(x: Int): Int = x * x * x&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;the anonymous function &lt;code&gt;x =&amp;gt; x * x * x&lt;/code&gt; provides a lightweight function definition and is useful when we want to create an inline function. &lt;br /&gt; More examples of anonymous functions:&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;(x, y) =&amp;gt; _+_   // i.e. (x, y) =&amp;gt; x+y
+(x, y) =&amp;gt; _min _   // i.e. (x, y) =&amp;gt; x min y
+(x, y) =&amp;gt; _max _   // i.e. (x, y) =&amp;gt; x max y
+// Anonymous functions with parameters
+var add = (x: Int, y: Int) =&amp;gt; x + y
+// Anonymous functions without parameters
+var word = () =&amp;gt; {&amp;quot;Hello world.&amp;quot;}&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id=&#34;currying&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Currying&lt;/h2&gt;
+&lt;p&gt;Currying is a special form of higher-order function. It can transform a function that takes multiple parameters into a function that consists of (nested) anonymous functions with each taking one parameter. &lt;!--That is, transform `def f(arg1)(arg2)...(argn) = E` to `def f = (arg1 =&gt; (arg2 =&gt; ...(agrn =&gt; E))`.
+**Multiple parameter lists**
+A simple example would be 
+```scala
+def add(x: Int) = (y: Int) =&gt; x + y;
+println(add(20)(10));
+
+// You can also apply partial applied function in currying
+val sum40 = add(40);
+println(sum40(100));
+
+//Simpler version in scala
+def add2 (x: Int) (y: Int) = x + y;
+val sum50 = add2(50)_;  //have to add _
+println(sum50(10))
+```
+--&gt;&lt;/p&gt;
+&lt;p&gt;For example, we can rewrite the &lt;code&gt;sum&lt;/code&gt; function which takes three parameters &lt;em&gt;(a, b, f)&lt;/em&gt; to a function that returns a function&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;def sum(f: Int =&amp;gt; Int): (Int, Int) =&amp;gt; Int = {
+  def sumF(a: Int, b: Int): Int =
+    if(a &amp;gt; b) 0
+    else f(a) + sumF(a+1, b)
+  sumF
+}
+def sumInts = sum(x =&amp;gt; x);
+def sumCubes = sum(x =&amp;gt; x * x * x) 
+println( sumCubes(1, 3) )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here the &lt;code&gt;sum&lt;/code&gt; function takes one argument &lt;em&gt;f&lt;/em&gt; and returns a function &lt;code&gt;sumF&lt;/code&gt; of type &lt;code&gt;(Int, Int) =&amp;gt; Int&lt;/code&gt;. This allows us to get rid of those parameters &lt;em&gt;a&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt; in &lt;code&gt;sumInts&lt;/code&gt; and &lt;code&gt;sumCubes&lt;/code&gt;. We can also avoid defining &lt;code&gt;sumInts&lt;/code&gt; and &lt;code&gt;sumCubes&lt;/code&gt; by applying &lt;code&gt;sum&lt;/code&gt; to a function directly, for example, &lt;code&gt;sum(cube)(1, 3)&lt;/code&gt; is equivalent to &lt;code&gt;sumCubes(1, 3)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;In Scala, functions that return functions are so useful that there is a special syntax for them. For example, the &lt;code&gt;sum&lt;/code&gt; function with the nested &lt;code&gt;sumF&lt;/code&gt; function can be simplified as&lt;/p&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;def sum(f: Int =&amp;gt; Int)(a: Int, b: Int): Int = {
+  if(a &amp;gt; b) 0
+  else f(a) + sum(f)(a+1, b)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The function type of &lt;code&gt;sum&lt;/code&gt; is &lt;code&gt;(Int =&amp;gt; Int) =&amp;gt; (Int, Int) =&amp;gt; Int&lt;/code&gt; or &lt;code&gt;(Int =&amp;gt; Int) =&amp;gt; ( (Int, Int) =&amp;gt; Int )&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Scala notes I</title>
-      <link>/post/2019-05-18-scala/</link>
+      <link>/post/2019-05-18-scala1/</link>
       <pubDate>Sat, 18 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/2019-05-18-scala/</guid>
+      <guid>/post/2019-05-18-scala1/</guid>
       <description>
 
 
@@ -111,7 +1035,7 @@ AnyRef   The supertype of any reference type&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;variables&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Variables &lt;a name=&#34;variables&#34;&gt;&lt;/a&gt;&lt;/h1&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;// mutable variable: variable value can be changed
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;// mutable variable: variable value can be changed
 var myVar : String = &amp;quot;Foo&amp;quot; 
 // imutable variable: variable value cannot be changed
 val myVar : Int = 10
@@ -124,7 +1048,7 @@ lazy val x = 500&lt;/code&gt;&lt;/pre&gt;
 &lt;h1&gt;String &lt;a name=&#34;string&#34;&gt;&lt;/a&gt;&lt;/h1&gt;
 &lt;div id=&#34;string-interpolation&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;String interpolation&lt;/h2&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val name = &amp;quot;mark&amp;quot;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val name = &amp;quot;mark&amp;quot;
 val age = 18
 println(name + &amp;quot; is&amp;quot; + age + &amp;quot; year old.&amp;quot;)
 println(s&amp;quot;$name is $age years old.&amp;quot;)
@@ -139,7 +1063,7 @@ println(s&amp;quot;Hello \nworld.&amp;quot;)
 &lt;/div&gt;
 &lt;div id=&#34;methods-for-strings&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Methods for Strings&lt;/h2&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val str1: String = &amp;quot;Hello world&amp;quot;;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val str1: String = &amp;quot;Hello world&amp;quot;;
 val str2: String = &amp;quot; Max&amp;quot;;
 
 // calculate length
@@ -160,7 +1084,7 @@ println(&amp;quot;(%d -- %f -- %s)&amp;quot;.format(num1, num2, str1));&lt;/code
 &lt;div id=&#34;arrays&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Arrays&lt;/h1&gt;
 &lt;p&gt;An array is a data structure which can store fixed-sized sequential elements of same data type.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val myarray: Array[Int] = new Array[Int](4);
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val myarray: Array[Int] = new Array[Int](4);
 
 // index starts from 0 in Scala
 myarray(0) = 20; 
@@ -194,7 +1118,7 @@ for(x &amp;lt;- result){
 &lt;div id=&#34;lists&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Lists&lt;/h2&gt;
 &lt;p&gt;Lists are immutable and represent the link lists whereas arrays are mutable and flat.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mylist: List[Int] = List(1, 2, 5, 8);
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val mylist: List[Int] = List(1, 2, 5, 8);
 val names: List[String] = List(&amp;quot;Max&amp;quot;, &amp;quot;Tom&amp;quot;, &amp;quot;John&amp;quot;)
 println(mylist)
 println(names)
@@ -222,18 +1146,18 @@ println(sum)   // sum up all the elements&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;sets&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Sets&lt;/h2&gt;
 &lt;p&gt;A set is a collection of different elements of CM data types. So a set cannot have duplicated values inside them.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val myset: Set[Int] = Set(1, 2, 2, 5)
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val myset: Set[Int] = Set(1, 2, 2, 5)
 println(myset)  // returns Set(1, 2, 5)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;By default, set is immutable in Scala. If we need to declare a mutable set, we can use &lt;em&gt;scala.collection.mutable.Set&lt;/em&gt; instead.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val myset2 = scala.collection.mutable.Set(1, 3, 5)
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val myset2 = scala.collection.mutable.Set(1, 3, 5)
 println(myset2)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;To add a value into the set&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(myset + 10)  
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;println(myset + 10)  
 println(myset) // myset is not changed because it&amp;#39;s immutable&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Set is not ordered, which means the new element is assigned to a random location and you cannot index an element.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(myset(8))  // check if 8 exists in myset or not&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;println(myset(8))  // check if 8 exists in myset or not&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Other useful functions in set:&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(myset.head)
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;println(myset.head)
 println(myset.tail)
 println(myset.isEmpty)
 
@@ -256,13 +1180,13 @@ for(x &amp;lt;- myset){ println(x) }&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;maps&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Maps&lt;/h2&gt;
 &lt;p&gt;A map is a collection of key-value pairs, for example 801-max, 802-tom, 804-july.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mymap : Map[Int, String] = Map(801 -&amp;gt; &amp;quot;max&amp;quot;, 802 -&amp;gt; &amp;quot;tom&amp;quot;, 804 -&amp;gt; &amp;quot;july&amp;quot;);
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val mymap : Map[Int, String] = Map(801 -&amp;gt; &amp;quot;max&amp;quot;, 802 -&amp;gt; &amp;quot;tom&amp;quot;, 804 -&amp;gt; &amp;quot;july&amp;quot;);
 println(mymap)
 println(mymap(802))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Duplication of keys is not possible in a map.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mymap : Map[Int, String] = Map(801 -&amp;gt; &amp;quot;max&amp;quot;, 802 -&amp;gt; &amp;quot;tom&amp;quot;, 804 -&amp;gt; &amp;quot;july&amp;quot;, 804 -&amp;gt; &amp;quot;jully&amp;quot;);
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val mymap : Map[Int, String] = Map(801 -&amp;gt; &amp;quot;max&amp;quot;, 802 -&amp;gt; &amp;quot;tom&amp;quot;, 804 -&amp;gt; &amp;quot;july&amp;quot;, 804 -&amp;gt; &amp;quot;jully&amp;quot;);
 println(mymap); // it takes the last entry of 804&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(mymap.keys)  // returns a set
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;println(mymap.keys)  // returns a set
 println(mymap.values)
 println(mymap.isEmpty)
 println(mymap.contains(801000)) // check if a key (or exception case) is valid/exist in the map
@@ -280,7 +1204,7 @@ println(mymap ++ mymap2);&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;tuples&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Tuples&lt;/h2&gt;
 &lt;p&gt;A tuple is a class that can contain different kinds of elements, unlike array. A tuple is immutable in scala. You cannot change a tuple once it’s declared. A tuple can contain 22 elements at most.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val mytuple = (1, 2, &amp;quot;hello&amp;quot;, true);
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val mytuple = (1, 2, &amp;quot;hello&amp;quot;, true);
 println(mytuple);
 
 val mytuple2 = new Tuple3(1, 2, &amp;quot;hello&amp;quot;); // have to indicate the number of elements in a tuple right after the &amp;quot;Tuple&amp;quot; keyword; maximum number is 22.
@@ -298,7 +1222,7 @@ mytuple.productIterator.foreach{
 &lt;div id=&#34;options&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Options&lt;/h2&gt;
 &lt;p&gt;An option is a container which can give you two values (Some or None).&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3);
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3);
 val map = Map(1 -&amp;gt; &amp;quot;Tom&amp;quot;, 2 -&amp;gt; &amp;quot;Max&amp;quot;, 3 -&amp;gt; &amp;quot;John&amp;quot;);
 println(lst.find(_ &amp;gt; 6));  // return None
 println(lst.find(_ &amp;gt; 2));  // return Some(3)
@@ -322,16 +1246,16 @@ val opt2 : Option[Int] = Some(55); // returns false&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;comment-code&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Comment code&lt;/h1&gt;
 &lt;p&gt;Comment one line&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;// println(&amp;quot;Hello&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;// println(&amp;quot;Hello&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Comment multiple lines&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;/*  
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;/*  
 println(&amp;quot;Hello&amp;quot;)
 println(&amp;quot;world&amp;quot;)
 */&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;ifelse-statement&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Ifelse statement&lt;/h1&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val x = 20
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val x = 20
 var res = &amp;quot;&amp;quot;
 
 if(x == 20){
@@ -349,7 +1273,7 @@ println(if(x == 20) &amp;quot;x==20&amp;quot; else &amp;quot;x!=20&amp;quot;)&lt
 &lt;/div&gt;
 &lt;div id=&#34;match-expressions&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Match expressions&lt;/h1&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val age: Int = 18
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val age: Int = 18
 
 age match {
   case 18 =&amp;gt; println(&amp;quot;age 18&amp;quot;)
@@ -377,7 +1301,7 @@ i match {
 &lt;div id=&#34;while-loop&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;while loop&lt;/h2&gt;
 &lt;p&gt;check the condition before executing&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var x = 0
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;var x = 0
 while(x &amp;lt; 10){
     println(&amp;quot;x = &amp;quot; + x)
     x += 1  // x = x + 1
@@ -386,7 +1310,7 @@ while(x &amp;lt; 10){
 &lt;div id=&#34;do-while-loop&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;do-while loop&lt;/h2&gt;
 &lt;p&gt;execute at least once regardless of the condition&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var y = 0
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;var y = 0
 do {
     println(&amp;quot;y = &amp;quot; + y)
     y += 1  
@@ -394,7 +1318,7 @@ do {
 &lt;/div&gt;
 &lt;div id=&#34;for-loop&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;for loop&lt;/h2&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;for ( i &amp;lt;- 1 to 5){
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;for ( i &amp;lt;- 1 to 5){
   println(&amp;quot;i using to &amp;quot; + i)
 }
 // identical
@@ -419,98 +1343,10 @@ val result = for { i &amp;lt;- lst; if i &amp;lt; 3 } yield {
 println(&amp;quot;result = &amp;quot; + result) // return a List&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;div id=&#34;functions&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Functions&lt;/h1&gt;
-&lt;div id=&#34;basice-functions&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Basice functions&lt;/h3&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;def add(x: Int, y: Int): Int = {
-  return x + y;
-}
-println(add(21, 19));
-// Other variants
-def multiply(x: Int, y: Int): Int = x * y  // simplified version
-def divide(x: Int, y: Int) = x / y  // can ignore the output type if it&amp;#39;s obvious
-def substract(x: Int = 10, y: Int = 2) = x - y  // set default values&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;You can define the function names as operator, e.g. +, *, /, -&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;def +(x: Int, y: Int) = x + y&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;anonymous-functions&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Anonymous functions&lt;/h3&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var add = (x: Int, y: Int) =&amp;gt; x + y
-println(add(300, 500))&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;higher-order-functions&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Higher-order functions&lt;/h3&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;def math(x: Double, y: Double, z:Double, f: (Double, Double) =&amp;gt; Double): Double = {
-  f(f(x, y), z);
-}
-
-def main(args: Array[String]) {
-  val result = math(50, 20, 10, (x, y) =&amp;gt; x min y);  // find the minimum number
-  println(result);
-}
-
-(x, y) =&amp;gt; _+_   // i.e. (x, y) =&amp;gt; x+y
-(x, y) =&amp;gt; _max _   // i.e. (x, y) =&amp;gt; x max y&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;partially-applied-functions&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Partially applied functions&lt;/h3&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val sum = (a: Int, b: Int, c: Int) =&amp;gt; a+b+c
-val f = sum(10, 20, _:Int)
-println(f(100)) // returns 130
-
-import java.util.Date
-def log(date: Date, message: String) = {
-  println(date + &amp;quot;   &amp;quot; + message);
-}
-val date = new Date;
-val newLog = log(date, _ :String);
-newLog(&amp;quot;The message 1.&amp;quot;)
-newLog(&amp;quot;The message 2.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;closures&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Closures&lt;/h1&gt;
-&lt;p&gt;A closure is a function which uses one or more variables declared outside this function.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;var number = 10;
-
-//Example 1
-val add = (x:Int) =&amp;gt; x + number;
-println(add(20))
-
-number = 100
-println(add(20))  // If the value of the variable changes, the result changes too.
-
-//Example 2
-val add2 = (x:Int) =&amp;gt; {
-  number = x+number;
-  number
-}
-println(add2(20))
-println(number)  // numbder is 120 now
-
-//Example 3
-val number = 10;  // The result won&amp;#39;t change since number is fixed.&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;currying&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Currying&lt;/h1&gt;
-&lt;p&gt;Currying is the technique of transforming a function that takes multiple arguments into a function that takes a single argument.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;def add(x: Int) = (y: Int) =&amp;gt; x + y;
-println(add(20)(10));
-
-// You can also apply partial applied function in currying
-val sum40 = add(40);
-println(sum40(100));
-
-//Simpler version in scala
-def add2 (x: Int) (y: Int) = x + y;
-val sum50 = add2(50)_;  //have to add _
-println(sum50(10))&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;div id=&#34;map-flatten-and-filter&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Map, flatten, and filter&lt;/h1&gt;
 &lt;p&gt;Map method&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3, 5, 7, 9, 10);
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3, 5, 7, 9, 10);
 val mymap = Map(1 -&amp;gt; &amp;quot;Tom&amp;quot;, 2 -&amp;gt; &amp;quot;Max&amp;quot;, 3 -&amp;gt; &amp;quot;John&amp;quot;);
 
 // double every element in lst
@@ -522,18 +1358,18 @@ println(mymap.mapValues(x =&amp;gt; &amp;quot;hi &amp;quot; + x));
 // apply toUpper to every element in the string &amp;quot;hello&amp;quot;
 println(&amp;quot;hello&amp;quot;.map(_.toUpper))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Flatten method&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;// flatten contents of a list of lists
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;// flatten contents of a list of lists
 println(List(List(1, 2, 3), List(3, 4, 5)).flatten)
 println(lst.flatMap(x =&amp;gt; List(x, x+1)))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Filter method&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;// abstract even numbers
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;// abstract even numbers
 println(lst.filter(x =&amp;gt; x%2 == 0))&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;reduce-fold-and-scan-leftright&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Reduce, fold, and scan (left/right)&lt;/h1&gt;
 &lt;p&gt;Reduce method&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3, 4, 6, 7, 8);
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val lst = List(1, 2, 3, 4, 6, 7, 8);
 val lst2 = List(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;C&amp;quot;);
 
 println(lst.reduceLeft(_ + _)) // returns sum of all elements
@@ -542,190 +1378,44 @@ println(lst2.reduceRight(_ + _)) // returns &amp;quot;ABC&amp;quot; by A(BC)
 
 println(lst.reduceLeft((x, y) =&amp;gt; {println(x + &amp;quot;,&amp;quot;, + y); x+y;}))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Fold method is similar to reduce method but can insert initial argument.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(lst.foldLeft(10)(_ + _)) // return 10 + sum(lst) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;println(lst.foldLeft(10)(_ + _)) // return 10 + sum(lst) &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Scan method takes initial value and applies it to each element in reduce method. It returns the map of intermediate results.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;println(lst.scanLeft(10)(_ + _))
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;println(lst.scanLeft(10)(_ + _))
 println(lst2.scanLeft(&amp;quot;z&amp;quot;)(_ + _))&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;object-oriented-program&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Object oriented program&lt;/h1&gt;
-&lt;div id=&#34;objects&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Objects&lt;/h2&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;object Math {
-    def divide(x: Int, y: Int) = x / y
-    def square(x: Int) = x*x
-}
-
-println(Math.square(3))
-println(Math square 3)  // works if there is only one augment&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;class&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Class&lt;/h2&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;class User(var name: String, var age: Int);
-
-object Demo {
-  def main(args: Array[String]) {
-    var user = new User(&amp;quot;Max&amp;quot;, 28);
-    println(user.name);
-    println(user.age);
-    user.name = &amp;quot;Tom&amp;quot;;  // rewritable because name is var
-    user.age = 23;
-    println(user.name);
-    println(user.age);
-  }
-}
-
-//          Getter?     Setter?
-// -------  -------    ---------
-// var        yes         yes
-// val        yes         no
-// default    no          no
-
-// you cannot access name outside the class if it&amp;#39;s private
-class User2(private var name: String, var age: Int) {
-  def printName{ println(name) }
-};
-
-var user2 = new User2(&amp;quot;Max&amp;quot;, 28);
-println(user2.name); // returns error
-
-// to access name inside a class
-user2.printName&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;auxiliary-constructor&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Auxiliary constructor&lt;/h2&gt;
-&lt;p&gt;An alternative constructor for a class.&lt;/p&gt;
-&lt;p&gt;With primary constructors, you must have different signatures for your auxiliary constructors; you must call previously defined constructors in your auxiliary constructors.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;class User(val name: String, var age: Int) { // primary constructor
-  def this() {  // auxiliary constructor
-    this(&amp;quot;Tim&amp;quot;, 21);
-  }
-
-  def this(name: String) {
-    this(name, 32);
-  }
-}
-
-object Demo{
-  def main(args: Array[String]) {
-    var user1 = new User(&amp;quot;Max&amp;quot;, 28);
-    var user2 = new User();
-    var user3 = new User(&amp;quot;Max&amp;quot;);
-  }
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;class-inheritance-extending-a-class&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Class inheritance: extending a class&lt;/h2&gt;
-&lt;p&gt;Scala doesn’t allow multiple inheritance from more than one class.&lt;/p&gt;
-&lt;p&gt;A super class Polygon:&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
-
-class Polygon {
-  def area: Double = 0.0;
-}
-
-object Polygon {
-  def main(args: Array[String]) {
-    var poly = new Polygon;
-    printArea(poly);
-
-    var rect = new Rectangle(55.2, 20.0);
-    printArea(rect);
-
-    var tri = new Triangle(55.2, 20.0);
-    printArea(tri);
-  }
-
-  def printArea(p: Polygon) {
-    println(p.area);
-  }    
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;A subclass Rectangle:&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
-
-class Rectangle(var width: Double, var height: Double) extends Polygon {
-  override def area: Double = width * height; 
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;A subclass Triangle:&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
-
-class Triangle(var width: Double, var height: Double) extends Polygon {
-  override def area: Double = width * height / 2; 
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;abstract-class&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Abstract class&lt;/h2&gt;
-&lt;p&gt;If a class is declared abstract, it cannot be instantiated.&lt;/p&gt;
-&lt;p&gt;An abstract class does a few things for the inheriting subclass:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;define methods which can be used by the inheriting subclass;&lt;/li&gt;
-&lt;li&gt;define abstract methods which the inheriting subclass must implement, in another word, it makes sure that we must implement methods inside subclasses;&lt;/li&gt;
-&lt;li&gt;provide a common interface which allows the subclass to be interchanged with all other subclasses i.e. inheritance.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
-
-abstract class Polygon {
-  def area: Double; // doesn&amp;#39;t provide any body to this method
-}
-
-object Polygon {
-  def main(args: Array[String]) {
-    // var poly = new Polygon;   // cannot be instantiated
-    // printArea(poly);
-
-    var rect = new Rectangle(55.2, 20.0);
-    printArea(rect);
-
-    var tri = new Triangle(55.2, 20.0);
-    printArea(tri);
-  }
-
-  def printArea(p: Polygon) {
-    println(p.area);
-  }    
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;trait&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Trait&lt;/h2&gt;
-&lt;p&gt;Scala doesn’t allow multiple inheritance and instead they use interface. A trait is a partially created interface.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;package Inheritance
-
-trait Shape {
-  def shape: String;
-}
-
-class Rectangle(var width: Double, var height: Double) extends Polygon with Shape {
-  override def area: Double = height * width;
-  def shape: String = &amp;quot;rectangle&amp;quot;;  // can remove override when inheriting from a trait
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;lazy-evaluation&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Lazy evaluation&lt;/h1&gt;
 &lt;p&gt;Lazy evaluation is an evaluation strategy that delays the evaluation of an expression until it’s needed. Scala supports strict evaluation by default and lazy evaluation if specified.&lt;/p&gt;
-&lt;pre class=&#34;java&#34;&gt;&lt;code&gt;val e = 9; // strict evaluation
-lazy val l = 9; // lazy evaluation
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;val e = 9; // strict evaluation
+lazy val l = 9; // lazy evaluation&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;call-by-value-v.s.-call-by-name&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;call-by-value v.s. call-by-name&lt;/h2&gt;
+&lt;pre class=&#34;scala&#34;&gt;&lt;code&gt;# call-by-value, the general case
+def method1(n: Int) {
+  println(&amp;quot;Method 1&amp;quot;);
+  println(n);
+}
 
+# call-by-name
+def method2(n: =&amp;gt; Int) {    // use =&amp;gt; 
+  println(&amp;quot;Method 2&amp;quot;);
+  println(n);
+}
 
-// object Demo {
-  def method1(n: Int) {
-    println(&amp;quot;Method 1&amp;quot;);
-    println(n);
-  }
-  def method2(n: =&amp;gt; Int) {
-    println(&amp;quot;Method 2&amp;quot;);
-    println(n);
-  }
-  // def main(args: Array[String]) {
-    val add = (a: Int, b: Int) =&amp;gt; {
-      println(&amp;quot;Add&amp;quot;);
-      a + b
-    }
+val add = (a: Int, b: Int) =&amp;gt; {
+  println(&amp;quot;Add&amp;quot;);
+  a + b
+}
 
-    method1(add(5, 6))
-    method2(add(5, 6))
-//   }
-// }&lt;/code&gt;&lt;/pre&gt;
+method1(add(5, 6))
+// Add
+// Method 1
+// 11
+method2(add(5, 6))
+// Method 2
+// Add
+// 11&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;scala-in-intellij-idea&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Scala in IntelliJ IDEA&lt;/h1&gt;
@@ -1216,323 +1906,6 @@ summary(model)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;[2] Sparklyr from Rstudio. &lt;a href=&#34;https://spark.rstudio.com/extensions/&#34; class=&#34;uri&#34;&gt;https://spark.rstudio.com/extensions/&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-    </item>
-    
-    <item>
-      <title>ARIMA</title>
-      <link>/post/2019-04-03-arima/</link>
-      <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2019-04-03-arima/</guid>
-      <description>
-
-
-&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Introduction&lt;/h1&gt;
-&lt;p&gt;The ARIMA (autoregressive integrated moving average) models are also known as &lt;strong&gt;Box–Jenkins models&lt;/strong&gt;. ARIMA models are applied in some cases where data show evidence of non-stationarity, where an initial differencing step (corresponding to the “integrated” part of the model) can be applied one or more times to eliminate the non-stationarity.&lt;/p&gt;
-&lt;p&gt;The AR part of ARIMA indicates that the evolving variable of interest is regressed on its own lagged (i.e., prior) values. The MA part indicates that the regression error is actually a linear combination of error terms whose values occurred contemporaneously and at various times in the past. The I (for “integrated”) indicates that the data values have been replaced with the difference between their values and the previous values (and this differencing process may have been performed more than once).&lt;/p&gt;
-&lt;p&gt;When two out of the three model parameters are zeros, the model may be referred to based on the non-zero parameter, dropping “AR”, “I” or “MA” from the acronym describing the model. For example, &lt;span class=&#34;math inline&#34;&gt;\(ARIMA (1,0,0)\)&lt;/span&gt; is &lt;span class=&#34;math inline&#34;&gt;\(AR(1)\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,0)\)&lt;/span&gt; is &lt;span class=&#34;math inline&#34;&gt;\(I(1)\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,0,1)\)&lt;/span&gt; is &lt;span class=&#34;math inline&#34;&gt;\(MA(1)\)&lt;/span&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;arp&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;AR(p)&lt;/h1&gt;
-&lt;p&gt;An autoregressive (AR) model is a representation of a type of random process. The AR model specifies that the output variable depends &lt;em&gt;linearly&lt;/em&gt; on its own previous values and on a stochastic term. In general, the AR model of order &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt;, i.e. &lt;span class=&#34;math inline&#34;&gt;\(AR(p)\)&lt;/span&gt;, is defined as &lt;span class=&#34;math display&#34;&gt;\[y_t = c + \sum_{i=1}^p \phi_i y_{t-i} +\epsilon_t,\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\phi_1,\cdots,\phi_p\)&lt;/span&gt; are the parameters, &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; is a constant, and &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\)&lt;/span&gt; is white noise often assumed following &lt;span class=&#34;math inline&#34;&gt;\(N(0,\sigma^2)\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;For AR(1), &lt;span class=&#34;math inline&#34;&gt;\(|\phi|&amp;lt;1\)&lt;/span&gt; is necessary for the process to be stationary, such that &lt;span class=&#34;math display&#34;&gt;\[E(y_t) = E(y_{t-1}) = \mu,\]&lt;/span&gt; &lt;span class=&#34;math display&#34;&gt;\[\text{var}(y_t) = \text{var}(y_{t-1})=\frac{\sigma^2}{1-\phi^2} = \sigma_y^2,\]&lt;/span&gt; assuming &lt;span class=&#34;math inline&#34;&gt;\(y_{t}\)&lt;/span&gt;’s and &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\)&lt;/span&gt;’s are independent from each other. The condition &lt;span class=&#34;math inline&#34;&gt;\(|\phi|&amp;lt;1\)&lt;/span&gt; appears in the variance term so that &lt;span class=&#34;math inline&#34;&gt;\(\sigma_y^2\)&lt;/span&gt; is finite and positive. Note that &lt;span class=&#34;math inline&#34;&gt;\(\text{var}(y_t)\)&lt;/span&gt; in AR(1) is larger than in AR(0) i.e. regular linear models without autoregressions.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;id&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;I(d)&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;Differencing&lt;/strong&gt; in statistics is a transformation applied to time-series data in order to make it stationary. Differencing removes the changes in the level of a time series, eliminating trend and seasonality and consequently stabilizing the mean of the time series. The differenced data is then used for the estimation of an ARMA model.&lt;/p&gt;
-&lt;p&gt;The I(1) model of first-order differencing can be written as &lt;span class=&#34;math display&#34;&gt;\[D(y_t) = y_t - y_{t-1} = \epsilon_t,\]&lt;/span&gt; and the I(2) model of second-order differencing can be written as &lt;span class=&#34;math display&#34;&gt;\[D^2(y_t)  = D(y_t) - D(y_{t-1})  = y_t - 2y_{t-1}+y_{t-2} = \epsilon_t,\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(D()\)&lt;/span&gt; is the operator of differencing and &lt;span class=&#34;math inline&#34;&gt;\(D^d(y_t) = D^{d-1}(y_t) - D^{d-1}(y_{t-1})\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;Another method of differencing data is &lt;strong&gt;seasonal differencing&lt;/strong&gt;, which involves computing the difference between an observation and the corresponding observation in the previous period. For example, &lt;span class=&#34;math display&#34;&gt;\[y&amp;#39;_t = y_t - y_{t-s},\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; is the duration of season. We denote it as &lt;span class=&#34;math inline&#34;&gt;\(D_s(y_t)\)&lt;/span&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;maq&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;MA(q)&lt;/h1&gt;
-&lt;p&gt;The moving average model of order &lt;span class=&#34;math inline&#34;&gt;\(q\)&lt;/span&gt;, i.e. &lt;span class=&#34;math inline&#34;&gt;\(MA(q)\)&lt;/span&gt;, is given as &lt;span class=&#34;math display&#34;&gt;\[y_t = \mu + \epsilon_t + \sum_{i=1}^q\theta_i\epsilon_{t-i},\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\theta_1,\cdots,\theta_q\)&lt;/span&gt; are the parameters, &lt;span class=&#34;math inline&#34;&gt;\(\mu\)&lt;/span&gt; is the expectation of &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t, \epsilon_{t-1},\cdots\)&lt;/span&gt; are white noise error terms.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;arimapdq&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;ARIMA(p,d,q)&lt;/h1&gt;
-&lt;div id=&#34;non-seasonal-arima&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Non-seasonal ARIMA&lt;/h2&gt;
-&lt;p&gt;Non-seasonal ARIMA models are generally denoted &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(p,d,q)\)&lt;/span&gt; where parameters &lt;span class=&#34;math inline&#34;&gt;\(p, d, q\)&lt;/span&gt; are non-negative integers, &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; is the order (number of time lags) of the autoregressive model, &lt;span class=&#34;math inline&#34;&gt;\(d\)&lt;/span&gt; is the degree of differencing (the number of times the data have had past values subtracted), and &lt;span class=&#34;math inline&#34;&gt;\(q\)&lt;/span&gt; is the order of the moving-average model. In general, an &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(p,d, q)\)&lt;/span&gt; model is given as &lt;span class=&#34;math display&#34;&gt;\[D^d(y_t) = \delta + \sum_{i=1}^p\phi_i D^d(y_{t-i}) + \epsilon_t +
-\sum_{i=1}^q \theta_i \epsilon_{t-i},\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(D^d(y_t)\)&lt;/span&gt; is the &lt;span class=&#34;math inline&#34;&gt;\(d\)&lt;/span&gt;-order difference of &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;seasonal-arima&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Seasonal ARIMA&lt;/h2&gt;
-&lt;p&gt;Seasonal ARIMA models are usually denoted &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(p,d,q)\times(P,D,Q)_s\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; refers to the time span of repeating seasonal pattern, and the uppercase &lt;span class=&#34;math inline&#34;&gt;\(P,D,Q\)&lt;/span&gt; refer to the autoregressive, differencing, and moving average terms for the seasonal part of the ARIMA model.&lt;/p&gt;
-&lt;p&gt;The non-seasonal components are the same as in non-seasonal ARIMA. As for the seasonal components, we have, for example,&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Seasonal AR: &lt;span class=&#34;math inline&#34;&gt;\(y_t = c + \sum_{i=1}^P\psi_i y_{t-si}\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Seasonal MA: &lt;span class=&#34;math inline&#34;&gt;\(y_t = \mu+ \epsilon_t + \sum_{i=1}^Q\eta_i\epsilon_{t-si}\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Seasonal I: &lt;span class=&#34;math inline&#34;&gt;\(D^D_s(y_t) = D^{D-1}_s(y_t)- D_s^{D-1}(y_{t-s})\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div id=&#34;examples&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Examples&lt;/h2&gt;
-&lt;p&gt;Some well-known special cases arise naturally or are mathematically equivalent to other popular forecasting models. For example:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,0)\)&lt;/span&gt; model (or &lt;span class=&#34;math inline&#34;&gt;\(I(1)\)&lt;/span&gt; model) is given by &lt;span class=&#34;math inline&#34;&gt;\(X_{t}=X_{t-1}+\epsilon_{t}\)&lt;/span&gt;, which is simply a random walk.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,0)\)&lt;/span&gt; with a constant, given by &lt;span class=&#34;math inline&#34;&gt;\(X_{t}=c+X_{t-1}+\epsilon_{t}\)&lt;/span&gt;, which is a random walk with drift.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,0,0)\)&lt;/span&gt; model is a white noise model.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,2)\)&lt;/span&gt; model is a Damped Holt’s model.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,1,1)\)&lt;/span&gt; model without constant is a &lt;strong&gt;basic exponential smoothing model&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;An &lt;span class=&#34;math inline&#34;&gt;\(ARIMA(0,2,2)\)&lt;/span&gt; model is given by &lt;span class=&#34;math inline&#34;&gt;\(X_{t}=2X_{t-1}-X_{t-2}+(\alpha +\beta -2)\epsilon_{t-1}+(1-\alpha )\epsilon_{t-2}+\epsilon_{t}\)&lt;/span&gt;, which is equivalent to Holt’s linear method with additive errors, or &lt;strong&gt;second-order exponential smoothing&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Structural Time-Series Models</title>
-      <link>/post/2019-03-21-bsts/</link>
-      <pubDate>Thu, 21 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2019-03-21-bsts/</guid>
-      <description>
-
-
-&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Introduction&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;State-space models&lt;/strong&gt; were originally developed by control engineers, particularly for applications that require continuous updating of the current position. An example, from the field of navigation systems, is updating an user equipment’s position. The models have also found increasing use in many types of time-series problems, including parameter estimation, smoothing, and prediction. &lt;strong&gt;Structural time-series models&lt;/strong&gt; are state-space models for time-series data. They are useful in practice because they are&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;flexible&lt;/strong&gt; : a very large class of models can be expressed in state space forms, including all ARIMA and VARMA models;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;modular&lt;/strong&gt; : the model can be assembled from a library of state-component sub-models to capture important features of the data. Several widely used &lt;strong&gt;state components&lt;/strong&gt; are available for capturing the trend, seasonality, or effects of holidays.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The &lt;em&gt;bsts&lt;/em&gt; R package is a tool for fitting structural time series models using Bayesian methods and &lt;em&gt;bsts&lt;/em&gt; stands for Bayesian structural time series. The &lt;em&gt;bsts&lt;/em&gt; can be configured for short term or long term forecasting, incorporating one or more seasonal effects, or fitting explanatory models if forecasting is not the primary goal.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;general-form&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;General Form&lt;/h1&gt;
-&lt;p&gt;A general form of (univariate) structural time-series model &lt;!-- which underlies the Kalman filter--&gt; can be written as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp; y_t = Z_t^T \alpha_t + \epsilon_t, \qquad (\text{observation equation})\\
-&amp;amp; \alpha_{t+1} = T_t\alpha_{t} + R_t\eta_t, \qquad (\text{transition or state equation})\\
-&amp;amp; \epsilon_t\sim N(0,\sigma^2_t),\quad \eta_t \sim N(0, Q_t)
-\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt; is the observed value of a time series at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt;-dimensional &lt;strong&gt;state vector&lt;/strong&gt;, &lt;span class=&#34;math inline&#34;&gt;\(Z_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt;-dimensional &lt;strong&gt;output vector&lt;/strong&gt;, &lt;span class=&#34;math inline&#34;&gt;\(T_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(m\times m\)&lt;/span&gt; &lt;strong&gt;transition matrix&lt;/strong&gt;, &lt;span class=&#34;math inline&#34;&gt;\(R_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(m\times q\)&lt;/span&gt; &lt;strong&gt;control matrix&lt;/strong&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\)&lt;/span&gt; is a scalar observation error, and &lt;span class=&#34;math inline&#34;&gt;\(\eta_t\)&lt;/span&gt; is a &lt;span class=&#34;math inline&#34;&gt;\(q\)&lt;/span&gt;-dimensional system error with a &lt;span class=&#34;math inline&#34;&gt;\(q\times q\)&lt;/span&gt; &lt;strong&gt;state-diffusion matrix&lt;/strong&gt; &lt;span class=&#34;math inline&#34;&gt;\(Q_t\)&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(q\leq m\)&lt;/span&gt;.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;The observation equation links the observed data &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt; with the unobserved latent state &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t\)&lt;/span&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The state vector &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t\)&lt;/span&gt; is of prime importance and is usually unobserved or partially known. Although it may not be directly observable, it is often reasonable to assume that we know how it changes over time, and we denote the updating equation by the transition or state equation above. This equation defines how the latent space evolves over time.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The arrays &lt;span class=&#34;math inline&#34;&gt;\(Z_t, T_t, R_t\)&lt;/span&gt; typically contain a mix of known values (often 0 and 1) and unknown parameters. The 0’s and 1’s indicate which bits of &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t\)&lt;/span&gt; are relevant for a particular computation.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\eta_t\)&lt;/span&gt; are generally assumed to be serially uncorrelated and also to be uncorrelated with each other at all time periods. In practice, we often assume &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_t\sim N(0,\sigma_t^2)\)&lt;/span&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The term &lt;span class=&#34;math inline&#34;&gt;\(R_t\eta_t\)&lt;/span&gt; allows us to incorporate state components of less than full ranks. A model for seasonality will be the most important example.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The analyst chooses the structure of &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t\)&lt;/span&gt; based on the specific data and task, such as whether it is for short or long term forecast, whether the data contains seasonal effects, and whether and how regressors are to be included. Many of these models are standard, and can be fit using a variety of tools, such as the &lt;em&gt;StructTS&lt;/em&gt; function distributed with base R or one of several R packages for fitting these models, such as the &lt;em&gt;dlm&lt;/em&gt; package for dynamic linear model. The &lt;em&gt;bsts&lt;/em&gt; package handles all the standard cases, but it also includes several useful extensions.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;state-components&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;State Components&lt;/h1&gt;
-&lt;div id=&#34;static-intercept&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Static intercept&lt;/h2&gt;
-&lt;p&gt;We can add a static intercept term to a model, &lt;span class=&#34;math display&#34;&gt;\[y_t = c+\epsilon_t,\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; is a constant value. If the structural time-series model includes a traditional trend component (e.g. local level, local linear trend, etc) then a separate intercept is not needed (and will probably cause trouble, as it will be confounded with the initial state of the trend model). However, if there is no trend, or the trend is an AR process centered around zero, then adding a static intercept will shift the center to a data-determined value.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddStaticIntercept(ss, y)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;trend&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Trend&lt;/h2&gt;
-&lt;div id=&#34;local-level&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Local level&lt;/h3&gt;
-&lt;p&gt;The local level model assumes the trend is a random walk: &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp;y_t = \mu_t +\epsilon_t,\\
-&amp;amp;\mu_{t+1} =  \mu_{t} + \eta_{t}
-\end{split}\]&lt;/span&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddLocalLevel(ss, y)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;ar&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;AR&lt;/h3&gt;
-&lt;p&gt;An autoregressive (AR) model is a representation of a type of random process. The AR model specifies that the time series &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt; depends &lt;em&gt;linearly&lt;/em&gt; on its own previous values and on a stochastic term. In general, the AR model of order &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt;, i.e. &lt;span class=&#34;math inline&#34;&gt;\(AR(p)\)&lt;/span&gt;, can be written as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp;y_t = \mu_t +\epsilon_t,\\
-&amp;amp;\mu_{t+1} = \sum_{i=0}^{p-1} \phi_i \mu_{t-i} + \eta_{t}
-\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\phi_0,\cdots,\phi_{p-1}\)&lt;/span&gt; are the parameters of the model. &lt;!--Note that when $p=1$ and $\phi_0=1$, the AR process is equivalent to the local level component. It can be re-written in the general form with ???
---&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddAr(ss, y, lags = p)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The &lt;em&gt;bsts&lt;/em&gt; package also supports sparse AR(p) process for large &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt;, where a spike and slab prior is applied on the autoregression coefficients &lt;span class=&#34;math inline&#34;&gt;\(\phi_0,\cdots, \phi_{p-1}\)&lt;/span&gt;. This model differs from the one in &lt;code&gt;AddAr()&lt;/code&gt; only in that some of its coefficients may be set to zero.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddAutoAr(ss, y, lags = p)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;local-linear-trend&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Local linear trend&lt;/h3&gt;
-&lt;p&gt;The local linear trend is a popular choice for modelling trends because it quickly adapts to local variation, which is desirable when making short-term predictions. However, this degree of flexibility may not be desired when making long-term predictions, as such predictions often come with implausibly wide uncertainty intervals.&lt;/p&gt;
-&lt;p&gt;A local linear trend model for &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt; can be written as, &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp; y_t = \mu_t +\epsilon_t, \\
-&amp;amp; \mu_{t+1} = \mu_{t} + \delta_t + \eta_{\mu,t}, \qquad \text{(stochastic level component)}\\
-&amp;amp; \delta_{t+1} = \delta_t + \eta_{\delta,t}, \qquad \text{(stochastic slope component)}\\
-&amp;amp; \eta_{\mu, t} \sim N(0,\sigma^2_{\mu, t}),\quad
-  \eta_{\delta, t} \sim N(0,\sigma^2_{\delta, t})
-\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\mu_t\)&lt;/span&gt; is the value of the trend at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\delta_t\)&lt;/span&gt; is the expected increase in &lt;span class=&#34;math inline&#34;&gt;\(\mu\)&lt;/span&gt; between time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(t+1\)&lt;/span&gt; so it can be thought of as the slope at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\eta_{\mu,t}\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\eta_{\delta, t}\)&lt;/span&gt; are error terms independent from each other. A local linear trend allows both level (&lt;span class=&#34;math inline&#34;&gt;\(\mu_t\)&lt;/span&gt;) and slope (&lt;span class=&#34;math inline&#34;&gt;\(\delta_t\)&lt;/span&gt;) to be stochastic. It assumes that both the level and the slope follow random walks.&lt;/p&gt;
-&lt;p&gt;The model can also be expressed in the general form &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp; y_t = [1\quad 0]\left[\begin{matrix}\mu_t\\\delta_t\end{matrix}\right] +\epsilon_t, \\
-&amp;amp; \left[\begin{matrix}\mu_{t+1}\\\delta_{t+1}\end{matrix}\right] = 
-\left[\begin{matrix}1 &amp;amp; 1\\ 0 &amp;amp; 1 \end{matrix}\right]
-\left[\begin{matrix}\mu_t\\\delta_t\end{matrix}\right] + 
-\left[\begin{matrix}1 &amp;amp; 0 \\ 0 &amp;amp; 1 \end{matrix}\right]
-\left[\begin{matrix}\eta_{\mu, t}\\\eta_{\delta, t}\end{matrix}\right],
-\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(Z_t = (1,0)^T\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t = (\mu_t, \delta_t)^T\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(T_t = \left[\begin{smallmatrix}1 &amp;amp; 1\\ 0 &amp;amp; 1 \end{smallmatrix}\right]\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(R_t=\left[\begin{smallmatrix}1 &amp;amp; 0 \\ 0 &amp;amp; 1 \end{smallmatrix}\right]\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(\eta_t = (\eta_{\mu,t}, \eta_{\delta, t})^T\)&lt;/span&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddLocalLinearTrend(ss, y)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;semi-local-linear-trend&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Semi-local linear trend&lt;/h3&gt;
-&lt;p&gt;The semi-local linear trend is similar to the local linear trend, but more useful for long-term forecasting. The model can be written as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp; y_t = \mu_t +\epsilon_t, \\
-&amp;amp; \mu_{t+1} = \mu_{t} + \delta_t + \eta_{\mu,t}, \qquad \text{(stochastic level component)}\\
-&amp;amp; \delta_{t+1} = a + \phi\times (\delta_t-a) + \eta_{\delta,t}, \qquad \text{(stochastic slope component)}\\
-&amp;amp; \eta_{\mu, t} \sim N(0,\sigma^2_{\mu, t}),\quad
-  \eta_{\delta, t} \sim N(0,\sigma^2_{\delta, t})
-\end{split}\]&lt;/span&gt; where the slope component &lt;span class=&#34;math inline&#34;&gt;\(\delta_{t+1}\)&lt;/span&gt; is modeled by an AR(1) process centered at value &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt;. A stationary AR(1) process is less variable than a random walk so it often gives more reasonable uncertainty estimates when making long term forecasts.&lt;/p&gt;
-&lt;p&gt;The model can be expressed in the general form with &lt;span class=&#34;math inline&#34;&gt;\(Z_t = (1,0, a)^T\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t = (\mu_t+a, \delta_t-a, -1)^T\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(T_t = \left[\begin{smallmatrix}1 &amp;amp; 1 &amp;amp; 0 \\ 0 &amp;amp; \phi &amp;amp; 0 \\ 0 &amp;amp; 0 &amp;amp; 1 \end{smallmatrix}\right]\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(R_t=\left[\begin{smallmatrix}1 &amp;amp; 0 \\ 0 &amp;amp; 1\\0&amp;amp;0 \end{smallmatrix}\right]\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(\eta_t = (\eta_{\mu,t}, \eta_{\delta, t})^T\)&lt;/span&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddSemilocalLinearTrend(ss, y)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;seasonality&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Seasonality&lt;/h2&gt;
-&lt;div id=&#34;regression-with-seasonal-dummy-variables&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Regression with Seasonal Dummy Variables&lt;/h3&gt;
-&lt;p&gt;There are several commonly used state-component models to capture seasonality. The most frequently used model in the time domain is &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp; y_t = \gamma_t +\epsilon_t, \\
-&amp;amp; \gamma_{t+d} = - \sum_{i=0}^{s-2}\gamma_{t-i\times d} + \eta_{\gamma, t},
-\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; is the number of seasons and &lt;span class=&#34;math inline&#34;&gt;\(d\)&lt;/span&gt; is the seasonal duration (number of time periods in each season, often set to 1). The model can be thought of as a regression on &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; dummy variables representing &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; seasons and &lt;span class=&#34;math inline&#34;&gt;\(\gamma_{t}\)&lt;/span&gt; denotes their joint contribution to the observed response &lt;span class=&#34;math inline&#34;&gt;\(y_t\)&lt;/span&gt;. The mean of &lt;span class=&#34;math inline&#34;&gt;\(\gamma_{t+d}\)&lt;/span&gt; is such that the total seasonal effect is zero when summed over &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; seasons (i.e. &lt;span class=&#34;math inline&#34;&gt;\(E(\gamma_{t+d}+\sum_{i=0}^{s-2}\gamma_{t-i\times d}) = 0\)&lt;/span&gt;). The model can be rewritten as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp; y_t = [1\quad 0 \quad \cdots\quad 0]\left[\begin{matrix}\gamma_{t}\\\gamma_{t-d}\\ \vdots\\
-\gamma_{t-(s-2)d}\end{matrix}\right] +\epsilon_t, \\
-&amp;amp; \left[\begin{matrix}\gamma_{t+d}\\\gamma_t\\\gamma_{t-d}\\ \vdots\\
-\gamma_{t-(s-4)d}\\
-\gamma_{t-(s-3)d}\end{matrix}\right] = 
-\left[\begin{matrix} -1 &amp;amp; - 1 &amp;amp; \cdots &amp;amp; -1 &amp;amp; -1 \\ 1 &amp;amp; 0 &amp;amp; \cdots &amp;amp;0&amp;amp; 0\\
-0 &amp;amp; 1 &amp;amp; \cdots &amp;amp; 0 &amp;amp;0 \\
-\vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\\
-0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 1 &amp;amp; 0 \\
-0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0 \\
-\end{matrix}\right]
-\left[\begin{matrix}\gamma_{t}\\\gamma_{t-d}\\\gamma_{t-2d}\\\vdots \\
-\gamma_{t-(s-3)d}\\
-\gamma_{t-(s-2)d}\end{matrix}\right] + \left[\begin{matrix}1\\0\\0\\ \vdots\\
-0\\
-0\end{matrix}\right]\eta_{\gamma, t}
-\end{split}\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;The seasonal model can be generalized to allow for multiple seasonal components with different periods.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-# Suppose that y is a time series collected hourly
-ss &amp;lt;- list()
-# daily seasonality
-ss &amp;lt;- bsts::AddSeasonal(ss, y, nseasons = 24, season.duration = 1) 
-# weely seasonality
-ss &amp;lt;- bsts::AddSeasonal(ss, y, nseasons = 7, season.duration = 24)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;trigonometric-seasonal-model&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Trigonometric Seasonal model&lt;/h3&gt;
-&lt;p&gt;Another way to model seasonality is to use trigonometric seasonal model, &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp; y_t = \gamma_t +\epsilon_t, \\
-&amp;amp; \gamma_{j, t+1} = \gamma_{j,t}\times \cos(\lambda_j) - \gamma^*_{j,t}\times \sin(\lambda_j) + \omega_{j, t},\\
-&amp;amp; \gamma^*_{j, t+1} = \gamma^*_{j,t}\times \cos(\lambda_j) - \gamma_{j,t}\times \sin(\lambda_j) + \omega^*_{j,t},\\
-\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\gamma_t = \sum_{j=1}^{k}\gamma_{j,t}\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\lambda_j = 2\pi j/s\)&lt;/span&gt; is the &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt;-th seasonal frequency, &lt;span class=&#34;math inline&#34;&gt;\(j = 1,\cdots, k\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; is the number of time steps required for the longest cycle to repeat (i.e. number of seasosns).&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-# The harmonic method is strongly preferred to the direct method.
-# For a time series collected hourly with daily 
-# seasonality, we can try 
-# the component below, where frequencies = 1:4 specifies the frequencis of sin, cos functions we will use.
-ss &amp;lt;- bsts::AddTrig(ss, y, period = 24, frequencies = 1:4, method = &amp;quot;harmonic&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;linear-regression&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Linear regression&lt;/h2&gt;
-&lt;p&gt;The covariates in structural time series models are assumed to be contemporaneous. The coefficients of the contemporaneous covariates &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{x}_t\)&lt;/span&gt; can be static or time-varying.&lt;/p&gt;
-&lt;p&gt;A static regression can be written in state-space form by setting &lt;span class=&#34;math inline&#34;&gt;\(Z_t = \beta^T \mathbf{x}_t\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\alpha_t =1\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt; is static.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-bsts::bsts(y ~ x, ss, niter = 500)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;A dynamic regression component can be written as &lt;span class=&#34;math display&#34;&gt;\[\begin{split}
-&amp;amp; \mathbf{x}_t^T\beta_t = \sum_{j=1}^J x_{j,t} \beta_{j,t}\\
-&amp;amp; \beta_{j, t+1} = \beta_{j,t} + \eta_{\beta,j,t},
-\end{split}\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(\beta_{j,t}\)&lt;/span&gt; is the coefficient for the &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt;-th covariate &lt;span class=&#34;math inline&#34;&gt;\(x_{j,t}\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;. The state-space form is given as &lt;span class=&#34;math inline&#34;&gt;\(Z_t = \mathbf{x}_t, \alpha_t =\beta_t, T_t = R_t = I_{J\times J}\)&lt;/span&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddDynamicRegression(ss, y ~ x)
-bsts::bsts(y, ss, niter = 500)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;assemble-multiple-state-components&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Assemble multiple state components&lt;/h2&gt;
-&lt;p&gt;Independent state components can be combined by concatenating their observation vectors &lt;span class=&#34;math inline&#34;&gt;\(Z_t\)&lt;/span&gt; and arranging the other model matrices as elements in a block diagonal matrix. For example, we can combine the &lt;em&gt;local linear trend&lt;/em&gt; with &lt;em&gt;seasonality&lt;/em&gt; and have the following model matrices: &lt;span class=&#34;math display&#34;&gt;\[Z_t = \left[\begin{smallmatrix}
-1  \\ 
-0 \\
-1 \\
-0 \\
-\vdots\\
-0\end{smallmatrix}\right], 
-T_t = \left[\begin{smallmatrix}
-  1 &amp;amp; 1 &amp;amp; \\ 
-  0 &amp;amp; 1 &amp;amp; \\
-    &amp;amp;   &amp;amp; -1 &amp;amp; - 1 &amp;amp; \cdots &amp;amp; -1 &amp;amp; -1 \\ 
-    &amp;amp;   &amp;amp; 1 &amp;amp; 0 &amp;amp; \cdots &amp;amp;0&amp;amp; 0\\
-    &amp;amp;   &amp;amp; 0 &amp;amp; 1 &amp;amp; \cdots &amp;amp; 0 &amp;amp;0 \\
-    &amp;amp;   &amp;amp; \vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\vdots &amp;amp;\\
-    &amp;amp;   &amp;amp; 0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 1 &amp;amp; 0 \\
-    &amp;amp;   &amp;amp; 0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0 \\
-  \end{smallmatrix}\right],
-R_t=\left[\begin{smallmatrix}
-1 &amp;amp; 0 \\ 
-0 &amp;amp; 1 \\
-  &amp;amp;  &amp;amp; 1 \\
-  &amp;amp; &amp;amp;  0 \\
-    &amp;amp; &amp;amp;  \vdots \\
-    &amp;amp; &amp;amp;  0 \\
-\end{smallmatrix}\right] \]&lt;/span&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddLocalLinearTrend(ss, y)
-ss &amp;lt;- bsts::AddSeasonality(ss, y, nseason = s, season.duration = d)
-bsts::bsts(y, ss, niter = 500)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Similarly, we can add other state components such as Regression, Local level, AR process, Random walk for holiday effect, etc (see &lt;em&gt;bsts&lt;/em&gt; Package for more details). As mentioned in the Introduction, the model is modular and can be easily extended by using the &lt;em&gt;bsts&lt;/em&gt; package. For example,&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# R code
-ss &amp;lt;- list()
-ss &amp;lt;- bsts::AddLocalLevel(ss, y)
-ss &amp;lt;- bsts::AddAr(ss, y)
-ss &amp;lt;- bsts::AddSeasonal(ss, y, nseasons = 24)
-ss &amp;lt;- bsts::AddDynamicRegression(ss, y ~ x1)
-bsts::bsts(y ~ x2, ss, niter = 500)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Some examples of application to real data analyses can be found &lt;a href=&#34;http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;model-diagnostic&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Model diagnostic&lt;/h1&gt;
-&lt;div id=&#34;prediction-errors&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Prediction errors&lt;/h2&gt;
-&lt;p&gt;As part of the model fitting process, the algorithm in &lt;em&gt;bsts&lt;/em&gt; generates the one-step-ahead prediction errors &lt;span class=&#34;math inline&#34;&gt;\(y_tbE(y_t|Y_{tb1},\theta)\)&lt;/span&gt; , where &lt;span class=&#34;math inline&#34;&gt;\(Y_{tb1}=y_1,\cdots,y_{tb1}\)&lt;/span&gt;, and the vector of model parameters &lt;span class=&#34;math inline&#34;&gt;\(\theta\)&lt;/span&gt; is fixed at its current value in the MCMC algorithm. The one-step-ahead prediction errors can be obtained from the bsts model by calling&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;bsts.prediction.errors(model1)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The one step prediction errors are a useful diagnostic for comparing several bsts models that have been fit to the same data. They are used to implement the function &lt;code&gt;CompareBstsModels&lt;/code&gt;, which is called as shown below.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;CompareBstsModels(list(&amp;quot;Model 1&amp;quot; = model1,
-                       &amp;quot;Model 2&amp;quot; = model2,
-                       &amp;quot;Model 3&amp;quot; = model3),
-                  colors = c(&amp;quot;black&amp;quot;, &amp;quot;red&amp;quot;, &amp;quot;blue&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;model-assumptions&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Model assumptions&lt;/h2&gt;
-&lt;p&gt;In BSTS models, the residual term is often assumed to follow a Gaussian distribution. It is important to check the validity of such assumption to see if the model is valid or not.&lt;/p&gt;
-&lt;p&gt;The output of bsts model contains a matrix of Monte Carlo draws of residual errors. Each row is a Monte Carlo draw, and each column is an observation.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;qqdist&lt;/code&gt; function sorts the columns of draws by their mean, and plots the resulting set of curves against the quantiles of the standard normal distribution. A reference line is added, and the mean of each column of draws is represented by a blue dot. If the dots fall around the straight line, the normality assumption holds well for the residuals. If the dots depart greatly from the line, the normality assumption may violate. In this case, we may either do data transformation to obtain more normally distributed data or assume a different distribution on the data (e.g. t-distribution)&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;AcfDist&lt;/code&gt; function plots the posterior distribution of the autocorrelation function (ACF) of the residuals using a set of side-by-side boxplots. If the boxplot of lag &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; contains 0, we may consider the residuals are uncorrelated at lag &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;. If the ACF does not dampen out (i.e. falling to zero) within about 15 to 20 lags, the residual term is nonstationary and we should try a different model.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;References&lt;/h1&gt;
-&lt;p&gt;Steven L. Scott. (2017). Fitting Bayesian structural time series with the bsts R package. &lt;a href=&#34;http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html&#34; class=&#34;uri&#34;&gt;http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Chatfield, Chris. (2016). The analysis of time series: an introduction. CRC press.&lt;/p&gt;
-&lt;p&gt;Montgomery, Douglas C., Cheryl L. Jennings, and Murat Kulahci. (2015). Introduction to time series analysis and forecasting. John Wiley &amp;amp; Sons.&lt;/p&gt;
-&lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/publication/publications/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/publication/publications/</guid>
-      <description></description>
     </item>
     
   </channel>

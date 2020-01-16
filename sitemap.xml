@@ -43,7 +43,31 @@
   
     <url>
     
-      <loc>/post/2019-05-18-scala/</loc>
+      <loc>/post/2019-08-07-data_manipulation/</loc>
+      <lastmod>2019-08-07T00:00:00+00:00</lastmod>
+    </url>
+  
+    <url>
+    
+      <loc>/post/2019-07-14-sql/</loc>
+      <lastmod>2019-07-14T00:00:00+00:00</lastmod>
+    </url>
+  
+    <url>
+    
+      <loc>/post/2019-06-25-scala3/</loc>
+      <lastmod>2019-06-25T00:00:00+00:00</lastmod>
+    </url>
+  
+    <url>
+    
+      <loc>/post/2019-05-26-scala2/</loc>
+      <lastmod>2019-05-26T00:00:00+00:00</lastmod>
+    </url>
+  
+    <url>
+    
+      <loc>/post/2019-05-18-scala1/</loc>
       <lastmod>2019-05-18T00:00:00+00:00</lastmod>
     </url>
   
@@ -94,6 +118,11 @@
   
     <url>
     
+      <loc>/post/2019-07-14-sql/</loc>
+    </url>
+  
+    <url>
+    
       <loc>/publication/publications/</loc>
     </url>
   
@@ -124,7 +153,7 @@
     <url>
     
       <loc>/post/</loc>
-      <lastmod>2019-05-18T00:00:00+00:00</lastmod>
+      <lastmod>2019-08-07T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
@@ -159,7 +188,7 @@
     <url>
     
       <loc>/</loc>
-      <lastmod>2019-05-18T00:00:00+00:00</lastmod>
+      <lastmod>2019-08-07T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
@@ -173,7 +202,7 @@
     <url>
     
       <loc>/tags/big-data/</loc>
-      <lastmod>2019-05-18T00:00:00+00:00</lastmod>
+      <lastmod>2019-06-25T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
@@ -181,6 +210,20 @@
     
       <loc>/tags/bsts/</loc>
       <lastmod>2019-03-21T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+  
+    <url>
+    
+      <loc>/tags/data/</loc>
+      <lastmod>2019-08-07T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+  
+    <url>
+    
+      <loc>/categories/data-manipulation/</loc>
+      <lastmod>2019-08-07T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
@@ -194,14 +237,21 @@
     <url>
     
       <loc>/categories/programming/</loc>
-      <lastmod>2019-05-18T00:00:00+00:00</lastmod>
+      <lastmod>2019-06-25T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+  
+    <url>
+    
+      <loc>/tags/r/</loc>
+      <lastmod>2019-08-07T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
     <url>
     
       <loc>/tags/scala/</loc>
-      <lastmod>2019-05-18T00:00:00+00:00</lastmod>
+      <lastmod>2019-06-25T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   
@@ -209,6 +259,13 @@
     
       <loc>/tags/spark/</loc>
       <lastmod>2019-04-10T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+  
+    <url>
+    
+      <loc>/tags/sql/</loc>
+      <lastmod>2019-07-14T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
   

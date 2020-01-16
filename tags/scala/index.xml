@@ -6,17 +6,37 @@
     <description>Recent content in scala on Tingting&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 18 May 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 25 Jun 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/scala/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Scala notes III -- Classes and Objects</title>
+      <link>/post/2019-06-25-scala3/</link>
+      <pubDate>Tue, 25 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-06-25-scala3/</guid>
+      <description>Classes and objects In Scala, a class is a blueprint for objects. Once you define a class, you can create objects from the class blueprint with the keyword new. Through the object you can use all functionalities of the defined class.
+An object is a named instance with members such as fields and methods. It is a class that has exactly one instance. There are three uses of objects.</description>
+    </item>
+    
+    <item>
+      <title>Scala notes II -- Functions</title>
+      <link>/post/2019-05-26-scala2/</link>
+      <pubDate>Sun, 26 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-05-26-scala2/</guid>
+      <description>Function Syntax Scala is a functional programming language, which means that functions are first-class citizens and you can pass them around as parameters or values.
+def add(x: Int, y: Int): Int = { return x + y; } println(add(21, 19)); // Other variants def multiply(x: Int, y: Int): Int = x * y // simplified version def divide(x: Int, y: Int) = x / y // can ignore the output type if it&amp;#39;s obvious def substract(x: Int = 10, y: Int = 2) = x - y // set default values You can define the function names as operator, e.</description>
+    </item>
+    
+    <item>
       <title>Scala notes I</title>
-      <link>/post/2019-05-18-scala/</link>
+      <link>/post/2019-05-18-scala1/</link>
       <pubDate>Sat, 18 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/2019-05-18-scala/</guid>
+      <guid>/post/2019-05-18-scala1/</guid>
       <description>Data types Boolean true or false Byte 8 bit signed value Short 16 bit signed value Char 16 bit unsigned Unicode character Int 32 bit signed value Long 64 bit signed value Float 32 bit IEEE 754 single-precision float Double 64 bit IEEE 754 double-precision float String A sequence of characters Unit Corresponds to no value Null null or empty references Nothing subtype of every other type; includes no .</description>
     </item>
     

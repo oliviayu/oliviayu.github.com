@@ -680,94 +680,6 @@ val result = for { i &lt;- lst; if i &lt; 3 } yield {
 println(&quot;result = &quot; + result) // return a List</code></pre>
 </div>
 </div>
-<div id="functions" class="section level1">
-<h1>Functions</h1>
-<div id="basice-functions" class="section level3">
-<h3>Basice functions</h3>
-<pre class="java"><code>def add(x: Int, y: Int): Int = {
-  return x + y;
-}
-println(add(21, 19));
-// Other variants
-def multiply(x: Int, y: Int): Int = x * y  // simplified version
-def divide(x: Int, y: Int) = x / y  // can ignore the output type if it&#39;s obvious
-def substract(x: Int = 10, y: Int = 2) = x - y  // set default values</code></pre>
-<p>You can define the function names as operator, e.g. +, *, /, -</p>
-<pre class="java"><code>def +(x: Int, y: Int) = x + y</code></pre>
-</div>
-<div id="anonymous-functions" class="section level3">
-<h3>Anonymous functions</h3>
-<pre class="java"><code>var add = (x: Int, y: Int) =&gt; x + y
-println(add(300, 500))</code></pre>
-</div>
-<div id="higher-order-functions" class="section level3">
-<h3>Higher-order functions</h3>
-<pre class="java"><code>def math(x: Double, y: Double, z:Double, f: (Double, Double) =&gt; Double): Double = {
-  f(f(x, y), z);
-}
-
-def main(args: Array[String]) {
-  val result = math(50, 20, 10, (x, y) =&gt; x min y);  // find the minimum number
-  println(result);
-}
-
-(x, y) =&gt; _+_   // i.e. (x, y) =&gt; x+y
-(x, y) =&gt; _max _   // i.e. (x, y) =&gt; x max y</code></pre>
-</div>
-<div id="partially-applied-functions" class="section level3">
-<h3>Partially applied functions</h3>
-<pre class="java"><code>val sum = (a: Int, b: Int, c: Int) =&gt; a+b+c
-val f = sum(10, 20, _:Int)
-println(f(100)) // returns 130
-
-import java.util.Date
-def log(date: Date, message: String) = {
-  println(date + &quot;   &quot; + message);
-}
-val date = new Date;
-val newLog = log(date, _ :String);
-newLog(&quot;The message 1.&quot;)
-newLog(&quot;The message 2.&quot;)</code></pre>
-</div>
-</div>
-<div id="closures" class="section level1">
-<h1>Closures</h1>
-<p>A closure is a function which uses one or more variables declared outside this function.</p>
-<pre class="java"><code>var number = 10;
-
-//Example 1
-val add = (x:Int) =&gt; x + number;
-println(add(20))
-
-number = 100
-println(add(20))  // If the value of the variable changes, the result changes too.
-
-//Example 2
-val add2 = (x:Int) =&gt; {
-  number = x+number;
-  number
-}
-println(add2(20))
-println(number)  // numbder is 120 now
-
-//Example 3
-val number = 10;  // The result won&#39;t change since number is fixed.</code></pre>
-</div>
-<div id="currying" class="section level1">
-<h1>Currying</h1>
-<p>Currying is the technique of transforming a function that takes multiple arguments into a function that takes a single argument.</p>
-<pre class="java"><code>def add(x: Int) = (y: Int) =&gt; x + y;
-println(add(20)(10));
-
-// You can also apply partial applied function in currying
-val sum40 = add(40);
-println(sum40(100));
-
-//Simpler version in scala
-def add2 (x: Int) (y: Int) = x + y;
-val sum50 = add2(50)_;  //have to add _
-println(sum50(10))</code></pre>
-</div>
 <div id="map-flatten-and-filter" class="section level1">
 <h1>Map, flatten, and filter</h1>
 <p>Map method</p>
@@ -965,28 +877,35 @@ class Rectangle(var width: Double, var height: Double) extends Polygon with Shap
 <h1>Lazy evaluation</h1>
 <p>Lazy evaluation is an evaluation strategy that delays the evaluation of an expression until it’s needed. Scala supports strict evaluation by default and lazy evaluation if specified.</p>
 <pre class="java"><code>val e = 9; // strict evaluation
-lazy val l = 9; // lazy evaluation
+lazy val l = 9; // lazy evaluation</code></pre>
+<div id="call-by-value-v.s.-call-by-name" class="section level2">
+<h2>call-by-value v.s. call-by-name</h2>
+<pre class="java"><code># call-by-value, the general case
+def method1(n: Int) {
+  println(&quot;Method 1&quot;);
+  println(n);
+}
 
+# call-by-name
+def method2(n: =&gt; Int) {    // use =&gt; 
+  println(&quot;Method 2&quot;);
+  println(n);
+}
 
-// object Demo {
-  def method1(n: Int) {
-    println(&quot;Method 1&quot;);
-    println(n);
-  }
-  def method2(n: =&gt; Int) {
-    println(&quot;Method 2&quot;);
-    println(n);
-  }
-  // def main(args: Array[String]) {
-    val add = (a: Int, b: Int) =&gt; {
-      println(&quot;Add&quot;);
-      a + b
-    }
+val add = (a: Int, b: Int) =&gt; {
+  println(&quot;Add&quot;);
+  a + b
+}
 
-    method1(add(5, 6))
-    method2(add(5, 6))
-//   }
-// }</code></pre>
+method1(add(5, 6))
+// Add
+// Method 1
+// 11
+method2(add(5, 6))
+// Method 2
+// Add
+// 11</code></pre>
+</div>
 </div>
 <div id="scala-in-intellij-idea" class="section level1">
 <h1>Scala in IntelliJ IDEA</h1>

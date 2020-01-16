@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>database on Tingting&#39;s Blog</title>
+    <link>/categories/database/</link>
+    <description>Recent content in database on Tingting&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 14 Jul 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/database/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SQL notes</title>
+      <link>/post/2019-07-14-sql/</link>
+      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-07-14-sql/</guid>
+      <description>Introduction Structured Query Language (SQL) is a standard computer language for relational database management and data manipulation. It can be used to read, write, and update data. For data scientists, it is mainly used for data retrieval. There are several relational database management systems, such as Oracle, MySQL, and SQLite. Depending on the system you are using, the SQL syntax may be a little bit different.
+Retrieve data Use SELECT statement to query database, filtered by some conditions (optional).</description>
+    </item>
+    
+  </channel>
+</rss>
